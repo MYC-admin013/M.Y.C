@@ -16,471 +16,143 @@
             --gray: #aaaaaa;
             --border: #222222;
         }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             background: var(--black);
             color: var(--white);
             font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
             min-height: 100vh;
             overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
         }
-
-        /* ============ BARRA DE TAREAS ============ */
         .taskbar {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 48px;
-            background: var(--dark);
-            border-top: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 20px;
-            z-index: 1000;
-            backdrop-filter: blur(20px);
+            position: fixed; bottom: 0; left: 0; right: 0; height: 48px;
+            background: var(--dark); border-top: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 20px; z-index: 1000; backdrop-filter: blur(20px);
         }
-
-        .taskbar-time {
-            color: var(--gray);
-            font-size: 13px;
-            letter-spacing: 0.5px;
-        }
-
-        .taskbar-player {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            color: var(--white);
-            font-size: 13px;
-        }
-
+        .taskbar-time { color: var(--gray); font-size: 13px; letter-spacing: 0.5px; }
+        .taskbar-player { display: flex; align-items: center; gap: 12px; color: var(--white); font-size: 13px; }
         .taskbar-player button {
-            background: none;
-            border: 1px solid var(--magenta);
-            color: var(--magenta);
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 14px;
-            transition: all 0.3s;
+            background: none; border: 1px solid var(--magenta); color: var(--magenta);
+            width: 32px; height: 32px; border-radius: 50%; cursor: pointer;
+            font-size: 14px; transition: all 0.3s;
         }
-
-        .taskbar-player button:hover {
-            background: var(--magenta);
-            color: var(--black);
-            box-shadow: 0 0 20px var(--magenta-glow);
-        }
-
-        .taskbar-player button.playing {
-            background: var(--magenta);
-            color: var(--black);
-            animation: pulse-play 2s infinite;
-        }
-
+        .taskbar-player button:hover { background: var(--magenta); color: var(--black); box-shadow: 0 0 20px var(--magenta-glow); }
+        .taskbar-player button.playing { background: var(--magenta); color: var(--black); animation: pulse-play 2s infinite; }
         @keyframes pulse-play {
-            0%,
-            100% {
-                box-shadow: 0 0 10px var(--magenta-glow);
-            }
-            50% {
-                box-shadow: 0 0 25px var(--magenta), 0 0 50px var(--magenta-glow);
-            }
+            0%, 100% { box-shadow: 0 0 10px var(--magenta-glow); }
+            50% { box-shadow: 0 0 25px var(--magenta), 0 0 50px var(--magenta-glow); }
         }
-
-        /* ============ PANTALLAS ============ */
-        .screen {
-            display: none;
-            min-height: calc(100vh - 48px);
-            padding-bottom: 60px;
-        }
-
-        .screen.active {
-            display: block;
-        }
-
-        /* ============ ESCRITORIO ============ */
+        .screen { display: none; min-height: calc(100vh - 48px); padding-bottom: 60px; }
+        .screen.active { display: block; }
         .desktop {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: calc(100vh - 48px);
-            padding: 40px 20px;
+            display: flex; flex-direction: column; align-items: center;
+            justify-content: center; min-height: calc(100vh - 48px); padding: 40px 20px;
         }
-
         .desktop-logo {
-            font-size: clamp(2rem, 5vw, 3.5rem);
-            font-weight: 300;
-            letter-spacing: 8px;
-            color: var(--white);
-            text-align: center;
-            margin-bottom: 8px;
+            font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 300;
+            letter-spacing: 8px; color: var(--white); text-align: center; margin-bottom: 8px;
         }
-
-        .desktop-logo span {
-            color: var(--magenta);
-        }
-
+        .desktop-logo span { color: var(--magenta); }
         .desktop-subtitle {
-            color: var(--gray);
-            font-size: 12px;
-            letter-spacing: 6px;
-            text-transform: uppercase;
-            margin-bottom: 60px;
+            color: var(--gray); font-size: 12px; letter-spacing: 6px;
+            text-transform: uppercase; margin-bottom: 60px;
         }
-
         .desktop-icons {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 30px 40px;
-            max-width: 600px;
-            width: 100%;
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 30px 40px; max-width: 600px; width: 100%;
         }
-
         .desktop-icon {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-            cursor: pointer;
-            transition: transform 0.2s;
-            background: none;
-            border: none;
-            color: var(--white);
-            font-family: inherit;
-            padding: 15px 10px;
-            border-radius: 12px;
+            display: flex; flex-direction: column; align-items: center; gap: 10px;
+            cursor: pointer; transition: transform 0.2s; background: none; border: none;
+            color: var(--white); font-family: inherit; padding: 15px 10px; border-radius: 12px;
         }
-
-        .desktop-icon:hover {
-            transform: translateY(-4px);
-            background: rgba(255, 255, 255, 0.03);
-        }
-
+        .desktop-icon:hover { transform: translateY(-4px); background: rgba(255,255,255,0.03); }
         .desktop-icon .icon-img {
-            width: 64px;
-            height: 64px;
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 30px;
-            background: var(--card);
-            border: 1px solid var(--border);
-            transition: all 0.3s;
+            width: 64px; height: 64px; border-radius: 16px; display: flex;
+            align-items: center; justify-content: center; font-size: 30px;
+            background: var(--card); border: 1px solid var(--border); transition: all 0.3s;
         }
-
-        .desktop-icon:hover .icon-img {
-            border-color: var(--magenta);
-            box-shadow: 0 0 25px var(--magenta-glow);
-        }
-
+        .desktop-icon:hover .icon-img { border-color: var(--magenta); box-shadow: 0 0 25px var(--magenta-glow); }
         .desktop-icon .icon-label {
-            font-size: 11px;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            color: var(--gray);
-            text-align: center;
+            font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+            color: var(--gray); text-align: center;
         }
-
-        /* ============ PÁGINAS INTERIORES ============ */
-        .inner-page {
-            padding: 40px 30px;
-            max-width: 900px;
-            margin: 0 auto;
-        }
-
+        .inner-page { padding: 40px 30px; max-width: 900px; margin: 0 auto; }
         .back-btn {
-            background: none;
-            border: 1px solid var(--border);
-            color: var(--gray);
-            padding: 10px 20px;
-            cursor: pointer;
-            font-size: 13px;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            transition: all 0.3s;
-            margin-bottom: 40px;
-            font-family: inherit;
+            background: none; border: 1px solid var(--border); color: var(--gray);
+            padding: 10px 20px; cursor: pointer; font-size: 13px; letter-spacing: 2px;
+            text-transform: uppercase; transition: all 0.3s; margin-bottom: 40px; font-family: inherit;
         }
-
-        .back-btn:hover {
-            border-color: var(--magenta);
-            color: var(--magenta);
-        }
-
-        .inner-page h2 {
-            font-size: clamp(2rem, 4vw, 3rem);
-            font-weight: 300;
-            letter-spacing: 6px;
-            margin-bottom: 10px;
-        }
-
-        .inner-page h2 span {
-            color: var(--magenta);
-        }
-
+        .back-btn:hover { border-color: var(--magenta); color: var(--magenta); }
+        .inner-page h2 { font-size: clamp(2rem, 4vw, 3rem); font-weight: 300; letter-spacing: 6px; margin-bottom: 10px; }
+        .inner-page h2 span { color: var(--magenta); }
         .inner-page .subtitle {
-            color: var(--gray);
-            font-size: 12px;
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            margin-bottom: 40px;
+            color: var(--gray); font-size: 12px; letter-spacing: 4px;
+            text-transform: uppercase; margin-bottom: 40px;
         }
-
-        .inner-page p {
-            color: var(--gray);
-            line-height: 1.8;
-            font-size: 15px;
-            max-width: 650px;
-            margin-bottom: 30px;
-        }
-
-        /* ============ GRID DE TARJETAS ============ */
-        .card-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 20px;
-            margin-top: 30px;
-        }
-
+        .inner-page p { color: var(--gray); line-height: 1.8; font-size: 15px; max-width: 650px; margin-bottom: 30px; }
+        .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; margin-top: 30px; }
         .card {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 25px;
-            transition: all 0.3s;
-            cursor: pointer;
+            background: var(--card); border: 1px solid var(--border);
+            border-radius: 12px; padding: 25px; transition: all 0.3s; cursor: pointer;
         }
-
-        .card:hover {
-            border-color: var(--magenta);
-            box-shadow: 0 0 20px var(--magenta-glow);
-            transform: translateY(-2px);
-        }
-
-        .card-icon {
-            font-size: 36px;
-            margin-bottom: 15px;
-        }
-
-        .card h3 {
-            font-size: 16px;
-            font-weight: 500;
-            letter-spacing: 1px;
-            margin-bottom: 8px;
-            color: var(--white);
-        }
-
-        .card p {
-            font-size: 13px;
-            color: var(--gray);
-            line-height: 1.5;
-            margin: 0;
-        }
-
+        .card:hover { border-color: var(--magenta); box-shadow: 0 0 20px var(--magenta-glow); transform: translateY(-2px); }
+        .card-icon { font-size: 36px; margin-bottom: 15px; }
+        .card h3 { font-size: 16px; font-weight: 500; letter-spacing: 1px; margin-bottom: 8px; color: var(--white); }
+        .card p { font-size: 13px; color: var(--gray); line-height: 1.5; margin: 0; }
         .card .tag {
-            display: inline-block;
-            background: var(--magenta);
-            color: var(--black);
-            font-size: 10px;
-            padding: 4px 10px;
-            border-radius: 20px;
-            letter-spacing: 1px;
-            margin-top: 10px;
-            font-weight: 600;
+            display: inline-block; background: var(--magenta); color: var(--black);
+            font-size: 10px; padding: 4px 10px; border-radius: 20px; letter-spacing: 1px;
+            margin-top: 10px; font-weight: 600;
         }
-
-        /* ============ TOURS ============ */
         .tour-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 20px 0;
-            border-bottom: 1px solid var(--border);
-            flex-wrap: wrap;
-            gap: 15px;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 20px 0; border-bottom: 1px solid var(--border); flex-wrap: wrap; gap: 15px;
         }
-
-        .tour-date {
-            font-size: 24px;
-            font-weight: 300;
-            letter-spacing: 2px;
-            color: var(--magenta);
-            min-width: 100px;
-        }
-
-        .tour-info h4 {
-            font-size: 18px;
-            font-weight: 400;
-            letter-spacing: 1px;
-        }
-
-        .tour-info span {
-            color: var(--gray);
-            font-size: 13px;
-        }
-
+        .tour-date { font-size: 24px; font-weight: 300; letter-spacing: 2px; color: var(--magenta); min-width: 100px; }
+        .tour-info h4 { font-size: 18px; font-weight: 400; letter-spacing: 1px; }
+        .tour-info span { color: var(--gray); font-size: 13px; }
         .tour-btn {
-            background: none;
-            border: 1px solid var(--magenta);
-            color: var(--magenta);
-            padding: 10px 25px;
-            cursor: pointer;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            font-size: 11px;
-            transition: all 0.3s;
-            font-family: inherit;
+            background: none; border: 1px solid var(--magenta); color: var(--magenta);
+            padding: 10px 25px; cursor: pointer; letter-spacing: 2px; text-transform: uppercase;
+            font-size: 11px; transition: all 0.3s; font-family: inherit;
         }
-
-        .tour-btn:hover {
-            background: var(--magenta);
-            color: var(--black);
-        }
-
-        /* ============ STORE / MERCH ============ */
+        .tour-btn:hover { background: var(--magenta); color: var(--black); }
         .product-card {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            overflow: hidden;
-            transition: all 0.3s;
+            background: var(--card); border: 1px solid var(--border);
+            border-radius: 12px; overflow: hidden; transition: all 0.3s;
         }
-
-        .product-card:hover {
-            border-color: var(--magenta);
-            box-shadow: 0 0 20px var(--magenta-glow);
-        }
-
-        .product-img {
-            height: 180px;
-            background: var(--dark);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 50px;
-        }
-
-        .product-info {
-            padding: 20px;
-        }
-
-        .product-info h4 {
-            font-size: 15px;
-            font-weight: 400;
-            letter-spacing: 1px;
-            margin-bottom: 5px;
-        }
-
-        .product-info .price {
-            color: var(--magenta);
-            font-size: 18px;
-            font-weight: 300;
-            letter-spacing: 1px;
-        }
-
-        /* ============ ARTISTAS ============ */
-        .artist-card {
-            display: flex;
-            gap: 25px;
-            padding: 25px 0;
-            border-bottom: 1px solid var(--border);
-            flex-wrap: wrap;
-        }
-
+        .product-card:hover { border-color: var(--magenta); box-shadow: 0 0 20px var(--magenta-glow); }
+        .product-img { height: 180px; background: var(--dark); display: flex; align-items: center; justify-content: center; font-size: 50px; }
+        .product-info { padding: 20px; }
+        .product-info h4 { font-size: 15px; font-weight: 400; letter-spacing: 1px; margin-bottom: 5px; }
+        .product-info .price { color: var(--magenta); font-size: 18px; font-weight: 300; letter-spacing: 1px; }
+        .artist-card { display: flex; gap: 25px; padding: 25px 0; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
         .artist-avatar {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background: var(--card);
-            border: 2px solid var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 35px;
-            flex-shrink: 0;
+            width: 80px; height: 80px; border-radius: 50%; background: var(--card);
+            border: 2px solid var(--border); display: flex; align-items: center;
+            justify-content: center; font-size: 35px; flex-shrink: 0;
         }
-
-        .artist-info h3 {
-            font-size: 20px;
-            font-weight: 400;
-            letter-spacing: 2px;
-            margin-bottom: 5px;
-        }
-
-        .artist-info .role {
-            color: var(--magenta);
-            font-size: 12px;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            margin-bottom: 10px;
-        }
-
-        .artist-info p {
-            font-size: 14px;
-            color: var(--gray);
-            line-height: 1.6;
-            margin: 0;
-        }
-
-        /* ============ RESPONSIVE ============ */
+        .artist-info h3 { font-size: 20px; font-weight: 400; letter-spacing: 2px; margin-bottom: 5px; }
+        .artist-info .role { color: var(--magenta); font-size: 12px; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 10px; }
+        .artist-info p { font-size: 14px; color: var(--gray); line-height: 1.6; margin: 0; }
         @media (max-width: 768px) {
-            .desktop-icons {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 20px;
-            }
-
-            .inner-page {
-                padding: 30px 20px;
-            }
-
-            .desktop-logo {
-                font-size: 2rem;
-                letter-spacing: 4px;
-            }
-
-            .card-grid {
-                grid-template-columns: 1fr 1fr;
-            }
+            .desktop-icons { grid-template-columns: repeat(2, 1fr); gap: 20px; }
+            .inner-page { padding: 30px 20px; }
+            .desktop-logo { font-size: 2rem; letter-spacing: 4px; }
+            .card-grid { grid-template-columns: 1fr 1fr; }
         }
-
         @media (max-width: 480px) {
-            .desktop-icons {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 15px;
-            }
-
-            .desktop-icon .icon-img {
-                width: 50px;
-                height: 50px;
-                font-size: 22px;
-            }
-
-            .card-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .tour-item {
-                flex-direction: column;
-                align-items: flex-start;
-            }
+            .desktop-icons { grid-template-columns: repeat(2, 1fr); gap: 15px; }
+            .desktop-icon .icon-img { width: 50px; height: 50px; font-size: 22px; }
+            .card-grid { grid-template-columns: 1fr; }
+            .tour-item { flex-direction: column; align-items: flex-start; }
         }
     </style>
 </head>
 <body>
 
-    <!-- ============ BARRA DE TAREAS ============ -->
     <div class="taskbar">
         <div class="taskbar-time" id="taskbar-time"></div>
         <div class="taskbar-player">
@@ -489,362 +161,147 @@
         </div>
     </div>
 
-    <!-- ============ ESCRITORIO PRINCIPAL ============ -->
     <div class="screen active" id="desktop-screen">
         <div class="desktop">
             <div class="desktop-logo">THE <span>MAYIN BUU</span> CLUB</div>
             <div class="desktop-subtitle">M.Y.C — Since 2024</div>
-
             <div class="desktop-icons">
-                <!-- MYC -->
-                <button class="desktop-icon" onclick="openPage('myc')">
-                    <div class="icon-img">🎤</div>
-                    <span class="icon-label">M.Y.C</span>
-                </button>
-
-                <!-- STORE -->
-                <button class="desktop-icon" onclick="openPage('store')">
-                    <div class="icon-img">💿</div>
-                    <span class="icon-label">Store</span>
-                </button>
-
-                <!-- MERCH -->
-                <button class="desktop-icon" onclick="openPage('merch')">
-                    <div class="icon-img">👕</div>
-                    <span class="icon-label">Merch</span>
-                </button>
-
-                <!-- TOURS -->
-                <button class="desktop-icon" onclick="openPage('tours')">
-                    <div class="icon-img">🌍</div>
-                    <span class="icon-label">Tours</span>
-                </button>
-
-                <!-- BABY BUU'S -->
-                <button class="desktop-icon" onclick="openPage('babybuus')">
-                    <div class="icon-img">👶</div>
-                    <span class="icon-label">Baby Buu's</span>
-                </button>
-
-                <!-- ARTISTS -->
-                <button class="desktop-icon" onclick="openPage('artists')">
-                    <div class="icon-img">🎨</div>
-                    <span class="icon-label">Artists</span>
-                </button>
+                <button class="desktop-icon" onclick="openPage('myc')"><div class="icon-img">🎤</div><span class="icon-label">M.Y.C</span></button>
+                <button class="desktop-icon" onclick="openPage('store')"><div class="icon-img">💿</div><span class="icon-label">Store</span></button>
+                <button class="desktop-icon" onclick="openPage('merch')"><div class="icon-img">👕</div><span class="icon-label">Merch</span></button>
+                <button class="desktop-icon" onclick="openPage('tours')"><div class="icon-img">🌍</div><span class="icon-label">Tours</span></button>
+                <button class="desktop-icon" onclick="openPage('babybuus')"><div class="icon-img">👶</div><span class="icon-label">Baby Buu's</span></button>
+                <button class="desktop-icon" onclick="openPage('artists')"><div class="icon-img">🎨</div><span class="icon-label">Artists</span></button>
             </div>
         </div>
     </div>
 
-    <!-- ============ M.Y.C ============ -->
     <div class="screen" id="myc-screen">
         <div class="inner-page">
             <button class="back-btn" onclick="goToDesktop()">← Volver</button>
             <h2>M.<span>Y</span>.C</h2>
             <div class="subtitle">The Mayin Buu Club</div>
-            <p>
-                Fundado en 2024, <strong>M.Y.C</strong> es un sello discográfico independiente 
-                dedicado a la música electrónica de vanguardia. Nacido de la necesidad de crear 
-                un espacio donde el arte sonoro no tenga límites, combinamos la estética retro 
-                con la producción más innovadora.
-            </p>
-            <p>
-                Nuestro catálogo abarca desde el synthwave más nostálgico hasta el techno 
-                más experimental. Cada lanzamiento es una declaración de intenciones.
-            </p>
+            <p>Fundado en 2024, <strong>M.Y.C</strong> es un sello discográfico independiente dedicado a la música electrónica de vanguardia. Nacido de la necesidad de crear un espacio donde el arte sonoro no tenga límites.</p>
+            <p>Nuestro catálogo abarca desde el synthwave más nostálgico hasta el techno más experimental. Cada lanzamiento es una declaración de intenciones.</p>
             <div class="card-grid">
-                <div class="card">
-                    <div class="card-icon">🎹</div>
-                    <h3>Producción Musical</h3>
-                    <p>Estudio propio con equipamiento analógico y digital de última generación.</p>
-                </div>
-                <div class="card">
-                    <div class="card-icon">🎛️</div>
-                    <h3>Mastering</h3>
-                    <p>Servicios de mezcla y mastering para artistas del sello y externos.</p>
-                </div>
-                <div class="card">
-                    <div class="card-icon">🎪</div>
-                    <h3>Eventos</h3>
-                    <p>Organización de showcases, raves y festivales en ubicaciones secretas.</p>
-                </div>
+                <div class="card"><div class="card-icon">🎹</div><h3>Producción Musical</h3><p>Estudio propio con equipamiento analógico y digital.</p></div>
+                <div class="card"><div class="card-icon">🎛️</div><h3>Mastering</h3><p>Servicios de mezcla y mastering para artistas.</p></div>
+                <div class="card"><div class="card-icon">🎪</div><h3>Eventos</h3><p>Showcases, raves y festivales en ubicaciones secretas.</p></div>
             </div>
         </div>
     </div>
 
-    <!-- ============ STORE ============ -->
     <div class="screen" id="store-screen">
         <div class="inner-page">
             <button class="back-btn" onclick="goToDesktop()">← Volver</button>
             <h2><span>STORE</span></h2>
             <div class="subtitle">Discos · Vinilos · Digital</div>
             <div class="card-grid">
-                <div class="product-card">
-                    <div class="product-img">💿</div>
-                    <div class="product-info">
-                        <h4>VA — Neon Void Vol.1</h4>
-                        <span class="price">€24.99</span>
-                        <span class="tag">Vinilo</span>
-                    </div>
-                </div>
-                <div class="product-card">
-                    <div class="product-img">📀</div>
-                    <div class="product-info">
-                        <h4>Baby Buu's — First Steps EP</h4>
-                        <span class="price">€12.99</span>
-                        <span class="tag">Digital</span>
-                    </div>
-                </div>
-                <div class="product-card">
-                    <div class="product-img">💾</div>
-                    <div class="product-info">
-                        <h4>M.Y.C — Club Edits 001</h4>
-                        <span class="price">€18.00</span>
-                        <span class="tag">Cassette</span>
-                    </div>
-                </div>
-                <div class="product-card">
-                    <div class="product-img">🎵</div>
-                    <div class="product-info">
-                        <h4>Various — Synth Series 1-3</h4>
-                        <span class="price">€34.99</span>
-                        <span class="tag">Box Set</span>
-                    </div>
-                </div>
+                <div class="product-card"><div class="product-img">💿</div><div class="product-info"><h4>VA — Neon Void Vol.1</h4><span class="price">€24.99</span><span class="tag">Vinilo</span></div></div>
+                <div class="product-card"><div class="product-img">📀</div><div class="product-info"><h4>Baby Buu's — First Steps EP</h4><span class="price">€12.99</span><span class="tag">Digital</span></div></div>
+                <div class="product-card"><div class="product-img">💾</div><div class="product-info"><h4>M.Y.C — Club Edits 001</h4><span class="price">€18.00</span><span class="tag">Cassette</span></div></div>
+                <div class="product-card"><div class="product-img">🎵</div><div class="product-info"><h4>Various — Synth Series 1-3</h4><span class="price">€34.99</span><span class="tag">Box Set</span></div></div>
             </div>
         </div>
     </div>
 
-    <!-- ============ MERCH ============ -->
     <div class="screen" id="merch-screen">
         <div class="inner-page">
             <button class="back-btn" onclick="goToDesktop()">← Volver</button>
             <h2><span>MERCH</span></h2>
             <div class="subtitle">Ropa · Accesorios · Colecciones</div>
             <div class="card-grid">
-                <div class="product-card">
-                    <div class="product-img">👕</div>
-                    <div class="product-info">
-                        <h4>Camiseta M.Y.C Logo</h4>
-                        <span class="price">€29.99</span>
-                        <span class="tag">Nuevo</span>
-                    </div>
-                </div>
-                <div class="product-card">
-                    <div class="product-img">🧢</div>
-                    <div class="product-info">
-                        <h4>Gorra Baby Buu's</h4>
-                        <span class="price">€22.00</span>
-                    </div>
-                </div>
-                <div class="product-card">
-                    <div class="product-img">🎒</div>
-                    <div class="product-info">
-                        <h4>Tote Bag M.Y.C</h4>
-                        <span class="price">€15.99</span>
-                    </div>
-                </div>
-                <div class="product-card">
-                    <div class="product-img">📿</div>
-                    <div class="product-info">
-                        <h4>Colgante Ed. Limitada</h4>
-                        <span class="price">€45.00</span>
-                        <span class="tag">Exclusivo</span>
-                    </div>
-                </div>
+                <div class="product-card"><div class="product-img">👕</div><div class="product-info"><h4>Camiseta M.Y.C Logo</h4><span class="price">€29.99</span><span class="tag">Nuevo</span></div></div>
+                <div class="product-card"><div class="product-img">🧢</div><div class="product-info"><h4>Gorra Baby Buu's</h4><span class="price">€22.00</span></div></div>
+                <div class="product-card"><div class="product-img">🎒</div><div class="product-info"><h4>Tote Bag M.Y.C</h4><span class="price">€15.99</span></div></div>
+                <div class="product-card"><div class="product-img">📿</div><div class="product-info"><h4>Colgante Ed. Limitada</h4><span class="price">€45.00</span><span class="tag">Exclusivo</span></div></div>
             </div>
         </div>
     </div>
 
-    <!-- ============ TOURS ============ -->
     <div class="screen" id="tours-screen">
         <div class="inner-page">
             <button class="back-btn" onclick="goToDesktop()">← Volver</button>
             <h2><span>TOURS</span></h2>
             <div class="subtitle">Próximas Fechas</div>
-            
-            <div class="tour-item">
-                <div class="tour-date">15 DIC</div>
-                <div class="tour-info">
-                    <h4>Tokyo — Cyberdome</h4>
-                    <span>Neon Void Festival 2024</span>
-                </div>
-                <button class="tour-btn">Tickets</button>
-            </div>
-
-            <div class="tour-item">
-                <div class="tour-date">20 ENE</div>
-                <div class="tour-info">
-                    <h4>Berlin — Kraftwerk</h4>
-                    <span>Synthwave Night Special</span>
-                </div>
-                <button class="tour-btn">Tickets</button>
-            </div>
-
-            <div class="tour-item">
-                <div class="tour-date">14 FEB</div>
-                <div class="tour-info">
-                    <h4>Miami — Vice Club</h4>
-                    <span>Digital Love Tour</span>
-                </div>
-                <button class="tour-btn">Tickets</button>
-            </div>
-
-            <div class="tour-item">
-                <div class="tour-date">08 MAR</div>
-                <div class="tour-info">
-                    <h4>London — Electric</h4>
-                    <span>Retrowave Rave</span>
-                </div>
-                <button class="tour-btn">Tickets</button>
-            </div>
-
-            <div class="tour-item">
-                <div class="tour-date">22 ABR</div>
-                <div class="tour-info">
-                    <h4>CDMX — Foro Indie</h4>
-                    <span>Latin Synth Festival</span>
-                </div>
-                <button class="tour-btn">Tickets</button>
-            </div>
+            <div class="tour-item"><div class="tour-date">15 DIC</div><div class="tour-info"><h4>Tokyo — Cyberdome</h4><span>Neon Void Festival 2024</span></div><button class="tour-btn">Tickets</button></div>
+            <div class="tour-item"><div class="tour-date">20 ENE</div><div class="tour-info"><h4>Berlin — Kraftwerk</h4><span>Synthwave Night Special</span></div><button class="tour-btn">Tickets</button></div>
+            <div class="tour-item"><div class="tour-date">14 FEB</div><div class="tour-info"><h4>Miami — Vice Club</h4><span>Digital Love Tour</span></div><button class="tour-btn">Tickets</button></div>
+            <div class="tour-item"><div class="tour-date">08 MAR</div><div class="tour-info"><h4>London — Electric</h4><span>Retrowave Rave</span></div><button class="tour-btn">Tickets</button></div>
+            <div class="tour-item"><div class="tour-date">22 ABR</div><div class="tour-info"><h4>CDMX — Foro Indie</h4><span>Latin Synth Festival</span></div><button class="tour-btn">Tickets</button></div>
         </div>
     </div>
 
-    <!-- ============ BABY BUU'S ============ -->
     <div class="screen" id="babybuus-screen">
         <div class="inner-page">
             <button class="back-btn" onclick="goToDesktop()">← Volver</button>
             <h2>BABY <span>BUU'S</span></h2>
             <div class="subtitle">Subsello Oficial de M.Y.C</div>
-            <p>
-                <strong>Baby Buu's</strong> es el subsello de M.Y.C enfocado en sonidos 
-                más experimentales y lúdicos. Aquí damos espacio a propuestas arriesgadas, 
-                beats rotos, voces procesadas y texturas que desafían lo convencional.
-            </p>
-            <p>
-                Fundado en 2024, Baby Buu's ya ha lanzado 3 EPs y prepara su primer 
-                compilado internacional.
-            </p>
+            <p><strong>Baby Buu's</strong> es el subsello de M.Y.C enfocado en sonidos más experimentales y lúdicos. Aquí damos espacio a propuestas arriesgadas, beats rotos y texturas que desafían lo convencional.</p>
+            <p>Fundado en 2024, Baby Buu's ya ha lanzado 3 EPs y prepara su primer compilado internacional.</p>
             <div class="card-grid">
-                <div class="card">
-                    <div class="card-icon">🍼</div>
-                    <h3>Baby Buu</h3>
-                    <p>El artista principal del subsello. Synth pop experimental con toques de hyperpop.</p>
-                    <span class="tag">Artista</span>
-                </div>
-                <div class="card">
-                    <div class="card-icon">🧸</div>
-                    <h3>First Steps EP</h3>
-                    <p>Debut EP con 5 tracks. Vinilo de 12" edición limitada.</p>
-                    <span class="tag">Lanzamiento</span>
-                </div>
+                <div class="card"><div class="card-icon">🍼</div><h3>Baby Buu</h3><p>El artista principal del subsello. Synth pop experimental.</p><span class="tag">Artista</span></div>
+                <div class="card"><div class="card-icon">🧸</div><h3>First Steps EP</h3><p>Debut EP con 5 tracks. Vinilo 12" edición limitada.</p><span class="tag">Lanzamiento</span></div>
             </div>
         </div>
     </div>
 
-    <!-- ============ ARTISTS ============ -->
     <div class="screen" id="artists-screen">
         <div class="inner-page">
             <button class="back-btn" onclick="goToDesktop()">← Volver</button>
             <h2><span>ARTISTS</span></h2>
             <div class="subtitle">Roster Oficial</div>
-
-            <div class="artist-card">
-                <div class="artist-avatar">🎹</div>
-                <div class="artist-info">
-                    <h3>VHS GLITCH</h3>
-                    <div class="role">Synthwave / Darkwave</div>
-                    <p>Productor francés afincado en Berlín. Sus tracks combinan líneas de bajo 
-                    contundentes con melodías nostálgicas. Ha remezclado a artistas como Perturbator y Carpenter Brut.</p>
-                </div>
-            </div>
-
-            <div class="artist-card">
-                <div class="artist-avatar">🎛️</div>
-                <div class="artist-info">
-                    <h3>TERMINAL X</h3>
-                    <div class="role">Cyberpunk / Industrial</div>
-                    <p>Dúo de Tokyo conocido por sus directos caóticos y su estética cyberpunk. 
-                    Su álbum debut "System Error" alcanzó el #1 en Bandcamp.</p>
-                </div>
-            </div>
-
-            <div class="artist-card">
-                <div class="artist-avatar">👻</div>
-                <div class="artist-info">
-                    <h3>CRT GHOST</h3>
-                    <div class="role">Vaporwave / Ambient</div>
-                    <p>Artista anónimo que samplea VHS olvidados y grabaciones de televisión 
-                    analógica. Crea paisajes sonoros hipnagógicos.</p>
-                </div>
-            </div>
-
-            <div class="artist-card">
-                <div class="artist-avatar">💻</div>
-                <div class="artist-info">
-                    <h3>DATA PHANTOM</h3>
-                    <div class="role">Darksynth / Retrowave</div>
-                    <p>Proyecto solista desde Miami. Fusiona ritmos ochenteros con producción 
-                    moderna. Su EP "Midnight Protocol" es un clásico del sello.</p>
-                </div>
-            </div>
+            <div class="artist-card"><div class="artist-avatar">🎹</div><div class="artist-info"><h3>VHS GLITCH</h3><div class="role">Synthwave / Darkwave</div><p>Productor francés afincado en Berlín. Sus tracks combinan líneas de bajo contundentes con melodías nostálgicas.</p></div></div>
+            <div class="artist-card"><div class="artist-avatar">🎛️</div><div class="artist-info"><h3>TERMINAL X</h3><div class="role">Cyberpunk / Industrial</div><p>Dúo de Tokyo conocido por sus directos caóticos y su estética cyberpunk.</p></div></div>
+            <div class="artist-card"><div class="artist-avatar">👻</div><div class="artist-info"><h3>CRT GHOST</h3><div class="role">Vaporwave / Ambient</div><p>Artista anónimo que samplea VHS olvidados. Crea paisajes sonoros hipnagógicos.</p></div></div>
+            <div class="artist-card"><div class="artist-avatar">💻</div><div class="artist-info"><h3>DATA PHANTOM</h3><div class="role">Darksynth / Retrowave</div><p>Proyecto solista desde Miami. Fusiona ritmos ochenteros con producción moderna.</p></div></div>
         </div>
     </div>
 
-    <!-- ============ AUDIO ============ -->
     <script>
-        // ============ RELOJ ============
         function updateClock() {
-            const now = new Date();
-            const time = now.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+            var now = new Date();
+            var time = now.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
             document.getElementById('taskbar-time').textContent = time;
         }
         updateClock();
         setInterval(updateClock, 1000);
 
-        // ============ NAVEGACIÓN ============
         function openPage(page) {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            const target = document.getElementById(page + '-screen');
-            if (target) {
-                target.classList.add('active');
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            }
+            document.querySelectorAll('.screen').forEach(function(s) { s.classList.remove('active'); });
+            var target = document.getElementById(page + '-screen');
+            if (target) { target.classList.add('active'); window.scrollTo({ top: 0, behavior: 'smooth' }); }
         }
 
         function goToDesktop() {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.screen').forEach(function(s) { s.classList.remove('active'); });
             document.getElementById('desktop-screen').classList.add('active');
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // ============ REPRODUCTOR ============
-        let audioContext = null;
-        let isPlaying = false;
-        let oscNode = null;
-        let gainNode = null;
+        var audioContext = null;
+        var isPlaying = false;
+        var oscNode = null;
+        var gainNode = null;
 
         function initAudio() {
             if (!audioContext) {
-                audioContext = new(window.AudioContext || window.webkitAudioContext)();
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
                 oscNode = audioContext.createOscillator();
                 gainNode = audioContext.createGain();
-                const filter = audioContext.createBiquadFilter();
-
+                var filter = audioContext.createBiquadFilter();
                 oscNode.type = 'sawtooth';
                 oscNode.frequency.setValueAtTime(110, audioContext.currentTime);
                 filter.type = 'lowpass';
                 filter.frequency.setValueAtTime(600, audioContext.currentTime);
                 gainNode.gain.setValueAtTime(0, audioContext.currentTime);
-
                 oscNode.connect(filter);
                 filter.connect(gainNode);
                 gainNode.connect(audioContext.destination);
                 oscNode.start();
-
-                // Modulación suave
-                setInterval(() => {
+                setInterval(function() {
                     if (isPlaying && oscNode) {
-                        const mod = 110 + Math.sin(Date.now() * 0.001) * 5;
+                        var mod = 110 + Math.sin(Date.now() * 0.001) * 5;
                         oscNode.frequency.setValueAtTime(mod, audioContext.currentTime);
                     }
                 }, 100);
@@ -852,13 +309,9 @@
         }
 
         function togglePlay() {
-            const btn = document.getElementById('play-btn');
+            var btn = document.getElementById('play-btn');
             initAudio();
-
-            if (audioContext.state === 'suspended') {
-                audioContext.resume();
-            }
-
+            if (audioContext.state === 'suspended') { audioContext.resume(); }
             if (isPlaying) {
                 gainNode.gain.setValueAtTime(0, audioContext.currentTime);
                 btn.textContent = '▶';
@@ -871,25 +324,9 @@
                 isPlaying = true;
             }
         }
-
-        // Click en iconos con sonido
-        document.querySelectorAll('.desktop-icon').forEach(icon => {
-            icon.addEventListener('click', () => {
-                // Pequeño feedback sonoro
-                if (audioContext && !isPlaying) {
-                    const osc = audioContext.createOscillator();
-                    const g = audioContext.createGain();
-                    osc.type = 'sine';
-                    osc.frequency.setValueAtTime(800, audioContext.currentTime);
-                    g.gain.setValueAtTime(0.05, audioContext.currentTime);
-                    g.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.1);
-                    osc.connect(g);
-                    g.connect(audioContext.destination);
-                    osc.start();
-                    osc.stop(audioContext.currentTime + 0.1);
-                }
-            });
-        });
+    </script>
+</body>
+</html>
     </script>
 </body>
 </html>
