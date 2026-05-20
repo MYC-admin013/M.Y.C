@@ -1,413 +1,467 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <title>M.Y.C | The Mayin Buu Club</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+<head
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>M.Y.C | The Mayin Buu Club</title>
+    <style>
+        /* ========== RESET Y VARIABLES ========== */
+        :root {
+            --black: #010508;
+            --magenta: #d400ff;
+            --magenta-glow: rgba(212, 0, 255, 0.7);
+            --cyan: #00b8b8;
+            --cyan-dim: rgba(0, 184, 184, 0.4);
+            --white: #f0f0f0;
+            --dark-panel: rgba(5, 8, 15, 0.85);
+            --border-dim: rgba(0, 180, 180, 0.2);
+        }
 
-    body {
-      font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
-      background: #010508;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #f0f0f0;
-      overflow-x: hidden;
-      cursor: crosshair;
-      position: relative;
-    }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    /* ============ 1. FONDO HACKING (CÓDIGO CYAN CAYENDO) ============ */
-    .hack-bg {
-      position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      z-index: 0;
-      pointer-events: none;
-      overflow: hidden;
-    }
-    .code-line {
-      position: absolute;
-      font-family: 'Courier New', monospace;
-      font-size: 11px;
-      color: #00b8b8;
-      opacity: 0.2;
-      animation: fall linear infinite;
-      white-space: nowrap;
-      line-height: 1.4;
-    }
-    @keyframes fall {
-      0% { transform: translateY(-100px); }
-      100% { transform: translateY(110vh); }
-    }
+        body {
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            background: var(--black);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            overflow-x: hidden;
+            cursor: crosshair;
+            position: relative;
+        }
 
-    /* ============ 2. SCANLINES CRT ============ */
-    .scanlines {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 3px);
-      z-index: 1; pointer-events: none;
-    }
+        /* ========== 1. FONDO HACKING (CÓDIGO CYAN CAYENDO) ========== */
+        .hacking-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        .code-column {
+            position: absolute;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            color: var(--cyan);
+            opacity: 0.18;
+            animation: codeFall linear infinite;
+            white-space: nowrap;
+            line-height: 1.5;
+            letter-spacing: 1px;
+        }
+        @keyframes codeFall {
+            0% { transform: translateY(-100px); }
+            100% { transform: translateY(110vh); }
+        }
 
-    /* ============ 3. VIGNETTE ============ */
-    .vignette {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.8) 85%, #000 100%);
-      z-index: 1; pointer-events: none;
-    }
+        /* ========== 2. SCANLINES CRT ========== */
+        .scanlines {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 3px);
+            z-index: 1; pointer-events: none;
+        }
 
-    /* ============ 4. MARCA DE AGUA (HEXÁGONO) ============ */
-    .hex-watermark {
-      position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-      width: 500px; height: 500px; z-index: 0; pointer-events: none; opacity: 0.03;
-    }
+        /* ========== 3. VIGNETTE ========== */
+        .vignette {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.8) 85%, #000 100%);
+            z-index: 1; pointer-events: none;
+        }
 
-    /* ============ 5. PARTÍCULAS 3 CAPAS ============ */
-    .particles-layer {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      z-index: 2; pointer-events: none;
-    }
-    .p-fast, .p-mid, .p-slow {
-      position: absolute; border-radius: 50%; animation: floatUp var(--dur) infinite; opacity: 0;
-    }
-    .p-fast { width: 1px; height: 1px; background: #00b8b8; --dur: 4s; }
-    .p-mid { width: 2px; height: 2px; background: #d400ff; --dur: 6s; }
-    .p-slow { width: 3px; height: 3px; background: #fff; box-shadow: 0 0 5px #d400ff; --dur: 8s; }
-    @keyframes floatUp {
-      0% { transform: translateY(105vh) scale(0); opacity: 0; }
-      10% { opacity: 1; }
-      90% { opacity: 0.6; }
-      100% { transform: translateY(-10vh) scale(2); opacity: 0; }
-    }
+        /* ========== 4. MARCA DE AGUA HEXÁGONO ========== */
+        .hex-watermark {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 600px; height: 600px; z-index: 0; pointer-events: none; opacity: 0.03;
+        }
 
-    /* ============ 6. RETÍCULA CENTRAL ============ */
-    .reticle {
-      position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-      width: 100px; height: 100px; z-index: 3; pointer-events: none; opacity: 0.06;
-    }
-    .reticle::before, .reticle::after {
-      content: ''; position: absolute; background: #00b8b8;
-    }
-    .reticle::before { width: 100%; height: 1px; top: 50%; }
-    .reticle::after { width: 1px; height: 100%; left: 50%; }
+        /* ========== 5. PARTÍCULAS 3 CAPAS ========== */
+        .particles-layer {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 2; pointer-events: none;
+        }
+        .p-fast, .p-mid, .p-slow {
+            position: absolute; border-radius: 50%; animation: floatUp var(--dur) infinite; opacity: 0;
+        }
+        .p-fast { width: 1px; height: 1px; background: var(--cyan); --dur: 4s; }
+        .p-mid { width: 2px; height: 2px; background: var(--magenta); --dur: 6s; }
+        .p-slow { width: 3px; height: 3px; background: #fff; box-shadow: 0 0 6px var(--magenta); --dur: 8s; }
+        @keyframes floatUp {
+            0% { transform: translateY(105vh) scale(0); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 0.5; }
+            100% { transform: translateY(-10vh) scale(2.5); opacity: 0; }
+        }
 
-    /* ============ 7. ESPIRAL HIPNÓTICA ============ */
-    .spiral {
-      position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-      width: 300px; height: 300px; z-index: 0; pointer-events: none; opacity: 0.04;
-      animation: spinSlow 20s linear infinite;
-    }
-    @keyframes spinSlow { 100% { transform: translate(-50%, -50%) rotate(360deg); } }
+        /* ========== 6. RETÍCULA ========== */
+        .reticle {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 120px; height: 120px; z-index: 3; pointer-events: none; opacity: 0.05;
+        }
+        .reticle::before, .reticle::after {
+            content: ''; position: absolute; background: var(--cyan);
+        }
+        .reticle::before { width: 100%; height: 1px; top: 50%; }
+        .reticle::after { width: 1px; height: 100%; left: 50%; }
 
-    /* ============ 8. OJO GEOMÉTRICO (EMBLEMA) ============ */
-    .eye-emblem {
-      width: 120px; height: 70px; margin: 0 auto 10px;
-      animation: eyePulse 4s ease-in-out infinite;
-    }
-    .eye-emblem svg {
-      width: 100%; height: 100%;
-      filter: drop-shadow(0 0 25px rgba(212,0,255,0.6));
-    }
-    @keyframes eyePulse {
-      0%, 100% { filter: drop-shadow(0 0 25px rgba(212,0,255,0.6)); }
-      50% { filter: drop-shadow(0 0 45px rgba(212,0,255,0.9)) drop-shadow(0 0 60px rgba(0,180,180,0.3)); }
-    }
+        /* ========== 7. ESPIRAL HIPNÓTICA ========== */
+        .spiral {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 400px; height: 400px; z-index: 0; pointer-events: none; opacity: 0.04;
+            animation: spinSlow 25s linear infinite;
+        }
+        @keyframes spinSlow { 100% { transform: translate(-50%, -50%) rotate(360deg); } }
 
-    /* ============ 9. LOGO + TEXTO ============ */
-    .logo-text {
-      font-size: 44px; font-weight: 900; letter-spacing: 8px;
-      text-shadow: 0 0 30px rgba(212,0,255,0.6);
-      animation: neonPulse 3s ease-in-out infinite;
-    }
-    .dot { color: #d400ff; }
-    @keyframes neonPulse {
-      0%, 100% { text-shadow: 0 0 30px rgba(212,0,255,0.6); }
-      50% { text-shadow: 0 0 55px rgba(212,0,255,1), 0 0 80px rgba(0,180,180,0.3); }
-    }
-    .manifesto {
-      font-size: 11px; letter-spacing: 2px; color: #00b8b8;
-      font-family: 'Courier New', monospace; margin: 6px 0;
-      animation: fadeText 4s ease-in-out infinite;
-    }
-    @keyframes fadeText { 0%,100%{opacity:0.4;} 50%{opacity:0.9;} }
+        /* ========== 8. OJO GEOMÉTRICO ========== */
+        .eye-emblem {
+            width: 130px; height: 80px; margin: 0 auto 15px;
+            animation: eyePulse 4s ease-in-out infinite;
+        }
+        .eye-emblem svg {
+            width: 100%; height: 100%;
+            filter: drop-shadow(0 0 25px var(--magenta-glow));
+        }
+        @keyframes eyePulse {
+            0%, 100% { filter: drop-shadow(0 0 25px var(--magenta-glow)); }
+            50% { filter: drop-shadow(0 0 45px var(--magenta)) drop-shadow(0 0 70px var(--cyan-dim)); }
+        }
 
-    /* ============ 10. MENSAJES SUBLIMINALES ============ */
-    .subliminal {
-      position: fixed; font-size: 10px; color: #00b8b8;
-      opacity: 0; z-index: 50; pointer-events: none;
-      animation: ghostFloat 6s ease-in-out infinite;
-      font-family: 'Courier New', monospace;
-    }
-    @keyframes ghostFloat {
-      0% { opacity: 0; transform: translateY(0); }
-      20% { opacity: 0.7; }
-      40% { opacity: 0; transform: translateY(-30px); }
-      100% { opacity: 0; }
-    }
+        /* ========== 9. LOGO TEXTO + MANIFIESTO ========== */
+        .logo-text {
+            font-size: 48px; font-weight: 900; letter-spacing: 10px;
+            text-shadow: 0 0 30px var(--magenta-glow);
+            animation: neonPulse 3s ease-in-out infinite;
+        }
+        .dot { color: var(--magenta); }
+        @keyframes neonPulse {
+            0%, 100% { text-shadow: 0 0 30px var(--magenta-glow); }
+            50% { text-shadow: 0 0 60px var(--magenta), 0 0 90px var(--cyan-dim); }
+        }
+        .manifesto {
+            font-size: 12px; letter-spacing: 3px; color: var(--cyan);
+            font-family: 'Courier New', monospace; margin: 8px 0;
+            animation: fadeText 4s ease-in-out infinite;
+        }
+        @keyframes fadeText { 0%,100%{opacity:0.4;} 50%{opacity:0.9;} }
 
-    /* ============ 11. ONDA SONORA (ECUALIZADOR) ============ */
-    .waveform {
-      display: flex; gap: 3px; align-items: flex-end; height: 20px; margin: 8px 0;
-    }
-    .wave-bar {
-      width: 2px; background: linear-gradient(180deg, #d400ff, #00b8b8);
-      animation: wave 0.8s ease-in-out infinite;
-    }
-    @keyframes wave { 0%,100%{transform:scaleY(1);} 50%{transform:scaleY(0.3);} }
+        /* ========== 10. MENSAJES SUBLIMINALES ========== */
+        .subliminal {
+            position: fixed; font-size: 10px; color: var(--cyan);
+            opacity: 0; z-index: 50; pointer-events: none;
+            animation: ghostFloat 7s ease-in-out infinite;
+            font-family: 'Courier New', monospace;
+        }
+        @keyframes ghostFloat {
+            0% { opacity: 0; transform: translateY(0); }
+            20% { opacity: 0.8; }
+            40% { opacity: 0; transform: translateY(-40px); }
+            100% { opacity: 0; }
+        }
 
-    /* ============ 12. CONTENEDOR PRINCIPAL ============ */
-    .main-container {
-      position: relative; z-index: 10; max-width: 440px; width: 100%;
-      display: flex; flex-direction: column; align-items: center; gap: 12px;
-      padding: 20px;
-      opacity: 0; transform: scale(0.9);
-      transition: all 1.2s cubic-bezier(0.16,1,0.3,1);
-    }
-    .main-container.visible { opacity: 1; transform: scale(1); }
+        /* ========== 11. ONDA SONORA (ECUALIZADOR) ========== */
+        .waveform {
+            display: flex; gap: 3px; align-items: flex-end; height: 24px; margin: 10px 0;
+        }
+        .wave-bar {
+            width: 3px; background: linear-gradient(180deg, var(--magenta), var(--cyan));
+            animation: wave 0.8s ease-in-out infinite;
+        }
+        @keyframes wave { 0%,100%{transform:scaleY(1);} 50%{transform:scaleY(0.25);} }
 
-    /* ============ 13. INTERFAZ (COOKIES + LOGIN) ============ */
-    .cookie-banner, .login-panel {
-      width: 100%; background: rgba(5,8,15,0.85); backdrop-filter: blur(10px);
-      border: 1px solid rgba(0,180,180,0.2); border-radius: 6px; padding: 12px;
-    }
-    .hidden { display: none !important; }
-    .login-panel { opacity: 0; pointer-events: none; transition: 0.4s; }
-    .login-panel.visible { opacity: 1; pointer-events: auto; }
+        /* ========== 12. CONTENEDOR PRINCIPAL ========== */
+        .main-container {
+            position: relative; z-index: 10; max-width: 450px; width: 100%;
+            display: flex; flex-direction: column; align-items: center; gap: 15px;
+            padding: 30px 25px;
+            opacity: 0; transform: scale(0.9);
+            transition: all 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .main-container.visible { opacity: 1; transform: scale(1); }
 
-    select, input, .btn-enter {
-      width: 100%; padding: 12px; background: #0a0f15;
-      border: 1px solid #2a2a35; border-radius: 4px; color: #fff;
-      font-family: inherit; font-size: 13px; outline: none; margin-bottom: 8px;
-    }
-    .btn-enter {
-      background: #d400ff; border: none; font-weight: bold; cursor: pointer;
-      letter-spacing: 2px; text-transform: uppercase; margin-top: 4px;
-    }
+        /* ========== 13. PANELES (COOKIES + LOGIN) ========== */
+        .glass-panel {
+            width: 100%; background: var(--dark-panel); backdrop-filter: blur(15px);
+            border: 1px solid var(--border-dim); border-radius: 8px; padding: 15px;
+        }
+        .hidden { display: none !important; }
+        .login-panel { opacity: 0; pointer-events: none; transition: 0.4s; }
+        .login-panel.visible { opacity: 1; pointer-events: auto; }
 
-    /* ============ 14. FOOTER LEGAL ============ */
-    .legal {
-      position: fixed; bottom: 15px; left: 15px; font-size: 8px;
-      color: #333; z-index: 20; display: flex; gap: 15px;
-    }
+        select, input, .btn-enter {
+            width: 100%; padding: 14px; background: #0a0f15;
+            border: 1px solid #2a2a35; border-radius: 6px; color: #fff;
+            font-family: inherit; font-size: 14px; outline: none; margin-bottom: 10px;
+            transition: all 0.2s;
+        }
+        select:focus, input:focus { border-color: var(--magenta); box-shadow: 0 0 15px rgba(212,0,255,0.2); }
+        .btn-enter {
+            background: var(--magenta); border: none; font-weight: bold; cursor: pointer;
+            letter-spacing: 3px; text-transform: uppercase; margin-top: 5px;
+        }
+        .btn-enter:hover { background: #e010ff; box-shadow: 0 0 25px var(--magenta-glow); }
+        .error-msg { color: #ff4060; font-size: 12px; text-align: center; display: none; }
 
-    /* ============ 15. ESCRITORIO (SIMPLIFICADO) ============ */
-    #desktop-screen {
-      display: none; position: fixed; top:0; left:0; width:100%; height:100%;
-      background: #0a6e6e; z-index: 200; color: white;
-    }
-    #desktop-screen.active { display: flex; flex-direction: column; }
-    .desk-icons { display: flex; gap: 20px; padding: 30px; flex-wrap: wrap; }
-    .desk-icon { text-align: center; cursor: pointer; }
-    .taskbar {
-      margin-top: auto; height: 40px; background: #1a1a2e;
-      display: flex; align-items: center; padding: 0 15px; gap: 15px;
-    }
-  </style>
+        /* ========== 14. FOOTER LEGAL ========== */
+        .legal-footer {
+            position: fixed; bottom: 15px; left: 20px; font-size: 9px;
+            color: #444; z-index: 20; display: flex; gap: 20px;
+        }
+        .legal-footer span:hover { color: var(--cyan); cursor: pointer; }
+
+        /* ========== 15. ESCRITORIO (POST-LOGIN) ========== */
+        #desktop-screen {
+            display: none; position: fixed; top:0; left:0; width:100%; height:100%;
+            background: #0a6e6e; z-index: 200; color: white;
+        }
+        #desktop-screen.active { display: flex; flex-direction: column; }
+        .desk-icons { display: flex; gap: 25px; padding: 40px; flex-wrap: wrap; }
+        .desk-icon { text-align: center; cursor: pointer; transition: 0.2s; }
+        .desk-icon:hover { transform: scale(1.1); color: var(--magenta); }
+        .taskbar {
+            margin-top: auto; height: 45px; background: #1a1a2e;
+            display: flex; align-items: center; padding: 0 20px; gap: 20px;
+        }
+        .taskbar button { background: var(--magenta); border:none; color:white; padding:8px 15px; border-radius:4px; cursor:pointer; }
+    </style>
 </head>
 <body>
 
-  <!-- 1. Fondo Hacking -->
-  <div class="hack-bg" id="hack-bg"></div>
-  <!-- 2. Scanlines -->
-  <div class="scanlines"></div>
-  <!-- 3. Vignette -->
-  <div class="vignette"></div>
-  <!-- 4. Marca de agua hexágono -->
-  <div class="hex-watermark">
-    <svg viewBox="0 0 100 100"><polygon points="50,5 95,27 95,73 50,95 5,73 5,27" fill="none" stroke="#d400ff" stroke-width="0.5"/></svg>
-  </div>
-  <!-- 5. Partículas -->
-  <div class="particles-layer" id="particles-layer"></div>
-  <!-- 6. Retícula -->
-  <div class="reticle"></div>
-  <!-- 7. Espiral -->
-  <div class="spiral">
-    <svg viewBox="0 0 100 100"><path d="M50,50 Q60,20 80,30 T70,70 T30,60" fill="none" stroke="#d400ff" stroke-width="0.5"/></svg>
-  </div>
-  <!-- 10. Mensajes Subliminales -->
-  <div class="subliminal" style="top:15%;left:10%;animation-delay:0s;">ACCESS_PROTOCOL_23/10/2026</div>
-  <div class="subliminal" style="top:75%;right:8%;animation-delay:3s;">DETROIT_VISION_ACTIVE</div>
-  <div class="subliminal" style="top:40%;left:70%;animation-delay:5s;">MALAGA_BASE_SECURE</div>
-
-  <!-- Contenedor Principal -->
-  <div class="main-container" id="main-container">
-    <!-- 8. Ojo Geométrico -->
-    <div class="eye-emblem">
-      <svg viewBox="0 0 100 60">
-        <ellipse cx="50" cy="30" rx="45" ry="20" fill="none" stroke="#d400ff" stroke-width="1.5"/>
-        <circle cx="50" cy="30" r="10" fill="#d400ff" opacity="0.8"/>
-        <circle cx="50" cy="30" r="5" fill="#fff"/>
-        <path d="M5,30 L0,30 M95,30 L100,30 M50,10 L50,0 M50,50 L50,60" stroke="#d400ff" stroke-width="1"/>
-      </svg>
+    <!-- 1. Fondo Hacking -->
+    <div class="hacking-bg" id="hacking-bg"></div>
+    <!-- 2. Scanlines -->
+    <div class="scanlines"></div>
+    <!-- 3. Vignette -->
+    <div class="vignette"></div>
+    <!-- 4. Marca de agua Hexágono -->
+    <div class="hex-watermark">
+        <svg viewBox="0 0 100 100"><polygon points="50,5 95,27 95,73 50,95 5,73 5,27" fill="none" stroke="#d400ff" stroke-width="0.5"/></svg>
     </div>
-    <!-- 9. Logo -->
-    <div class="logo-text">M<span class="dot">.</span>Y<span class="dot">.</span>C</div>
-    <div class="manifesto">Diseñado en Málaga. Visión Detroit. Proyección Mundial.</div>
-    <div id="slogan-text" style="color:#d400ff;letter-spacing:3px;">Chaos With Purpose</div>
-
-    <!-- 11. Ecualizador -->
-    <div class="waveform">
-      <div class="wave-bar" style="height:10px;animation-delay:0s;"></div>
-      <div class="wave-bar" style="height:16px;animation-delay:0.1s;"></div>
-      <div class="wave-bar" style="height:8px;animation-delay:0.2s;"></div>
-      <div class="wave-bar" style="height:20px;animation-delay:0.3s;"></div>
-      <div class="wave-bar" style="height:12px;animation-delay:0.4s;"></div>
+    <!-- 5. Partículas -->
+    <div class="particles-layer" id="particles-layer"></div>
+    <!-- 6. Retícula -->
+    <div class="reticle"></div>
+    <!-- 7. Espiral -->
+    <div class="spiral">
+        <svg viewBox="0 0 100 100"><path d="M50,50 Q70,15 85,35 T60,80 T20,55" fill="none" stroke="#d400ff" stroke-width="0.5"/></svg>
     </div>
 
-    <!-- 13. Cookies -->
-    <div class="cookie-banner" id="cookie-banner">
-      <span id="cookie-text">🍪 Este club usa cookies. ¿Aceptas?</span>
-      <div style="display:flex;gap:8px;margin-top:8px;">
-        <button onclick="handleCookies(false)" id="cookie-reject">Rechazar</button>
-        <button onclick="handleCookies(true)" id="cookie-accept" style="background:#d400ff;border-color:#d400ff;">Aceptar</button>
-      </div>
+    <!-- 10. Mensajes Subliminales -->
+    <div class="subliminal" style="top:10%;left:5%;animation-delay:0s;">ACCESS_PROTOCOL_23/10/2026</div>
+    <div class="subliminal" style="top:80%;right:5%;animation-delay:3.5s;">DETROIT_VISION_ACTIVE</div>
+    <div class="subliminal" style="top:50%;left:80%;animation-delay:6s;">MALAGA_BASE_SECURE</div>
+
+    <!-- 12. Contenedor Principal -->
+    <div class="main-container" id="main-container">
+
+        <!-- 8. Ojo Geométrico -->
+        <div class="eye-emblem">
+            <svg viewBox="0 0 100 60">
+                <ellipse cx="50" cy="30" rx="48" ry="22" fill="none" stroke="#d400ff" stroke-width="1.5"/>
+                <circle cx="50" cy="30" r="12" fill="#d400ff" opacity="0.9"/>
+                <circle cx="50" cy="30" r="5" fill="#fff"/>
+                <path d="M2,30 L0,30 M98,30 L100,30 M50,8 L50,0 M50,52 L50,60" stroke="#d400ff" stroke-width="1.5"/>
+                <circle cx="50" cy="30" r="28" fill="none" stroke="#00b8b8" stroke-width="0.5" stroke-dasharray="4 4"/>
+            </svg>
+        </div>
+
+        <!-- 9. Logo + Manifiesto -->
+        <div class="logo-text">M<span class="dot">.</span>Y<span class="dot">.</span>C</div>
+        <div class="manifesto">DISEÑADO EN MÁLAGA · VISIÓN DETROIT · PROYECCIÓN MUNDIAL</div>
+        <div id="slogan-text" style="color:#d400ff; letter-spacing:4px; font-size:16px;">CHAOS WITH PURPOSE</div>
+
+        <!-- 11. Ecualizador -->
+        <div class="waveform">
+            <div class="wave-bar" style="height:12px; animation-delay:0s;"></div>
+            <div class="wave-bar" style="height:20px; animation-delay:0.1s;"></div>
+            <div class="wave-bar" style="height:8px; animation-delay:0.2s;"></div>
+            <div class="wave-bar" style="height:24px; animation-delay:0.3s;"></div>
+            <div class="wave-bar" style="height:14px; animation-delay:0.4s;"></div>
+            <div class="wave-bar" style="height:18px; animation-delay:0.5s;"></div>
+        </div>
+
+        <!-- 13. Cookies -->
+        <div class="glass-panel" id="cookie-banner">
+            <span id="cookie-text">🍪 Este club utiliza cookies para una experiencia inmersiva. ¿Las aceptas?</span>
+            <div style="display:flex; gap:10px; margin-top:12px;">
+                <button onclick="handleCookies(false)" id="cookie-reject" style="flex:1; padding:10px; background:transparent; border:1px solid #444; color:#aaa; border-radius:6px; cursor:pointer;">Rechazar</button>
+                <button onclick="handleCookies(true)" id="cookie-accept" style="flex:1; padding:10px; background:#d400ff; border:none; color:#fff; border-radius:6px; cursor:pointer; font-weight:bold;">Aceptar todo</button>
+            </div>
+        </div>
+
+        <!-- Login -->
+        <div class="glass-panel login-panel" id="login-panel">
+            <select id="lang-select" onchange="updateLang()">
+                <option value="ES">🌐 Español</option>
+                <option value="EN">🌐 English</option>
+                <option value="FR">🌐 Français</option>
+                <option value="IT">🌐 Italiano</option>
+                <option value="DE">🌐 Deutsch</option>
+                <option value="POR">🌐 Português</option>
+            </select>
+            <input type="text" id="email-input" placeholder="Email o número de teléfono">
+            <input type="password" id="password-input" placeholder="Contraseña">
+            <div class="error-msg" id="error-msg"></div>
+            <div style="font-size:10px; color:#666; text-align:center; margin-bottom:8px;" id="hint-text">🔑 Pista: La fecha más importante del club</div>
+            <button class="btn-enter" id="btn-enter" onclick="login()">Acceder al Club</button>
+        </div>
     </div>
 
-    <!-- Login -->
-    <div class="login-panel" id="login-panel">
-      <select id="lang-select" onchange="updateLang()">
-        <option value="ES">Español</option><option value="EN">English</option><option value="FR">Français</option>
-      </select>
-      <input type="text" id="email-input" placeholder="Email">
-      <input type="password" id="password-input" placeholder="Contraseña">
-      <div id="error-msg" style="color:#ff4060;font-size:11px;display:none;"></div>
-      <button class="btn-enter" id="btn-enter" onclick="login()">Acceder al Club</button>
+    <!-- 14. Footer Legal -->
+    <div class="legal-footer">
+        <span>Términos y condiciones</span>
+        <span>Privacidad</span>
+        <span>Ayuda</span>
+        <span>© M.Y.C 2024</span>
     </div>
-  </div>
 
-  <!-- 14. Footer -->
-  <div class="legal">
-    <span>Términos</span><span>Privacidad</span><span>M.Y.C 2024</span>
-  </div>
-
-  <!-- 15. Escritorio -->
-  <div id="desktop-screen">
-    <div class="desk-icons">
-      <div class="desk-icon"><span>🎤</span> M.Y.C</div>
-      <div class="desk-icon"><span>🌍</span> Tours</div>
-      <div class="desk-icon"><span>👶</span> Baby Buu's</div>
+    <!-- 15. Escritorio -->
+    <div id="desktop-screen">
+        <div class="desk-icons">
+            <div class="desk-icon"><span style="font-size:40px;">🎤</span><br>M.Y.C</div>
+            <div class="desk-icon"><span style="font-size:40px;">💿</span><br>Store</div>
+            <div class="desk-icon"><span style="font-size:40px;">👕</span><br>Merch</div>
+            <div class="desk-icon"><span style="font-size:40px;">🌍</span><br>Tours</div>
+            <div class="desk-icon"><span style="font-size:40px;">👶</span><br>Baby Buu's</div>
+            <div class="desk-icon"><span style="font-size:40px;">🎨</span><br>Artists</div>
+        </div>
+        <div class="taskbar">
+            <button onclick="logout()">🏠 Inicio</button>
+            <span style="color:#ccc; font-size:14px;">🎵 SYNTHWAVE FM</span>
+            <button id="play-btn" onclick="togglePlay()">▶</button>
+            <span id="time-display" style="margin-left:auto; color:#ccc;"></span>
+            <button onclick="logout()" style="background:transparent; border:1px solid #d400ff;">Salir</button>
+        </div>
     </div>
-    <div class="taskbar">
-      <button onclick="logout()">🏠</button>
-      <span id="time-display"></span>
-      <button onclick="toggleMusic()" id="music-btn">▶</button>
-    </div>
-  </div>
 
-  <script>
-    // ============ 1. GENERAR CÓDIGO CAYENDO ============
-    const codeSnippets = [
-      '0x' + Math.random().toString(16).substring(2,6).toUpperCase(),
-      '//M.Y.C_club.dll', '>>LOADING_SEQUENCE', 'DETROIT::VISION',
-      'MALAGA::BASE', 'access_granted', '//chaos_with_purpose.exe'
-    ];
-    const hackBg = document.getElementById('hack-bg');
-    for (let i=0; i<20; i++) {
-      let el = document.createElement('div');
-      el.className = 'code-line';
-      el.style.left = Math.random()*95 + '%';
-      el.style.animationDuration = (15 + Math.random()*30) + 's';
-      el.style.animationDelay = Math.random()*15 + 's';
-      el.innerHTML = Array(10).fill(0).map(() => codeSnippets[Math.floor(Math.random()*codeSnippets.length)]).join('<br>');
-      hackBg.appendChild(el);
-    }
+    <script>
+        // ============ 1. GENERAR CÓDIGO CAYENDO ============
+        const codeSnippets = [
+            '0x' + Math.random().toString(16).substring(2,6).toUpperCase(),
+            '//M.Y.C_club.dll', '>>LOADING_SEQUENCE', 'DETROIT::VISION',
+            'MALAGA::BASE', 'access_granted', '//chaos_with_purpose.exe',
+            '0x' + Math.random().toString(16).substring(2,6).toUpperCase(),
+            '>>FETCHING_DATA', 'EST.2024', 'M.Y.C'
+        ];
+        const hackBg = document.getElementById('hacking-bg');
+        for (let i=0; i<25; i++) {
+            let el = document.createElement('div');
+            el.className = 'code-column';
+            el.style.left = Math.random()*95 + '%';
+            el.style.animationDuration = (12 + Math.random()*25) + 's';
+            el.style.animationDelay = Math.random()*15 + 's';
+            let html = '';
+            for (let j=0; j<12; j++) {
+                html += codeSnippets[Math.floor(Math.random()*codeSnippets.length)] + '<br>';
+            }
+            el.innerHTML = html;
+            hackBg.appendChild(el);
+        }
 
-    // ============ 5. PARTÍCULAS ============
-    const pl = document.getElementById('particles-layer');
-    for (let i=0; i<20; i++) {
-      ['p-fast','p-mid','p-slow'].forEach(cls => {
-        let p = document.createElement('div'); p.className = cls;
-        p.style.left = Math.random()*100+'%'; p.style.animationDelay = Math.random()*8+'s';
-        pl.appendChild(p);
-      });
-    }
+        // ============ 5. PARTÍCULAS ============
+        const pl = document.getElementById('particles-layer');
+        for (let i=0; i<25; i++) {
+            ['p-fast','p-mid','p-slow'].forEach(cls => {
+                let p = document.createElement('div'); p.className = cls;
+                p.style.left = Math.random()*100+'%'; p.style.animationDelay = Math.random()*8+'s';
+                pl.appendChild(p);
+            });
+        }
 
-    // ============ SECUENCIA DE ENTRADA ============
-    setTimeout(() => document.getElementById('main-container').classList.add('visible'), 500);
+        // ============ SECUENCIA DE ENTRADA ============
+        setTimeout(() => document.getElementById('main-container').classList.add('visible'), 600);
 
-    // ============ SONIDOS (Web Audio API) ============
-    let audioCtx;
-    function getCtx() { if(!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)(); return audioCtx; }
-    function playSound(freq, type, duration=0.1, vol=0.05) {
-      const ctx = getCtx(); const o = ctx.createOscillator(); const g = ctx.createGain();
-      o.type = type; o.frequency.setValueAtTime(freq, ctx.currentTime);
-      g.gain.setValueAtTime(vol, ctx.currentTime); g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime+duration);
-      o.connect(g); g.connect(ctx.destination); o.start(); o.stop(ctx.currentTime+duration);
-    }
+        // ============ 20 SONIDOS (WEB AUDIO API) ============
+        let audioCtx;
+        function getCtx() { if(!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)(); return audioCtx; }
+        function playSound(freq, type, duration=0.1, vol=0.06) {
+            const ctx = getCtx(); const o = ctx.createOscillator(); const g = ctx.createGain();
+            o.type = type; o.frequency.setValueAtTime(freq, ctx.currentTime);
+            g.gain.setValueAtTime(vol, ctx.currentTime); g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime+duration);
+            o.connect(g); g.connect(ctx.destination); o.start(); o.stop(ctx.currentTime+duration);
+        }
 
-    // 20 Sonidos diferentes mapeados a eventos
-    document.body.addEventListener('click', (e) => {
-      if(e.target.matches('button')) playSound(800, 'square', 0.08, 0.06);
-      else if(e.target.matches('input')) playSound(300, 'sine', 0.1, 0.03);
-      else playSound(500, 'sine', 0.05, 0.02);
-    });
-    document.querySelectorAll('button, input').forEach(el => {
-      el.addEventListener('mouseenter', () => playSound(1000, 'triangle', 0.06, 0.04));
-    });
+        // Mapeo de sonidos a eventos
+        document.body.addEventListener('click', (e) => {
+            if(e.target.matches('button, .btn-enter')) playSound(900, 'square', 0.08, 0.07);
+            else if(e.target.matches('input, select')) playSound(400, 'sine', 0.12, 0.04);
+            else playSound(600, 'triangle', 0.06, 0.03);
+        });
+        document.querySelectorAll('button, input, select, .desk-icon').forEach(el => {
+            el.addEventListener('mouseenter', () => playSound(1200, 'sine', 0.05, 0.03));
+        });
+        function accessGrantedSound() { playSound(1400, 'sine', 0.2, 0.12); setTimeout(()=>playSound(1800,'sine',0.25,0.12), 150); }
+        function accessDeniedSound() { playSound(120, 'sawtooth', 0.35, 0.1); }
 
-    function accessGrantedSound() { playSound(1200, 'sine', 0.2, 0.1); setTimeout(()=>playSound(1500,'sine',0.2,0.1),150); }
-    function accessDeniedSound() { playSound(150, 'sawtooth', 0.3, 0.08); }
+        // ============ IDIOMAS ============
+        const texts = {
+            ES: { slogan:'CHAOS WITH PURPOSE', cookie:'🍪 Este club utiliza cookies para una experiencia inmersiva. ¿Las aceptas?', reject:'Rechazar', accept:'Aceptar todo', enter:'Acceder al Club', hint:'🔑 Pista: La fecha más importante del club' },
+            EN: { slogan:'CHAOS WITH PURPOSE', cookie:'🍪 This club uses cookies for an immersive experience. Accept?', reject:'Reject', accept:'Accept All', enter:'Enter the Club', hint:'🔑 Hint: The most important date of the club' },
+            FR: { slogan:'CHAOS WITH PURPOSE', cookie:'🍪 Ce club utilise des cookies pour une expérience immersive. Accepter?', reject:'Refuser', accept:'Tout accepter', enter:'Entrer dans le Club', hint:'🔑 Indice: La date la plus importante du club' },
+            IT: { slogan:'CHAOS WITH PURPOSE', cookie:'🍪 Questo club utilizza i cookie per un\'esperienza immersiva. Accettare?', reject:'Rifiutare', accept:'Accetta tutto', enter:'Entra nel Club', hint:'🔑 Suggerimento: La data più importante del club' },
+            DE: { slogan:'CHAOS WITH PURPOSE', cookie:'🍪 Dieser Club verwendet Cookies für ein immersives Erlebnis. Akzeptieren?', reject:'Ablehnen', accept:'Alle akzeptieren', enter:'Club betreten', hint:'🔑 Hinweis: Das wichtigste Datum des Clubs' },
+            POR: { slogan:'CHAOS WITH PURPOSE', cookie:'🍪 Este clube usa cookies para uma experiência imersiva. Aceitar?', reject:'Rejeitar', accept:'Aceitar tudo', enter:'Entrar no Clube', hint:'🔑 Dica: A data mais importante do clube' }
+        };
+        function updateLang() {
+            const lang = document.getElementById('lang-select').value;
+            const t = texts[lang];
+            document.getElementById('slogan-text').innerText = t.slogan;
+            document.getElementById('cookie-text').innerText = t.cookie;
+            document.getElementById('cookie-reject').innerText = t.reject;
+            document.getElementById('cookie-accept').innerText = t.accept;
+            document.getElementById('btn-enter').innerText = t.enter;
+            document.getElementById('hint-text').innerText = t.hint;
+        }
 
-    // ============ IDIOMAS ============
-    const texts = {
-      ES: { slogan:'Chaos With Purpose', cookie:'🍪 Este club usa cookies. ¿Aceptas?', reject:'Rechazar', accept:'Aceptar', enter:'Acceder al Club' },
-      EN: { slogan:'Chaos With Purpose', cookie:'🍪 This club uses cookies. Accept?', reject:'Reject', accept:'Accept', enter:'Enter the Club' },
-      FR: { slogan:'Chaos With Purpose', cookie:'🍪 Ce club utilise des cookies. Accepter?', reject:'Refuser', accept:'Accepter', enter:'Entrer dans le Club' }
-    };
-    function updateLang() {
-      const lang = document.getElementById('lang-select').value;
-      const t = texts[lang];
-      document.getElementById('slogan-text').innerText = t.slogan;
-      document.getElementById('cookie-text').innerText = t.cookie;
-      document.getElementById('cookie-reject').innerText = t.reject;
-      document.getElementById('cookie-accept').innerText = t.accept;
-      document.getElementById('btn-enter').innerText = t.enter;
-    }
+        // ============ COOKIES ============
+        function handleCookies(accepted) {
+            document.getElementById('cookie-banner').classList.add('hidden');
+            document.getElementById('login-panel').classList.add('visible');
+            playSound(800, 'sine', 0.1, 0.06);
+        }
 
-    // ============ COOKIES ============
-    function handleCookies(accepted) {
-      document.getElementById('cookie-banner').classList.add('hidden');
-      document.getElementById('login-panel').classList.add('visible');
-      playSound(700, 'sine', 0.1, 0.05);
-    }
+        // ============ LOGIN ============
+        function login() {
+            const email = document.getElementById('email-input').value.trim();
+            const pass = document.getElementById('password-input').value.trim();
+            const err = document.getElementById('error-msg');
+            if(!email) { err.style.display='block'; err.innerText='Identifícate, por favor'; return; }
+            if(pass === '23/10/2026') {
+                accessGrantedSound();
+                document.getElementById('main-container').style.display = 'none';
+                document.getElementById('desktop-screen').classList.add('active');
+                setInterval(() => {
+                    document.getElementById('time-display').innerText = new Date().toLocaleTimeString('es-ES', {hour:'2-digit', minute:'2-digit'});
+                }, 1000);
+            } else {
+                accessDeniedSound();
+                err.style.display='block'; err.innerText='Acceso denegado. Verifica tus credenciales.';
+            }
+        }
+        document.getElementById('password-input').addEventListener('keypress', (e) => { if(e.key==='Enter') login(); });
 
-    // ============ LOGIN ============
-    function login() {
-      const email = document.getElementById('email-input').value.trim();
-      const pass = document.getElementById('password-input').value.trim();
-      const err = document.getElementById('error-msg');
-      if(!email) { err.style.display='block'; err.innerText='Identifícate'; return; }
-      if(pass === '23/10/2026') {
-        accessGrantedSound();
-        document.getElementById('main-container').style.display = 'none';
-        document.getElementById('desktop-screen').classList.add('active');
-        setInterval(() => {
-          document.getElementById('time-display').innerText = new Date().toLocaleTimeString('es-ES', {hour:'2-digit', minute:'2-digit'});
-        }, 1000);
-      } else {
-        accessDeniedSound();
-        err.style.display='block'; err.innerText='Acceso denegado';
-      }
-    }
-    function logout() {
-      document.getElementById('desktop-screen').classList.remove('active');
-      document.getElementById('main-container').style.display = 'flex';
-      document.getElementById('login-panel').classList.remove('visible');
-      document.getElementById('cookie-banner').classList.remove('hidden');
-    }
+        function logout() {
+            document.getElementById('desktop-screen').classList.remove('active');
+            document.getElementById('main-container').style.display = 'flex';
+            document.getElementById('login-panel').classList.remove('visible');
+            document.getElementById('cookie-banner').classList.remove('hidden');
+            document.getElementById('password-input').value = '';
+        }
 
-    // Música simulada
-    let musicPlaying = false;
-    function toggleMusic() {
-      musicPlaying = !musicPlaying;
-      document.getElementById('music-btn').innerText = musicPlaying ? '⏸' : '▶';
-      playSound(440, 'triangle', 0.5, 0.1);
-    }
-  </script>
+        // ============ REPRODUCTOR (SIMULADO) ============
+        let musicPlaying = false;
+        function togglePlay() {
+            musicPlaying = !musicPlaying;
+            document.getElementById('play-btn').innerText = musicPlaying ? '⏸' : '▶';
+            playSound(500, 'triangle', 0.6, 0.12);
+        }
+    </script>
 </body>
 </html>
