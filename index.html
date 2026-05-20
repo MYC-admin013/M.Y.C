@@ -1,20 +1,24 @@
 <!DOCTYPE html>
 <html lang="es">
-<head
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>M.Y.C | The Mayin Buu Club</title>
+    <title>M.Y.C — The Mayin Buu Club</title>
     <style>
-        /* ========== RESET Y VARIABLES ========== */
         :root {
             --black: #010508;
             --magenta: #d400ff;
             --magenta-glow: rgba(212, 0, 255, 0.7);
             --cyan: #00b8b8;
-            --cyan-dim: rgba(0, 184, 184, 0.4);
+            --green-terminal: #00ff41;
             --white: #f0f0f0;
-            --dark-panel: rgba(5, 8, 15, 0.85);
-            --border-dim: rgba(0, 180, 180, 0.2);
+            --panel-bg: rgba(5, 8, 15, 0.9);
+            --border: rgba(0, 180, 180, 0.2);
+            --win95-gray: #c0c0c0;
+            --win95-dark: #808080;
+            --win95-darker: #404040;
+            --win95-white: #ffffff;
+            --win95-black: #000000;
         }
 
         * {
@@ -27,441 +31,674 @@
             font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
             background: var(--black);
             min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            overflow: hidden;
             color: var(--white);
-            overflow-x: hidden;
-            cursor: crosshair;
-            position: relative;
+            cursor: none;
+            user-select: none;
         }
 
-        /* ========== 1. FONDO HACKING (CÓDIGO CYAN CAYENDO) ========== */
-        .hacking-bg {
+        /* ============ CURSOR OJO ============ */
+        .custom-cursor {
+            position: fixed;
+            width: 32px;
+            height: 32px;
+            z-index: 99999;
+            pointer-events: none;
+            transition: transform 0.05s ease;
+        }
+        .custom-cursor.clicking {
+            transform: scale(0.8);
+        }
+        .custom-cursor svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 0 6px var(--magenta));
+        }
+
+        /* ============ PANTALLAS ============ */
+        .screen {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 0;
-            pointer-events: none;
+            display: none;
+            z-index: 10;
+        }
+        .screen.active {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* ============ BOOT SCREEN ============ */
+        #boot-screen {
+            background: #000;
+            font-family: 'Courier New', monospace;
+            color: var(--green-terminal);
+            padding: 40px;
+            align-items: flex-start;
+            justify-content: center;
+        }
+        #boot-screen .boot-text {
+            white-space: pre-wrap;
+            font-size: 14px;
+            line-height: 1.6;
+            max-width: 700px;
+            width: 100%;
+        }
+        .boot-line {
+            opacity: 0;
+            animation: fadeInLine 0.1s forwards;
+        }
+        @keyframes fadeInLine {
+            to {
+                opacity: 1;
+            }
+        }
+        .boot-progress {
+            display: inline-block;
+            width: 0;
             overflow: hidden;
-        }
-        .code-column {
-            position: absolute;
-            font-family: 'Courier New', monospace;
-            font-size: 11px;
-            color: var(--cyan);
-            opacity: 0.18;
-            animation: codeFall linear infinite;
             white-space: nowrap;
-            line-height: 1.5;
-            letter-spacing: 1px;
+            animation: fillBar 2s steps(20) forwards;
         }
-        @keyframes codeFall {
-            0% { transform: translateY(-100px); }
-            100% { transform: translateY(110vh); }
-        }
-
-        /* ========== 2. SCANLINES CRT ========== */
-        .scanlines {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 3px);
-            z-index: 1; pointer-events: none;
+        @keyframes fillBar {
+            to {
+                width: 100%;
+            }
         }
 
-        /* ========== 3. VIGNETTE ========== */
-        .vignette {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.8) 85%, #000 100%);
-            z-index: 1; pointer-events: none;
-        }
-
-        /* ========== 4. MARCA DE AGUA HEXÁGONO ========== */
-        .hex-watermark {
-            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 600px; height: 600px; z-index: 0; pointer-events: none; opacity: 0.03;
-        }
-
-        /* ========== 5. PARTÍCULAS 3 CAPAS ========== */
-        .particles-layer {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 2; pointer-events: none;
-        }
-        .p-fast, .p-mid, .p-slow {
-            position: absolute; border-radius: 50%; animation: floatUp var(--dur) infinite; opacity: 0;
-        }
-        .p-fast { width: 1px; height: 1px; background: var(--cyan); --dur: 4s; }
-        .p-mid { width: 2px; height: 2px; background: var(--magenta); --dur: 6s; }
-        .p-slow { width: 3px; height: 3px; background: #fff; box-shadow: 0 0 6px var(--magenta); --dur: 8s; }
-        @keyframes floatUp {
-            0% { transform: translateY(105vh) scale(0); opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 0.5; }
-            100% { transform: translateY(-10vh) scale(2.5); opacity: 0; }
-        }
-
-        /* ========== 6. RETÍCULA ========== */
-        .reticle {
-            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 120px; height: 120px; z-index: 3; pointer-events: none; opacity: 0.05;
-        }
-        .reticle::before, .reticle::after {
-            content: ''; position: absolute; background: var(--cyan);
-        }
-        .reticle::before { width: 100%; height: 1px; top: 50%; }
-        .reticle::after { width: 1px; height: 100%; left: 50%; }
-
-        /* ========== 7. ESPIRAL HIPNÓTICA ========== */
-        .spiral {
-            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 400px; height: 400px; z-index: 0; pointer-events: none; opacity: 0.04;
-            animation: spinSlow 25s linear infinite;
-        }
-        @keyframes spinSlow { 100% { transform: translate(-50%, -50%) rotate(360deg); } }
-
-        /* ========== 8. OJO GEOMÉTRICO ========== */
-        .eye-emblem {
-            width: 130px; height: 80px; margin: 0 auto 15px;
-            animation: eyePulse 4s ease-in-out infinite;
-        }
-        .eye-emblem svg {
-            width: 100%; height: 100%;
-            filter: drop-shadow(0 0 25px var(--magenta-glow));
-        }
-        @keyframes eyePulse {
-            0%, 100% { filter: drop-shadow(0 0 25px var(--magenta-glow)); }
-            50% { filter: drop-shadow(0 0 45px var(--magenta)) drop-shadow(0 0 70px var(--cyan-dim)); }
-        }
-
-        /* ========== 9. LOGO TEXTO + MANIFIESTO ========== */
-        .logo-text {
-            font-size: 48px; font-weight: 900; letter-spacing: 10px;
-            text-shadow: 0 0 30px var(--magenta-glow);
-            animation: neonPulse 3s ease-in-out infinite;
-        }
-        .dot { color: var(--magenta); }
-        @keyframes neonPulse {
-            0%, 100% { text-shadow: 0 0 30px var(--magenta-glow); }
-            50% { text-shadow: 0 0 60px var(--magenta), 0 0 90px var(--cyan-dim); }
-        }
-        .manifesto {
-            font-size: 12px; letter-spacing: 3px; color: var(--cyan);
-            font-family: 'Courier New', monospace; margin: 8px 0;
-            animation: fadeText 4s ease-in-out infinite;
-        }
-        @keyframes fadeText { 0%,100%{opacity:0.4;} 50%{opacity:0.9;} }
-
-        /* ========== 10. MENSAJES SUBLIMINALES ========== */
-        .subliminal {
-            position: fixed; font-size: 10px; color: var(--cyan);
-            opacity: 0; z-index: 50; pointer-events: none;
-            animation: ghostFloat 7s ease-in-out infinite;
+        /* ============ REGISTER SCREEN ============ */
+        #register-screen {
+            background: #000;
             font-family: 'Courier New', monospace;
+            color: var(--green-terminal);
         }
-        @keyframes ghostFloat {
-            0% { opacity: 0; transform: translateY(0); }
-            20% { opacity: 0.8; }
-            40% { opacity: 0; transform: translateY(-40px); }
-            100% { opacity: 0; }
+        .register-form {
+            border: 1px solid var(--green-terminal);
+            padding: 30px;
+            max-width: 450px;
+            width: 90%;
+        }
+        .register-form input {
+            background: #000;
+            border: none;
+            border-bottom: 1px solid var(--green-terminal);
+            color: var(--green-terminal);
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            padding: 8px 0;
+            width: 100%;
+            outline: none;
+            margin: 10px 0;
+        }
+        .register-form .btn-register {
+            background: var(--green-terminal);
+            color: #000;
+            border: none;
+            padding: 10px 25px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 15px;
+            letter-spacing: 2px;
         }
 
-        /* ========== 11. ONDA SONORA (ECUALIZADOR) ========== */
-        .waveform {
-            display: flex; gap: 3px; align-items: flex-end; height: 24px; margin: 10px 0;
-        }
-        .wave-bar {
-            width: 3px; background: linear-gradient(180deg, var(--magenta), var(--cyan));
-            animation: wave 0.8s ease-in-out infinite;
-        }
-        @keyframes wave { 0%,100%{transform:scaleY(1);} 50%{transform:scaleY(0.25);} }
-
-        /* ========== 12. CONTENEDOR PRINCIPAL ========== */
-        .main-container {
-            position: relative; z-index: 10; max-width: 450px; width: 100%;
-            display: flex; flex-direction: column; align-items: center; gap: 15px;
-            padding: 30px 25px;
-            opacity: 0; transform: scale(0.9);
-            transition: all 1.5s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .main-container.visible { opacity: 1; transform: scale(1); }
-
-        /* ========== 13. PANELES (COOKIES + LOGIN) ========== */
-        .glass-panel {
-            width: 100%; background: var(--dark-panel); backdrop-filter: blur(15px);
-            border: 1px solid var(--border-dim); border-radius: 8px; padding: 15px;
-        }
-        .hidden { display: none !important; }
-        .login-panel { opacity: 0; pointer-events: none; transition: 0.4s; }
-        .login-panel.visible { opacity: 1; pointer-events: auto; }
-
-        select, input, .btn-enter {
-            width: 100%; padding: 14px; background: #0a0f15;
-            border: 1px solid #2a2a35; border-radius: 6px; color: #fff;
-            font-family: inherit; font-size: 14px; outline: none; margin-bottom: 10px;
-            transition: all 0.2s;
-        }
-        select:focus, input:focus { border-color: var(--magenta); box-shadow: 0 0 15px rgba(212,0,255,0.2); }
-        .btn-enter {
-            background: var(--magenta); border: none; font-weight: bold; cursor: pointer;
-            letter-spacing: 3px; text-transform: uppercase; margin-top: 5px;
-        }
-        .btn-enter:hover { background: #e010ff; box-shadow: 0 0 25px var(--magenta-glow); }
-        .error-msg { color: #ff4060; font-size: 12px; text-align: center; display: none; }
-
-        /* ========== 14. FOOTER LEGAL ========== */
-        .legal-footer {
-            position: fixed; bottom: 15px; left: 20px; font-size: 9px;
-            color: #444; z-index: 20; display: flex; gap: 20px;
-        }
-        .legal-footer span:hover { color: var(--cyan); cursor: pointer; }
-
-        /* ========== 15. ESCRITORIO (POST-LOGIN) ========== */
+        /* ============ DESKTOP SCREEN ============ */
         #desktop-screen {
-            display: none; position: fixed; top:0; left:0; width:100%; height:100%;
-            background: #0a6e6e; z-index: 200; color: white;
+            background: #0a6e6e;
+            display: none;
+            flex-direction: column;
         }
-        #desktop-screen.active { display: flex; flex-direction: column; }
-        .desk-icons { display: flex; gap: 25px; padding: 40px; flex-wrap: wrap; }
-        .desk-icon { text-align: center; cursor: pointer; transition: 0.2s; }
-        .desk-icon:hover { transform: scale(1.1); color: var(--magenta); }
+        #desktop-screen.active {
+            display: flex;
+        }
+        .desktop-area {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+            padding: 20px;
+        }
+        .desktop-icon {
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 4px;
+            width: 85px;
+            text-align: center;
+            color: white;
+            font-size: 11px;
+            transition: background 0.15s;
+            z-index: 1;
+        }
+        .desktop-icon:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px dotted rgba(255, 255, 255, 0.4);
+        }
+        .desktop-icon .icon-img {
+            font-size: 36px;
+            pointer-events: none;
+        }
+        .desktop-icon .icon-label {
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+            pointer-events: none;
+            line-height: 1.2;
+        }
+        .desktop-icon.selected {
+            background: rgba(0, 0, 128, 0.6);
+            border: 1px dotted rgba(255, 255, 255, 0.6);
+        }
+
+        /* ============ VENTANAS ============ */
+        .window {
+            position: absolute;
+            top: 50px;
+            left: 50px;
+            min-width: 300px;
+            background: var(--win95-gray);
+            border: 2px solid;
+            border-color: var(--win95-white) var(--win95-dark) var(--win95-dark) var(--win95-white);
+            box-shadow: 2px 2px 0 var(--win95-black);
+            z-index: 50;
+            display: flex;
+            flex-direction: column;
+            resize: both;
+            overflow: auto;
+            min-height: 200px;
+        }
+        .window-titlebar {
+            background: linear-gradient(90deg, #000080, #1084d0);
+            color: white;
+            padding: 3px 4px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: move;
+            user-select: none;
+            height: 26px;
+        }
+        .window-titlebar .win-btns {
+            display: flex;
+            gap: 2px;
+        }
+        .window-titlebar .win-btns button {
+            background: var(--win95-gray);
+            border: 2px solid;
+            border-color: var(--win95-white) var(--win95-dark) var(--win95-dark) var(--win95-white);
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            color: black;
+        }
+        .window-body {
+            flex: 1;
+            padding: 15px;
+            background: white;
+            color: black;
+            font-size: 12px;
+            overflow: auto;
+        }
+
+        /* ============ TASKBAR ============ */
         .taskbar {
-            margin-top: auto; height: 45px; background: #1a1a2e;
-            display: flex; align-items: center; padding: 0 20px; gap: 20px;
+            height: 42px;
+            background: var(--win95-gray);
+            border-top: 2px solid var(--win95-white);
+            display: flex;
+            align-items: center;
+            padding: 3px 4px;
+            gap: 4px;
+            z-index: 200;
         }
-        .taskbar button { background: var(--magenta); border:none; color:white; padding:8px 15px; border-radius:4px; cursor:pointer; }
+        .start-btn {
+            background: var(--win95-gray);
+            border: 2px solid;
+            border-color: var(--win95-white) var(--win95-dark) var(--win95-dark) var(--win95-white);
+            padding: 4px 10px;
+            font-weight: bold;
+            cursor: pointer;
+            height: 30px;
+            font-family: 'Segoe UI', sans-serif;
+            font-size: 12px;
+        }
+        .start-btn:active {
+            border-color: var(--win95-dark) var(--win95-white) var(--win95-white) var(--win95-dark);
+        }
+        .taskbar-divider {
+            width: 2px;
+            height: 28px;
+            background: var(--win95-dark);
+            border-left: 1px solid var(--win95-white);
+        }
+        .taskbar-time {
+            margin-left: auto;
+            font-size: 11px;
+            color: black;
+            padding: 4px 10px;
+            border: 2px solid;
+            border-color: var(--win95-dark) var(--win95-white) var(--win95-white) var(--win95-dark);
+        }
+        .start-menu {
+            display: none;
+            position: fixed;
+            bottom: 46px;
+            left: 4px;
+            background: var(--win95-gray);
+            border: 2px solid;
+            border-color: var(--win95-white) var(--win95-dark) var(--win95-dark) var(--win95-white);
+            z-index: 300;
+            width: 180px;
+            box-shadow: 2px 2px 0 black;
+        }
+        .start-menu.active {
+            display: block;
+        }
+        .start-menu-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            cursor: pointer;
+            font-size: 12px;
+            color: black;
+        }
+        .start-menu-item:hover {
+            background: #000080;
+            color: white;
+        }
     </style>
 </head>
 <body>
 
-    <!-- 1. Fondo Hacking -->
-    <div class="hacking-bg" id="hacking-bg"></div>
-    <!-- 2. Scanlines -->
-    <div class="scanlines"></div>
-    <!-- 3. Vignette -->
-    <div class="vignette"></div>
-    <!-- 4. Marca de agua Hexágono -->
-    <div class="hex-watermark">
-        <svg viewBox="0 0 100 100"><polygon points="50,5 95,27 95,73 50,95 5,73 5,27" fill="none" stroke="#d400ff" stroke-width="0.5"/></svg>
-    </div>
-    <!-- 5. Partículas -->
-    <div class="particles-layer" id="particles-layer"></div>
-    <!-- 6. Retícula -->
-    <div class="reticle"></div>
-    <!-- 7. Espiral -->
-    <div class="spiral">
-        <svg viewBox="0 0 100 100"><path d="M50,50 Q70,15 85,35 T60,80 T20,55" fill="none" stroke="#d400ff" stroke-width="0.5"/></svg>
+    <!-- ============ CURSOR OJO ============ -->
+    <div class="custom-cursor" id="custom-cursor">
+        <svg viewBox="0 0 32 32">
+            <ellipse cx="16" cy="16" rx="14" ry="10" fill="none" stroke="#d400ff" stroke-width="1.5"/>
+            <circle cx="16" cy="16" r="5" fill="#d400ff" opacity="0.9"/>
+            <circle cx="16" cy="16" r="2.5" fill="#fff"/>
+            <line x1="2" y1="16" x2="0" y2="16" stroke="#d400ff" stroke-width="1"/>
+            <line x1="30" y1="16" x2="32" y2="16" stroke="#d400ff" stroke-width="1"/>
+            <line x1="16" y1="6" x2="16" y2="0" stroke="#d400ff" stroke-width="1"/>
+            <line x1="16" y1="26" x2="16" y2="32" stroke="#d400ff" stroke-width="1"/>
+        </svg>
     </div>
 
-    <!-- 10. Mensajes Subliminales -->
-    <div class="subliminal" style="top:10%;left:5%;animation-delay:0s;">ACCESS_PROTOCOL_23/10/2026</div>
-    <div class="subliminal" style="top:80%;right:5%;animation-delay:3.5s;">DETROIT_VISION_ACTIVE</div>
-    <div class="subliminal" style="top:50%;left:80%;animation-delay:6s;">MALAGA_BASE_SECURE</div>
+    <!-- ============ BOOT SCREEN ============ -->
+    <div class="screen active" id="boot-screen">
+        <div class="boot-text" id="boot-text"></div>
+    </div>
 
-    <!-- 12. Contenedor Principal -->
-    <div class="main-container" id="main-container">
-
-        <!-- 8. Ojo Geométrico -->
-        <div class="eye-emblem">
-            <svg viewBox="0 0 100 60">
-                <ellipse cx="50" cy="30" rx="48" ry="22" fill="none" stroke="#d400ff" stroke-width="1.5"/>
-                <circle cx="50" cy="30" r="12" fill="#d400ff" opacity="0.9"/>
-                <circle cx="50" cy="30" r="5" fill="#fff"/>
-                <path d="M2,30 L0,30 M98,30 L100,30 M50,8 L50,0 M50,52 L50,60" stroke="#d400ff" stroke-width="1.5"/>
-                <circle cx="50" cy="30" r="28" fill="none" stroke="#00b8b8" stroke-width="0.5" stroke-dasharray="4 4"/>
-            </svg>
-        </div>
-
-        <!-- 9. Logo + Manifiesto -->
-        <div class="logo-text">M<span class="dot">.</span>Y<span class="dot">.</span>C</div>
-        <div class="manifesto">DISEÑADO EN MÁLAGA · VISIÓN DETROIT · PROYECCIÓN MUNDIAL</div>
-        <div id="slogan-text" style="color:#d400ff; letter-spacing:4px; font-size:16px;">CHAOS WITH PURPOSE</div>
-
-        <!-- 11. Ecualizador -->
-        <div class="waveform">
-            <div class="wave-bar" style="height:12px; animation-delay:0s;"></div>
-            <div class="wave-bar" style="height:20px; animation-delay:0.1s;"></div>
-            <div class="wave-bar" style="height:8px; animation-delay:0.2s;"></div>
-            <div class="wave-bar" style="height:24px; animation-delay:0.3s;"></div>
-            <div class="wave-bar" style="height:14px; animation-delay:0.4s;"></div>
-            <div class="wave-bar" style="height:18px; animation-delay:0.5s;"></div>
-        </div>
-
-        <!-- 13. Cookies -->
-        <div class="glass-panel" id="cookie-banner">
-            <span id="cookie-text">🍪 Este club utiliza cookies para una experiencia inmersiva. ¿Las aceptas?</span>
-            <div style="display:flex; gap:10px; margin-top:12px;">
-                <button onclick="handleCookies(false)" id="cookie-reject" style="flex:1; padding:10px; background:transparent; border:1px solid #444; color:#aaa; border-radius:6px; cursor:pointer;">Rechazar</button>
-                <button onclick="handleCookies(true)" id="cookie-accept" style="flex:1; padding:10px; background:#d400ff; border:none; color:#fff; border-radius:6px; cursor:pointer; font-weight:bold;">Aceptar todo</button>
-            </div>
-        </div>
-
-        <!-- Login -->
-        <div class="glass-panel login-panel" id="login-panel">
-            <select id="lang-select" onchange="updateLang()">
-                <option value="ES">🌐 Español</option>
-                <option value="EN">🌐 English</option>
-                <option value="FR">🌐 Français</option>
-                <option value="IT">🌐 Italiano</option>
-                <option value="DE">🌐 Deutsch</option>
-                <option value="POR">🌐 Português</option>
-            </select>
-            <input type="text" id="email-input" placeholder="Email o número de teléfono">
-            <input type="password" id="password-input" placeholder="Contraseña">
-            <div class="error-msg" id="error-msg"></div>
-            <div style="font-size:10px; color:#666; text-align:center; margin-bottom:8px;" id="hint-text">🔑 Pista: La fecha más importante del club</div>
-            <button class="btn-enter" id="btn-enter" onclick="login()">Acceder al Club</button>
+    <!-- ============ REGISTER SCREEN ============ -->
+    <div class="screen" id="register-screen">
+        <div class="register-form">
+            <p style="font-size:18px;margin-bottom:15px;">> CREATE NEW USER_</p>
+            <label>> Username:</label>
+            <input type="text" id="reg-username" placeholder="username">
+            <label>> Email:</label>
+            <input type="email" id="reg-email" placeholder="email@club.xxx">
+            <label>> Password:</label>
+            <input type="password" id="reg-password" placeholder="********">
+            <label>> Access Code:</label>
+            <input type="text" id="reg-code" value="23/10/2026" readonly style="opacity:0.7;">
+            <p id="reg-level" style="margin-top:8px;font-size:12px;">Level: DEFAULT</p>
+            <button class="btn-register" onclick="registerUser()">REGISTER</button>
         </div>
     </div>
 
-    <!-- 14. Footer Legal -->
-    <div class="legal-footer">
-        <span>Términos y condiciones</span>
-        <span>Privacidad</span>
-        <span>Ayuda</span>
-        <span>© M.Y.C 2024</span>
-    </div>
-
-    <!-- 15. Escritorio -->
-    <div id="desktop-screen">
-        <div class="desk-icons">
-            <div class="desk-icon"><span style="font-size:40px;">🎤</span><br>M.Y.C</div>
-            <div class="desk-icon"><span style="font-size:40px;">💿</span><br>Store</div>
-            <div class="desk-icon"><span style="font-size:40px;">👕</span><br>Merch</div>
-            <div class="desk-icon"><span style="font-size:40px;">🌍</span><br>Tours</div>
-            <div class="desk-icon"><span style="font-size:40px;">👶</span><br>Baby Buu's</div>
-            <div class="desk-icon"><span style="font-size:40px;">🎨</span><br>Artists</div>
+    <!-- ============ DESKTOP SCREEN ============ -->
+    <div class="screen" id="desktop-screen">
+        <div class="desktop-area" id="desktop-area">
+            <!-- Iconos se generan dinámicamente -->
+        </div>
+        <div class="start-menu" id="start-menu">
+            <div class="start-menu-item" onclick="openWindow('myc')">🎤 M.Y.C</div>
+            <div class="start-menu-item" onclick="openWindow('store')">💿 Store</div>
+            <div class="start-menu-item" onclick="openWindow('merch')">👕 Merch</div>
+            <div class="start-menu-item" onclick="openWindow('tours')">🌍 Tours</div>
+            <div class="start-menu-item" onclick="openWindow('babybuus')">👶 Baby Buu's</div>
+            <div class="start-menu-item" onclick="openWindow('artists')">🎨 Artists</div>
+            <div class="start-menu-item" id="menu-assist" style="display:none;" onclick="openWindow('assist')">🤖 M.Y.C ASSIST</div>
+            <div style="border-top:1px solid #808080;margin:4px 0;"></div>
+            <div class="start-menu-item" onclick="location.reload()">🚪 Logout</div>
         </div>
         <div class="taskbar">
-            <button onclick="logout()">🏠 Inicio</button>
-            <span style="color:#ccc; font-size:14px;">🎵 SYNTHWAVE FM</span>
-            <button id="play-btn" onclick="togglePlay()">▶</button>
-            <span id="time-display" style="margin-left:auto; color:#ccc;"></span>
-            <button onclick="logout()" style="background:transparent; border:1px solid #d400ff;">Salir</button>
+            <button class="start-btn" onclick="toggleStart()">🏠 Inicio</button>
+            <div class="taskbar-divider"></div>
+            <button id="play-btn" onclick="togglePlay()" style="background:var(--win95-gray);border:2px solid;border-color:var(--win95-white) var(--win95-dark) var(--win95-dark) var(--win95-white);width:28px;height:28px;cursor:pointer;">▶</button>
+            <span style="font-size:11px;color:black;">SYNTHWAVE FM</span>
+            <div class="taskbar-time" id="taskbar-time"></div>
         </div>
     </div>
 
     <script>
-        // ============ 1. GENERAR CÓDIGO CAYENDO ============
-        const codeSnippets = [
-            '0x' + Math.random().toString(16).substring(2,6).toUpperCase(),
-            '//M.Y.C_club.dll', '>>LOADING_SEQUENCE', 'DETROIT::VISION',
-            'MALAGA::BASE', 'access_granted', '//chaos_with_purpose.exe',
-            '0x' + Math.random().toString(16).substring(2,6).toUpperCase(),
-            '>>FETCHING_DATA', 'EST.2024', 'M.Y.C'
+        // ============ CURSOR OJO ============
+        const cursor = document.getElementById('custom-cursor');
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = (e.clientX - 16) + 'px';
+            cursor.style.top = (e.clientY - 16) + 'px';
+        });
+        document.addEventListener('mousedown', () => cursor.classList.add('clicking'));
+        document.addEventListener('mouseup', () => cursor.classList.remove('clicking'));
+
+        // ============ BOOT SEQUENCE ============
+        const bootLines = [
+            'M.Y.C SECURE SYSTEM v.2024',
+            '----------------------------------------',
+            'INITIALIZING CORE MODULES...',
+            'ESTABLISHING CONNECTION TO DETROIT RELAY...',
+            'MÁLAGA NODE: ONLINE',
+            'DETROIT RELAY: ACTIVE',
+            'ENCRYPTING CHANNEL... 256-BIT AES',
+            'ACCESS GATEWAY: OPEN',
+            'LOADING USER DATABASE...',
+            '[████████████████████████████████] 100%',
+            '',
+            '> WELCOME, NEW USER. CREATE YOUR CREDENTIALS._'
         ];
-        const hackBg = document.getElementById('hacking-bg');
-        for (let i=0; i<25; i++) {
-            let el = document.createElement('div');
-            el.className = 'code-column';
-            el.style.left = Math.random()*95 + '%';
-            el.style.animationDuration = (12 + Math.random()*25) + 's';
-            el.style.animationDelay = Math.random()*15 + 's';
-            let html = '';
-            for (let j=0; j<12; j++) {
-                html += codeSnippets[Math.floor(Math.random()*codeSnippets.length)] + '<br>';
-            }
-            el.innerHTML = html;
-            hackBg.appendChild(el);
-        }
 
-        // ============ 5. PARTÍCULAS ============
-        const pl = document.getElementById('particles-layer');
-        for (let i=0; i<25; i++) {
-            ['p-fast','p-mid','p-slow'].forEach(cls => {
-                let p = document.createElement('div'); p.className = cls;
-                p.style.left = Math.random()*100+'%'; p.style.animationDelay = Math.random()*8+'s';
-                pl.appendChild(p);
-            });
-        }
+        const bootText = document.getElementById('boot-text');
+        let lineIndex = 0;
 
-        // ============ SECUENCIA DE ENTRADA ============
-        setTimeout(() => document.getElementById('main-container').classList.add('visible'), 600);
-
-        // ============ 20 SONIDOS (WEB AUDIO API) ============
-        let audioCtx;
-        function getCtx() { if(!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)(); return audioCtx; }
-        function playSound(freq, type, duration=0.1, vol=0.06) {
-            const ctx = getCtx(); const o = ctx.createOscillator(); const g = ctx.createGain();
-            o.type = type; o.frequency.setValueAtTime(freq, ctx.currentTime);
-            g.gain.setValueAtTime(vol, ctx.currentTime); g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime+duration);
-            o.connect(g); g.connect(ctx.destination); o.start(); o.stop(ctx.currentTime+duration);
-        }
-
-        // Mapeo de sonidos a eventos
-        document.body.addEventListener('click', (e) => {
-            if(e.target.matches('button, .btn-enter')) playSound(900, 'square', 0.08, 0.07);
-            else if(e.target.matches('input, select')) playSound(400, 'sine', 0.12, 0.04);
-            else playSound(600, 'triangle', 0.06, 0.03);
-        });
-        document.querySelectorAll('button, input, select, .desk-icon').forEach(el => {
-            el.addEventListener('mouseenter', () => playSound(1200, 'sine', 0.05, 0.03));
-        });
-        function accessGrantedSound() { playSound(1400, 'sine', 0.2, 0.12); setTimeout(()=>playSound(1800,'sine',0.25,0.12), 150); }
-        function accessDeniedSound() { playSound(120, 'sawtooth', 0.35, 0.1); }
-
-        // ============ IDIOMAS ============
-        const texts = {
-            ES: { slogan:'CHAOS WITH PURPOSE', cookie:'🍪 Este club utiliza cookies para una experiencia inmersiva. ¿Las aceptas?', reject:'Rechazar', accept:'Aceptar todo', enter:'Acceder al Club', hint:'🔑 Pista: La fecha más importante del club' },
-            EN: { slogan:'CHAOS WITH PURPOSE', cookie:'🍪 This club uses cookies for an immersive experience. Accept?', reject:'Reject', accept:'Accept All', enter:'Enter the Club', hint:'🔑 Hint: The most important date of the club' },
-            FR: { slogan:'CHAOS WITH PURPOSE', cookie:'🍪 Ce club utilise des cookies pour une expérience immersive. Accepter?', reject:'Refuser', accept:'Tout accepter', enter:'Entrer dans le Club', hint:'🔑 Indice: La date la plus importante du club' },
-            IT: { slogan:'CHAOS WITH PURPOSE', cookie:'🍪 Questo club utilizza i cookie per un\'esperienza immersiva. Accettare?', reject:'Rifiutare', accept:'Accetta tutto', enter:'Entra nel Club', hint:'🔑 Suggerimento: La data più importante del club' },
-            DE: { slogan:'CHAOS WITH PURPOSE', cookie:'🍪 Dieser Club verwendet Cookies für ein immersives Erlebnis. Akzeptieren?', reject:'Ablehnen', accept:'Alle akzeptieren', enter:'Club betreten', hint:'🔑 Hinweis: Das wichtigste Datum des Clubs' },
-            POR: { slogan:'CHAOS WITH PURPOSE', cookie:'🍪 Este clube usa cookies para uma experiência imersiva. Aceitar?', reject:'Rejeitar', accept:'Aceitar tudo', enter:'Entrar no Clube', hint:'🔑 Dica: A data mais importante do clube' }
-        };
-        function updateLang() {
-            const lang = document.getElementById('lang-select').value;
-            const t = texts[lang];
-            document.getElementById('slogan-text').innerText = t.slogan;
-            document.getElementById('cookie-text').innerText = t.cookie;
-            document.getElementById('cookie-reject').innerText = t.reject;
-            document.getElementById('cookie-accept').innerText = t.accept;
-            document.getElementById('btn-enter').innerText = t.enter;
-            document.getElementById('hint-text').innerText = t.hint;
-        }
-
-        // ============ COOKIES ============
-        function handleCookies(accepted) {
-            document.getElementById('cookie-banner').classList.add('hidden');
-            document.getElementById('login-panel').classList.add('visible');
-            playSound(800, 'sine', 0.1, 0.06);
-        }
-
-        // ============ LOGIN ============
-        function login() {
-            const email = document.getElementById('email-input').value.trim();
-            const pass = document.getElementById('password-input').value.trim();
-            const err = document.getElementById('error-msg');
-            if(!email) { err.style.display='block'; err.innerText='Identifícate, por favor'; return; }
-            if(pass === '23/10/2026') {
-                accessGrantedSound();
-                document.getElementById('main-container').style.display = 'none';
-                document.getElementById('desktop-screen').classList.add('active');
-                setInterval(() => {
-                    document.getElementById('time-display').innerText = new Date().toLocaleTimeString('es-ES', {hour:'2-digit', minute:'2-digit'});
-                }, 1000);
+        function typeBootLine() {
+            if (lineIndex < bootLines.length) {
+                const line = document.createElement('div');
+                line.className = 'boot-line';
+                line.textContent = bootLines[lineIndex];
+                bootText.appendChild(line);
+                lineIndex++;
+                setTimeout(typeBootLine, 250);
             } else {
-                accessDeniedSound();
-                err.style.display='block'; err.innerText='Acceso denegado. Verifica tus credenciales.';
+                setTimeout(() => {
+                    document.getElementById('boot-screen').classList.remove('active');
+                    document.getElementById('register-screen').classList.add('active');
+                }, 800);
             }
         }
-        document.getElementById('password-input').addEventListener('keypress', (e) => { if(e.key==='Enter') login(); });
+        setTimeout(typeBootLine, 300);
 
-        function logout() {
-            document.getElementById('desktop-screen').classList.remove('active');
-            document.getElementById('main-container').style.display = 'flex';
-            document.getElementById('login-panel').classList.remove('visible');
-            document.getElementById('cookie-banner').classList.remove('hidden');
-            document.getElementById('password-input').value = '';
+        // ============ REGISTRO ============
+        function registerUser() {
+            const username = document.getElementById('reg-username').value.trim();
+            const email = document.getElementById('reg-email').value.trim();
+            const password = document.getElementById('reg-password').value.trim();
+            const code = document.getElementById('reg-code').value.trim();
+
+            if (!username || !email || !password) {
+                alert('> ERROR: All fields are required.');
+                return;
+            }
+
+            let level = 'DEFAULT';
+            if (password === 'MYC-FOUNDER-2024') level = 'FOUNDER';
+            else if (code === '23/10/2026') level = 'VIP';
+
+            document.getElementById('reg-level').textContent = 'Level: ' + level;
+
+            // Guardar en localStorage
+            localStorage.setItem('myc_user', JSON.stringify({ username, email, level }));
+
+            // Ir al escritorio
+            document.getElementById('register-screen').classList.remove('active');
+            document.getElementById('desktop-screen').classList.add('active');
+            initDesktop(level);
         }
 
-        // ============ REPRODUCTOR (SIMULADO) ============
-        let musicPlaying = false;
+        // ============ ESCRITORIO ============
+        let zIndexCounter = 100;
+        let windowIdCounter = 0;
+
+        function initDesktop(level) {
+            const area = document.getElementById('desktop-area');
+            area.innerHTML = '';
+
+            const icons = [
+                { id: 'myc', icon: '🎤', label: 'M.Y.C', top: 20, left: 20 },
+                { id: 'store', icon: '💿', label: 'Store', top: 20, left: 120 },
+                { id: 'merch', icon: '👕', label: 'Merch', top: 20, left: 220 },
+                { id: 'tours', icon: '🌍', label: 'Tours', top: 120, left: 20 },
+                { id: 'babybuus', icon: '👶', label: "Baby Buu's", top: 120, left: 120 },
+                { id: 'artists', icon: '🎨', label: 'Artists', top: 120, left: 220 },
+            ];
+
+            if (level === 'FOUNDER') {
+                icons.push({ id: 'assist', icon: '🤖', label: 'M.Y.C ASSIST', top: 220, left: 20 });
+                document.getElementById('menu-assist').style.display = 'flex';
+            }
+
+            icons.forEach(ic => {
+                const el = document.createElement('div');
+                el.className = 'desktop-icon';
+                el.style.top = ic.top + 'px';
+                el.style.left = ic.left + 'px';
+                el.innerHTML = `<div class="icon-img">${ic.icon}</div><span class="icon-label">${ic.label}</span>`;
+                el.addEventListener('dblclick', () => openWindow(ic.id));
+                el.addEventListener('mousedown', (e) => startDragIcon(e, el));
+                area.appendChild(el);
+            });
+
+            // Reloj
+            updateClock();
+            setInterval(updateClock, 1000);
+
+            // Audio
+            initAudio();
+        }
+
+        // ============ ARRASTRAR ICONOS ============
+        let dragIcon = null;
+        let dragOffsetX = 0,
+            dragOffsetY = 0;
+
+        function startDragIcon(e, el) {
+            e.preventDefault();
+            dragIcon = el;
+            dragOffsetX = e.clientX - el.offsetLeft;
+            dragOffsetY = e.clientY - el.offsetTop;
+            el.style.zIndex = 500;
+            el.classList.add('selected');
+        }
+
+        document.addEventListener('mousemove', (e) => {
+            if (dragIcon) {
+                dragIcon.style.left = (e.clientX - dragOffsetX) + 'px';
+                dragIcon.style.top = (e.clientY - dragOffsetY) + 'px';
+            }
+        });
+
+        document.addEventListener('mouseup', () => {
+            if (dragIcon) {
+                dragIcon.style.zIndex = 1;
+                dragIcon.classList.remove('selected');
+                dragIcon = null;
+            }
+        });
+
+        // ============ VENTANAS ============
+        function openWindow(type) {
+            const area = document.getElementById('desktop-area');
+            const win = document.createElement('div');
+            win.className = 'window';
+            win.id = 'win-' + (++windowIdCounter);
+            win.style.zIndex = ++zIndexCounter;
+            win.style.top = (40 + Math.random() * 100) + 'px';
+            win.style.left = (40 + Math.random() * 200) + 'px';
+
+            let title = '',
+                content = '';
+            switch (type) {
+                case 'myc':
+                    title = 'M.Y.C — Info';
+                    content = '<h3>M.Y.C</h3><p>Sello independiente. Chaos With Purpose.</p><p>Diseñado en Málaga. Visión Detroit.</p>';
+                    break;
+                case 'store':
+                    title = 'STORE';
+                    content = '<h3>STORE</h3><p>💿 Neon Void Vol.1 — 24.99€</p><p>📀 First Steps EP — 12.99€</p>';
+                    break;
+                case 'merch':
+                    title = 'MERCH';
+                    content = '<h3>MERCH</h3><p>👕 Camiseta — 29.99€</p><p>🧢 Gorra — 22.00€</p>';
+                    break;
+                case 'tours':
+                    title = 'TOURS';
+                    content = '<h3>TOURS</h3><p>15 DIC — Tokyo</p><p>20 ENE — Berlin</p>';
+                    break;
+                case 'babybuus':
+                    title = "BABY BUU'S";
+                    content = '<h3>BABY BUUS</h3><p>Subsello experimental.</p>';
+                    break;
+                case 'artists':
+                    title = 'ARTISTS';
+                    content = '<h3>ARTISTS</h3><p>🎹 VHS GLITCH</p><p>🎛️ TERMINAL X</p>';
+                    break;
+                case 'assist':
+                    title = '🤖 M.Y.C ASSIST v1.0';
+                    content =
+                        '<h3>M.Y.C ASSIST</h3><p>> Hola, soy el asistente del club.</p><p>> Conectando con el servidor Python...</p><p style="color:#d400ff;">> Backend pendiente de desplegar.</p>';
+                    break;
+                default:
+                    title = 'Ventana';
+                    content = '<p>Contenido</p>';
+            }
+
+            win.innerHTML = `
+            <div class="window-titlebar" onmousedown="startDragWindow(event, '${win.id}')">
+              <span>${title}</span>
+              <div class="win-btns">
+                <button onclick="minimizeWindow('${win.id}')">─</button>
+                <button onclick="maximizeWindow('${win.id}')">□</button>
+                <button onclick="closeWindow('${win.id}')">✕</button>
+              </div>
+            </div>
+            <div class="window-body">${content}</div>
+          `;
+
+            area.appendChild(win);
+            bringToFront(win);
+        }
+
+        function bringToFront(win) {
+            win.style.zIndex = ++zIndexCounter;
+            win.style.display = 'flex';
+        }
+
+        function closeWindow(id) {
+            const win = document.getElementById(id);
+            if (win) win.remove();
+        }
+
+        function minimizeWindow(id) {
+            const win = document.getElementById(id);
+            if (win) win.style.display = 'none';
+        }
+
+        function maximizeWindow(id) {
+            const win = document.getElementById(id);
+            if (win) {
+                win.style.top = '0';
+                win.style.left = '0';
+                win.style.width = '100%';
+                win.style.height = 'calc(100% - 42px)';
+            }
+        }
+
+        let dragWin = null;
+        let winOffsetX = 0,
+            winOffsetY = 0;
+
+        function startDragWindow(e, winId) {
+            e.preventDefault();
+            dragWin = document.getElementById(winId);
+            if (dragWin) {
+                winOffsetX = e.clientX - dragWin.offsetLeft;
+                winOffsetY = e.clientY - dragWin.offsetTop;
+                bringToFront(dragWin);
+            }
+        }
+
+        document.addEventListener('mousemove', (e) => {
+            if (dragWin) {
+                dragWin.style.left = (e.clientX - winOffsetX) + 'px';
+                dragWin.style.top = (e.clientY - winOffsetY) + 'px';
+            }
+        });
+
+        document.addEventListener('mouseup', () => {
+            dragWin = null;
+        });
+
+        // ============ MENÚ INICIO ============
+        function toggleStart() {
+            document.getElementById('start-menu').classList.toggle('active');
+        }
+        document.addEventListener('click', (e) => {
+            const menu = document.getElementById('start-menu');
+            const btn = document.querySelector('.start-btn');
+            if (menu && !menu.contains(e.target) && e.target !== btn && !btn.contains(e.target)) {
+                menu.classList.remove('active');
+            }
+        });
+
+        // ============ RELOJ ============
+        function updateClock() {
+            const el = document.getElementById('taskbar-time');
+            if (el) el.textContent = new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+        }
+
+        // ============ AUDIO ============
+        let ctx = null,
+            playing = false,
+            osc = null,
+            gain = null;
+
+        function initAudio() {
+            if (!ctx) {
+                ctx = new(window.AudioContext || window.webkitAudioContext)();
+                osc = ctx.createOscillator();
+                gain = ctx.createGain();
+                const f = ctx.createBiquadFilter();
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(110, ctx.currentTime);
+                f.type = 'lowpass';
+                f.frequency.setValueAtTime(600, ctx.currentTime);
+                gain.gain.setValueAtTime(0, ctx.currentTime);
+                osc.connect(f);
+                f.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start();
+            }
+        }
+
         function togglePlay() {
-            musicPlaying = !musicPlaying;
-            document.getElementById('play-btn').innerText = musicPlaying ? '⏸' : '▶';
-            playSound(500, 'triangle', 0.6, 0.12);
+            const btn = document.getElementById('play-btn');
+            initAudio();
+            if (ctx.state === 'suspended') ctx.resume();
+            if (playing) {
+                gain.gain.setValueAtTime(0, ctx.currentTime);
+                btn.textContent = '▶';
+                playing = false;
+            } else {
+                gain.gain.setValueAtTime(0.12, ctx.currentTime);
+                btn.textContent = '⏸';
+                playing = true;
+            }
         }
+
+        // ============ INICIO ============
+        setTimeout(typeBootLine, 500);
     </script>
 </body>
 </html>
