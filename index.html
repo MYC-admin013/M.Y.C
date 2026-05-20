@@ -1,259 +1,542 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <title>M.Y.C | The Mayin Buu Club</title>
-  <style>
-    :root {
-      --negro: #010508; --magenta: #d400ff; --magenta-brillo: rgba(212, 0, 255, 0.8);
-      --cyan: #00b8b8; --verde-terminal: #00ff41; --blanco: #f0f0f0;
-    }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>M.Y.C | The Mayin Buu Club</title>
+    <style>
+        :root {
+            --negro-profundo: #010508;
+            --magenta: #d400ff;
+            --magenta-brillo: rgba(212, 0, 255, 0.8);
+            --cyan: #00b8b8;
+            --cyan-tenue: rgba(0, 184, 184, 0.25);
+            --verde-terminal: #00ff41;
+            --blanco: #f0f0f0;
+            --gris-oscuro: #1a1a2e;
+        }
 
-    body {
-      font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
-      background: var(--negro); height: 100vh; overflow: hidden;
-      color: var(--blanco); cursor: none; user-select: none;
-      display: flex; align-items: center; justify-content: center;
-    }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    /* ========== CURSOR OJO ========== */
-    #cursor-ojo {
-      position: fixed; width: 38px; height: 38px; z-index: 99999;
-      pointer-events: none; transition: transform 0.1s ease;
-      filter: drop-shadow(0 0 20px var(--magenta));
-    }
-    #cursor-ojo.clicking { transform: scale(0.75); }
+        body {
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            background: var(--negro-profundo);
+            min-height: 100vh;
+            overflow: hidden;
+            color: var(--blanco);
+            cursor: none;
+            user-select: none;
+        }
 
-    /* ========== FASE 1: NEGRO PURO (1s) ========== */
-    #fase1-negro {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: #000; z-index: 100; display: flex;
-      flex-direction: column; align-items: center; justify-content: center;
-      transition: opacity 0.6s ease;
-    }
-    .logo-fase1 {
-      font-size: 100px; font-weight: 900; letter-spacing: 20px; color: #fff;
-      text-shadow: 0 0 80px var(--magenta-brillo);
-      animation: aparecerLogo 0.6s ease-out forwards;
-    }
-    @keyframes aparecerLogo { 0% { opacity: 0; transform: scale(1.3); } 100% { opacity: 1; transform: scale(1); } }
-    .logo-fase1 .ojo-c {
-      display: inline-block; width: 70px; height: 45px; vertical-align: middle;
-      animation: latido 2s ease-in-out infinite;
-    }
-    @keyframes latido { 0%,100% { transform: scale(1); } 50% { transform: scale(1.12); } }
-    .texto-iniciando {
-      margin-top: 30px; font-size: 22px; color: #aaa; letter-spacing: 12px;
-      opacity: 0; animation: mostrarTexto 0.4s 0.6s forwards, pulsoTexto 2s 1s infinite;
-    }
-    @keyframes mostrarTexto { to { opacity: 1; } }
-    @keyframes pulsoTexto { 0%,100% { opacity: 0.4; } 50% { opacity: 1; } }
+        /* ============ CURSOR OJO GEOMÉTRICO ============ */
+        #cursor-ojo {
+            position: fixed;
+            width: 38px;
+            height: 38px;
+            z-index: 99999;
+            pointer-events: none;
+            transition: transform 0.08s ease;
+            filter: drop-shadow(0 0 20px var(--magenta-brillo));
+        }
+        #cursor-ojo.clicking {
+            transform: scale(0.7);
+        }
+        #cursor-ojo svg {
+            width: 100%;
+            height: 100%;
+        }
 
-    /* ========== FASE 2: PORTAL HACKER ========== */
-    #fase2-boot {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: radial-gradient(ellipse at center, #1c0035 0%, #010508 100%);
-      z-index: 90; display: none; flex-direction: column;
-      align-items: center; justify-content: center;
-      font-family: 'Courier New', monospace; color: var(--verde-terminal);
-    }
-    .contenedor-boot {
-      max-width: 950px; width: 90%; padding: 50px;
-      border-left: 3px solid rgba(0, 255, 65, 0.4);
-      position: relative; background: rgba(0,0,0,0.2);
-      backdrop-filter: blur(2px);
-    }
-    .linea-boot {
-      opacity: 0; font-size: 18px; margin: 8px 0; white-space: pre-wrap;
-      animation: escribirLinea 0.2s forwards;
-    }
-    @keyframes escribirLinea { to { opacity: 1; } }
+        /* ============ FASE 1: PANTALLA NEGRA INICIAL ============ */
+        #fase1-inicio {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.6s ease, background 0.9s ease;
+        }
+        #fase1-inicio.modo-morado {
+            background: radial-gradient(circle at center, #1a0030, #000);
+        }
+        #fase1-inicio.oculto {
+            opacity: 0;
+            pointer-events: none;
+        }
+        .logo-inicio {
+            font-size: 100px;
+            font-weight: 900;
+            letter-spacing: 20px;
+            color: #fff;
+            text-shadow: 0 0 80px var(--magenta-brillo);
+            animation: aparecerLogo 0.7s ease-out forwards;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        @keyframes aparecerLogo {
+            0% {
+                opacity: 0;
+                transform: scale(1.3);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        .logo-inicio .punto {
+            color: var(--magenta);
+        }
+        .logo-inicio .ojo-svg {
+            width: 75px;
+            height: 48px;
+            animation: latidoOjo 2.5s ease-in-out infinite;
+        }
+        @keyframes latidoOjo {
+            0%,
+            100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
+        .texto-iniciando {
+            margin-top: 35px;
+            font-size: 24px;
+            color: #aaa;
+            letter-spacing: 12px;
+            opacity: 0;
+            animation: mostrarTexto 0.5s 0.6s forwards, pulsoTexto 2s 1s infinite;
+        }
+        @keyframes mostrarTexto {
+            to {
+                opacity: 1;
+            }
+        }
+        @keyframes pulsoTexto {
+            0%,
+            100% {
+                opacity: 0.4;
+            }
+            50% {
+                opacity: 1;
+            }
+        }
 
-    /* Código cayendo en el fondo */
-    .codigo-cayendo {
-      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-      overflow: hidden; pointer-events: none; z-index: 0;
-    }
-    .columna-codigo {
-      position: absolute; top: -100px; font-family: 'Courier New', monospace;
-      font-size: 12px; color: var(--cyan); opacity: 0.2;
-      animation: caerCodigo linear infinite; white-space: nowrap;
-    }
-    @keyframes caerCodigo { 0% { transform: translateY(-100px); } 100% { transform: translateY(110vh); } }
+        /* ============ FASE 2: BOOT SEQUENCE ============ */
+        #fase2-boot {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at center, #1c0035 0%, #010508 100%);
+            z-index: 90;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Courier New', monospace;
+            color: var(--verde-terminal);
+        }
+        #fase2-boot.activo {
+            display: flex;
+        }
 
-    /* Bola de discoteca geométrica */
-    .bola-discoteca {
-      position: absolute; top: 50%; right: -40px; width: 90px; height: 90px;
-      background: radial-gradient(circle at 30% 30%, #fff, var(--magenta));
-      border-radius: 50%; filter: blur(18px); opacity: 0.5;
-      animation: girarBola 5s linear infinite;
-      box-shadow: 0 0 60px var(--magenta);
-    }
-    @keyframes girarBola { 100% { transform: rotate(360deg); } }
+        /* Código cayendo */
+        .capa-codigo {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .columna-codigo {
+            position: absolute;
+            top: -100px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            color: var(--cyan);
+            opacity: 0.2;
+            animation: caerCodigo linear infinite;
+            white-space: pre;
+            line-height: 1.4;
+        }
+        @keyframes caerCodigo {
+            0% {
+                transform: translateY(-100px);
+            }
+            100% {
+                transform: translateY(110vh);
+            }
+        }
 
-    /* Mensajes Subliminales Múltiples */
-    .mensaje-fantasma {
-      position: fixed; font-family: 'Courier New', monospace; font-size: 14px;
-      color: var(--cyan); opacity: 0; z-index: 95; pointer-events: none;
-    }
+        /* Scanlines */
+        .scanlines {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 0, 0, 0.03) 2px, rgba(0, 0, 0, 0.03) 3px);
+            pointer-events: none;
+            z-index: 1;
+        }
 
-    /* ========== FASE 3: ACCESO ========== */
-    #fase3-registro {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: #000; z-index: 80; display: none;
-      font-family: 'Courier New', monospace; color: var(--verde-terminal);
-      align-items: center; justify-content: center;
-    }
-    .formulario-acceso {
-      border: 2px solid var(--verde-terminal); padding: 60px;
-      max-width: 550px; width: 90%; box-shadow: 0 0 40px rgba(0, 255, 65, 0.3);
-    }
-    .formulario-acceso input {
-      background: #000; border: none; border-bottom: 2px solid var(--verde-terminal);
-      color: var(--verde-terminal); font-family: inherit; font-size: 20px;
-      padding: 14px 0; width: 100%; outline: none; margin-bottom: 15px;
-    }
-    .btn-acceso {
-      background: var(--verde-terminal); color: #000; border: none;
-      padding: 16px 50px; font-family: inherit; font-size: 20px; font-weight: bold;
-      cursor: pointer; margin-top: 30px; letter-spacing: 4px; transition: 0.2s;
-    }
-    .btn-acceso:hover { background: #fff; box-shadow: 0 0 50px rgba(0, 255, 65, 0.7); }
-  </style>
+        /* Bola de discoteca */
+        .bola-discoteca {
+            position: absolute;
+            top: 50px;
+            right: 50px;
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle at 35% 30%, #ffffff 5%, #e0e0e0 20%, #888 50%, #444 80%);
+            border-radius: 50%;
+            box-shadow: 0 0 60px var(--magenta-brillo), 0 0 100px rgba(255, 255, 255, 0.15);
+            animation: girarBola 5s linear infinite;
+            z-index: 2;
+        }
+        @keyframes girarBola {
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+        .bola-discoteca::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 50%;
+            background: repeating-linear-gradient(0deg, transparent, transparent 6px, rgba(0, 0, 0, 0.3) 6px, rgba(0, 0, 0, 0.3) 7px),
+                repeating-linear-gradient(90deg, transparent, transparent 6px, rgba(0, 0, 0, 0.3) 6px, rgba(0, 0, 0, 0.3) 7px);
+        }
+
+        /* Contenedor texto boot */
+        .contenedor-boot {
+            max-width: 900px;
+            width: 90%;
+            padding: 50px;
+            border-left: 3px solid rgba(0, 255, 65, 0.4);
+            position: relative;
+            z-index: 3;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(4px);
+        }
+        .linea-boot {
+            opacity: 0;
+            font-size: 18px;
+            margin: 8px 0;
+            animation: escribirLinea 0.2s forwards;
+        }
+        @keyframes escribirLinea {
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Mensajes subliminales */
+        .mensaje-fantasma {
+            position: fixed;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: var(--cyan);
+            opacity: 0;
+            z-index: 95;
+            pointer-events: none;
+        }
+
+        /* ============ FASE 3: REGISTRO ============ */
+        #fase3-registro {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            z-index: 80;
+            display: none;
+            font-family: 'Courier New', monospace;
+            color: var(--verde-terminal);
+            align-items: center;
+            justify-content: center;
+        }
+        #fase3-registro.activo {
+            display: flex;
+        }
+        .formulario-acceso {
+            border: 2px solid var(--verde-terminal);
+            padding: 60px;
+            max-width: 550px;
+            width: 90%;
+            box-shadow: 0 0 40px rgba(0, 255, 65, 0.3);
+            background: rgba(0, 0, 0, 0.8);
+        }
+        .formulario-acceso label {
+            display: block;
+            margin-top: 20px;
+            font-size: 16px;
+        }
+        .formulario-acceso input {
+            background: #000;
+            border: none;
+            border-bottom: 2px solid var(--verde-terminal);
+            color: var(--verde-terminal);
+            font-family: inherit;
+            font-size: 20px;
+            padding: 14px 0;
+            width: 100%;
+            outline: none;
+        }
+        .btn-acceso {
+            background: var(--verde-terminal);
+            color: #000;
+            border: none;
+            padding: 16px 50px;
+            font-family: inherit;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 35px;
+            letter-spacing: 4px;
+            transition: 0.2s;
+            width: 100%;
+        }
+        .btn-acceso:hover {
+            background: #fff;
+            box-shadow: 0 0 50px rgba(0, 255, 65, 0.7);
+        }
+        .nivel-info {
+            margin-top: 25px;
+            font-size: 18px;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
 
-  <!-- CURSOR OJO -->
-  <div id="cursor-ojo">
-    <svg width="38" height="38" viewBox="0 0 38 38">
-      <ellipse cx="19" cy="19" rx="17" ry="12" fill="none" stroke="#d400ff" stroke-width="2.5"/>
-      <circle cx="19" cy="19" r="7" fill="#d400ff" opacity="0.9"/>
-      <circle cx="19" cy="19" r="3.5" fill="#fff"/>
-      <path d="M2 19 L0 19 M36 19 L38 19 M19 2 L19 0 M19 36 L19 38" stroke="#d400ff" stroke-width="2.5"/>
-    </svg>
-  </div>
-
-  <!-- FASE 1: NEGRO -->
-  <div id="fase1-negro">
-    <div class="logo-fase1">M<span style="color:var(--magenta);">.</span>Y<span style="color:var(--magenta);">.</span>
-      <svg class="ojo-c" viewBox="0 0 38 38">
-        <ellipse cx="19" cy="19" rx="17" ry="12" fill="none" stroke="#d400ff" stroke-width="2.5"/>
-        <circle cx="19" cy="19" r="7" fill="#d400ff" opacity="0.9"/>
-        <circle cx="19" cy="19" r="3.5" fill="#fff"/>
-      </svg>
+    <!-- CURSOR OJO -->
+    <div id="cursor-ojo">
+        <svg viewBox="0 0 38 38">
+            <ellipse cx="19" cy="19" rx="17" ry="12" fill="none" stroke="#d400ff" stroke-width="2.5"/>
+            <circle cx="19" cy="19" r="7" fill="#d400ff" opacity="0.9"/>
+            <circle cx="19" cy="19" r="3.5" fill="#fff"/>
+            <path d="M2 19 L0 19 M36 19 L38 19 M19 2 L19 0 M19 36 L19 38" stroke="#d400ff" stroke-width="2.5"/>
+        </svg>
     </div>
-    <div class="texto-iniciando">INICIANDO...</div>
-  </div>
 
-  <!-- FASE 2: BOOT + CÓDIGO + SUBLIMINALES -->
-  <div id="fase2-boot">
-    <div class="codigo-cayendo" id="codigo-cayendo"></div>
-    <div class="contenedor-boot" id="texto-boot">
-      <div class="bola-discoteca"></div>
+    <!-- FASE 1: INICIO -->
+    <div id="fase1-inicio">
+        <div class="logo-inicio">
+            M<span class="punto">.</span>Y<span class="punto">.</span>
+            <svg class="ojo-svg" viewBox="0 0 38 38">
+                <ellipse cx="19" cy="19" rx="17" ry="12" fill="none" stroke="#d400ff" stroke-width="2.5"/>
+                <circle cx="19" cy="19" r="7" fill="#d400ff" opacity="0.9"/>
+                <circle cx="19" cy="19" r="3.5" fill="#fff"/>
+            </svg>
+        </div>
+        <div class="texto-iniciando">INICIANDO...</div>
     </div>
-    <div class="mensaje-fantasma" id="msg1" style="top:10%;left:5%;">ACCESO_RESTRINGIDO</div>
-    <div class="mensaje-fantasma" id="msg2" style="top:75%;right:5%;">DETROIT_VISION</div>
-    <div class="mensaje-fantasma" id="msg3" style="top:45%;left:80%;">MALAGA_BASE</div>
-    <div class="mensaje-fantasma" id="msg4" style="top:60%;left:15%;">CHAOS_WITH_PURPOSE</div>
-  </div>
 
-  <!-- FASE 3: REGISTRO -->
-  <div id="fase3-registro">
-    <div class="formulario-acceso">
-      <p style="font-size:28px;margin-bottom:30px;">> NUEVO USUARIO_</p>
-      <label>> USUARIO:</label><input type="text" id="reg-usuario" placeholder="username">
-      <label>> EMAIL:</label><input type="email" id="reg-email" placeholder="email@club.xxx">
-      <label>> CONTRASEÑA:</label><input type="password" id="reg-contrasena" placeholder="········">
-      <label>> CODIGO DE ACCESO:</label><input type="text" id="reg-codigo" value="23/10/2026" readonly style="opacity:0.6;">
-      <p id="reg-nivel" style="margin-top:25px;font-size:16px;">NIVEL: DEFAULT</p>
-      <button class="btn-acceso" onclick="procesarAcceso()">ACCEDER</button>
+    <!-- FASE 2: BOOT -->
+    <div id="fase2-boot">
+        <div class="capa-codigo" id="capa-codigo"></div>
+        <div class="scanlines"></div>
+        <div class="bola-discoteca"></div>
+        <div class="contenedor-boot" id="texto-boot"></div>
+        <div class="mensaje-fantasma" id="msg1" style="top:10%;left:5%;">ACCESO_RESTRINGIDO</div>
+        <div class="mensaje-fantasma" id="msg2" style="top:78%;right:5%;">DETROIT_VISION</div>
+        <div class="mensaje-fantasma" id="msg3" style="top:45%;left:82%;">MALAGA_BASE</div>
+        <div class="mensaje-fantasma" id="msg4" style="top:60%;left:15%;">CHAOS_WITH_PURPOSE</div>
     </div>
-  </div>
 
-  <script>
-    // Cursor
-    const cursorOjo = document.getElementById('cursor-ojo');
-    document.addEventListener('mousemove', e => { cursorOjo.style.left = (e.clientX-19)+'px'; cursorOjo.style.top = (e.clientY-19)+'px'; });
-    document.addEventListener('mousedown', () => cursorOjo.classList.add('clicking'));
-    document.addEventListener('mouseup', () => cursorOjo.classList.remove('clicking'));
+    <!-- FASE 3: REGISTRO -->
+    <div id="fase3-registro">
+        <div class="formulario-acceso">
+            <p style="font-size:28px;margin-bottom:30px;text-align:center;">> NUEVO USUARIO_</p>
+            <label>> USUARIO:</label>
+            <input type="text" id="reg-usuario" placeholder="username">
+            <label>> EMAIL:</label>
+            <input type="email" id="reg-email" placeholder="email@club.xxx">
+            <label>> CONTRASEÑA:</label>
+            <input type="password" id="reg-contrasena" placeholder="········">
+            <label>> CODIGO DE ACCESO:</label>
+            <input type="text" id="reg-codigo" value="23/10/2026" readonly style="opacity:0.6;">
+            <div class="nivel-info" id="reg-nivel">NIVEL: DEFAULT</div>
+            <button class="btn-acceso" onclick="procesarAcceso()">ACCEDER</button>
+        </div>
+    </div>
 
-    // Audio
-    let ctxAudio;
-    function getCtx() { if(!ctxAudio) ctxAudio = new (window.AudioContext||window.webkitAudioContext)(); return ctxAudio; }
-    function playSound(freq, type, dur=0.1, vol=0.05) {
-      const ctx = getCtx(); const o = ctx.createOscillator(); const g = ctx.createGain();
-      o.type = type; o.frequency.setValueAtTime(freq, ctx.currentTime);
-      g.gain.setValueAtTime(vol, ctx.currentTime); g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime+dur);
-      o.connect(g); g.connect(ctx.destination); o.start(); o.stop(ctx.currentTime+dur);
-    }
+    <script>
+        // ============ CURSOR ============
+        const cursorOjo = document.getElementById('cursor-ojo');
+        document.addEventListener('mousemove', (e) => {
+            cursorOjo.style.left = (e.clientX - 19) + 'px';
+            cursorOjo.style.top = (e.clientY - 19) + 'px';
+        });
+        document.addEventListener('mousedown', () => cursorOjo.classList.add('clicking'));
+        document.addEventListener('mouseup', () => cursorOjo.classList.remove('clicking'));
 
-    // Código cayendo
-    const codigos = ['0x8F3A', 'DETROIT', 'MALAGA', '23/10/2026', 'MYC', 'CHAOS'];
-    const capaCodigo = document.getElementById('codigo-cayendo');
-    for(let i=0; i<15; i++) {
-      let col = document.createElement('div'); col.className = 'columna-codigo';
-      col.style.left = Math.random()*100+'%';
-      col.style.animationDuration = (10+Math.random()*20)+'s';
-      col.style.animationDelay = Math.random()*10+'s';
-      col.textContent = Array(20).fill(0).map(()=> codigos[Math.floor(Math.random()*codigos.length)]).join('\n');
-      capaCodigo.appendChild(col);
-    }
+        // ============ SONIDOS (Web Audio API) ============
+        let ctxAudio;
 
-    // Secuencia de inicio
-    setTimeout(() => {
-      document.getElementById('fase1-negro').style.opacity = '0';
-      setTimeout(() => {
-        document.getElementById('fase1-negro').style.display = 'none';
-        document.getElementById('fase2-boot').style.display = 'flex';
-        iniciarBoot();
-      }, 600);
-    }, 1800);
+        function getCtx() {
+            if (!ctxAudio) ctxAudio = new(window.AudioContext || window.webkitAudioContext)();
+            return ctxAudio;
+        }
 
-    const lineasBoot = [
-      'M.Y.C SECURE SYSTEM v.2024','──────────────────────────────────────────',
-      'INITIALIZING CORE MODULES...','ESTABLISHING CONNECTION TO DETROIT RELAY...',
-      'MÁLAGA NODE: ONLINE','DETROIT RELAY: ACTIVE','ENCRYPTING CHANNEL... 256-BIT AES',
-      'ACCESS GATEWAY: OPEN','LOADING USER DATABASE...',
-      '[████████████████████████████████] 100%','',
-      '> BIENVENIDO. CREA TUS CREDENCIALES._'
-    ];
-    let iLinea = 0;
-    function iniciarBoot() {
-      if (iLinea < lineasBoot.length) {
-        const l = document.createElement('div'); l.className = 'linea-boot'; l.textContent = lineasBoot[iLinea];
-        document.getElementById('texto-boot').appendChild(l);
-        playSound(850, 'square', 0.06, 0.03); iLinea++;
-        setTimeout(iniciarBoot, 200 + Math.random() * 100);
-      } else {
+        function playSound(freq, type, dur = 0.1, vol = 0.05) {
+            try {
+                const ctx = getCtx();
+                const o = ctx.createOscillator();
+                const g = ctx.createGain();
+                o.type = type;
+                o.frequency.setValueAtTime(freq, ctx.currentTime);
+                g.gain.setValueAtTime(vol, ctx.currentTime);
+                g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + dur);
+                o.connect(g);
+                g.connect(ctx.destination);
+                o.start();
+                o.stop(ctx.currentTime + dur);
+            } catch (e) {}
+        }
+
+        // Sonidos de sistema
+        document.addEventListener('click', (e) => {
+            if (e.target.matches('button')) playSound(900, 'square', 0.08, 0.06);
+            else if (e.target.matches('input')) playSound(400, 'sine', 0.1, 0.03);
+        });
+
+        // ============ CÓDIGO CAYENDO ============
+        const fragmentosCodigo = [
+            '0x8F3A', 'DETROIT::VISION', 'MALAGA::BASE', '23/10/2026',
+            'MYC', 'CHAOS', '//club.dll', 'ACCESS_GRANTED',
+            '0x1B7C', '>>LOADING', '0xC4F1', '//chaos.exe'
+        ];
+        const capaCodigo = document.getElementById('capa-codigo');
+        for (let i = 0; i < 20; i++) {
+            const col = document.createElement('div');
+            col.className = 'columna-codigo';
+            col.style.left = Math.random() * 95 + '%';
+            col.style.animationDuration = (10 + Math.random() * 25) + 's';
+            col.style.animationDelay = Math.random() * 12 + 's';
+            let texto = '';
+            for (let j = 0; j < 15; j++) {
+                texto += fragmentosCodigo[Math.floor(Math.random() * fragmentosCodigo.length)] + '\n';
+            }
+            col.textContent = texto;
+            capaCodigo.appendChild(col);
+        }
+
+        // ============ MENSAJES SUBLIMINALES ============
+        const mensajes = document.querySelectorAll('.mensaje-fantasma');
+        mensajes.forEach((msg, i) => {
+            const duracion = 5 + Math.random() * 5;
+            const retraso = i * 1.5;
+            msg.style.animation = `flotar ${duracion}s ${retraso}s ease-in-out infinite`;
+        });
+
+        // Insertamos keyframes dinámicamente
+        const styleSheet = document.createElement('style');
+        styleSheet.textContent = `
+          @keyframes flotar {
+            0% { opacity: 0; transform: translateY(0); }
+            20% { opacity: 0.8; }
+            50% { opacity: 0; transform: translateY(-35px); }
+            100% { opacity: 0; }
+          }
+        `;
+        document.head.appendChild(styleSheet);
+
+        // ============ SECUENCIA DE INICIO ============
         setTimeout(() => {
-          document.getElementById('fase2-boot').style.display = 'none';
-          document.getElementById('fase3-registro').style.display = 'flex';
-        }, 900);
-      }
-    }
+            const fase1 = document.getElementById('fase1-inicio');
+            fase1.classList.add('modo-morado');
+            setTimeout(() => {
+                fase1.classList.add('oculto');
+                document.getElementById('fase2-boot').classList.add('activo');
+                iniciarBoot();
+            }, 800);
+        }, 1800);
 
-    // Animación de mensajes fantasma
-    const mensajes = document.querySelectorAll('.mensaje-fantasma');
-    mensajes.forEach((msg, i) => {
-      msg.style.animation = `flotar ${5+Math.random()*4}s ${i*2}s ease-in-out infinite`;
-    });
+        const lineasBoot = [
+            'M.Y.C SECURE SYSTEM v.2024',
+            '──────────────────────────────────────────',
+            'INITIALIZING CORE MODULES...',
+            'ESTABLISHING CONNECTION TO DETROIT RELAY...',
+            'MÁLAGA NODE: ONLINE',
+            'DETROIT RELAY: ACTIVE',
+            'ENCRYPTING CHANNEL... 256-BIT AES',
+            'ACCESS GATEWAY: OPEN',
+            'LOADING USER DATABASE...',
+            '[████████████████████████████████] 100%',
+            '',
+            '> BIENVENIDO. CREA TUS CREDENCIALES._'
+        ];
+        let iLinea = 0;
 
-    // Registro
-    function procesarAcceso() {
-      const u = document.getElementById('reg-usuario').value.trim();
-      const e = document.getElementById('reg-email').value.trim();
-      const p = document.getElementById('reg-contrasena').value.trim();
-      if(!u||!e||!p) { alert('> ERROR: Todos los campos son obligatorios.'); return; }
-      let nivel = 'DEFAULT', descuento = '';
-      if(p === 'MYC-FOUNDER-2024') { nivel = 'FOUNDER'; descuento = '50% DESCUENTO ACTIVADO'; }
-      else if(document.getElementById('reg-codigo').value === '23/10/2026') { nivel = 'VIP'; descuento = '23% DESCUENTO ACTIVADO'; }
-      document.getElementById('reg-nivel').innerHTML = `NIVEL: ${nivel} <span style="color:#d400ff;">${descuento}</span>`;
-      localStorage.setItem('usuario_myc', JSON.stringify({usuario:u, email:e, nivel}));
-      playSound(1300, 'sine', 0.25, 0.12);
-      alert(`> ACCESO CONCEDIDO. BIENVENIDO, ${u}. [NIVEL: ${nivel}]`);
-    }
-  </script>
+        function iniciarBoot() {
+            if (iLinea < lineasBoot.length) {
+                const linea = document.createElement('div');
+                linea.className = 'linea-boot';
+                linea.textContent = lineasBoot[iLinea];
+                document.getElementById('texto-boot').appendChild(linea);
+                playSound(800 + Math.random() * 200, 'square', 0.06, 0.03);
+                iLinea++;
+                setTimeout(iniciarBoot, 180 + Math.random() * 120);
+            } else {
+                setTimeout(() => {
+                    document.getElementById('fase2-boot').classList.remove('activo');
+                    document.getElementById('fase3-registro').classList.add('activo');
+                }, 900);
+            }
+        }
+
+        // ============ REGISTRO ============
+        function procesarAcceso() {
+            const u = document.getElementById('reg-usuario').value.trim();
+            const e = document.getElementById('reg-email').value.trim();
+            const p = document.getElementById('reg-contrasena').value.trim();
+            if (!u || !e || !p) {
+                alert('> ERROR: Todos los campos son obligatorios.');
+                return;
+            }
+
+            let nivel = 'DEFAULT';
+            let descuento = '';
+            if (p === 'MYC-FOUNDER-2024') {
+                nivel = 'FOUNDER';
+                descuento = '50% DESCUENTO ACTIVADO';
+            } else if (document.getElementById('reg-codigo').value === '23/10/2026') {
+                nivel = 'VIP';
+                descuento = '23% DESCUENTO ACTIVADO';
+            }
+
+            document.getElementById('reg-nivel').innerHTML =
+                `NIVEL: ${nivel} <span style="color:#d400ff;">${descuento}</span>`;
+            localStorage.setItem('usuario_myc', JSON.stringify({ usuario: u, email: e, nivel }));
+
+            // Sonido de acceso concedido
+            playSound(1300, 'sine', 0.25, 0.12);
+            setTimeout(() => playSound(1600, 'sine', 0.3, 0.12), 150);
+
+            alert(`> ACCESO CONCEDIDO. BIENVENIDO, ${u}. [NIVEL: ${nivel}]`);
+            // Aquí se redirigirá al escritorio
+        }
+    </script>
 </body>
 </html>
