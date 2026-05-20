@@ -81,7 +81,7 @@
             animation: aparecerLogo 0.7s ease-out forwards;
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 8px;
         }
         @keyframes aparecerLogo {
             0% {
@@ -96,19 +96,8 @@
         .logo-inicio .punto {
             color: var(--magenta);
         }
-        .logo-inicio .ojo-svg {
-            width: 75px;
-            height: 48px;
-            animation: latidoOjo 2.5s ease-in-out infinite;
-        }
-        @keyframes latidoOjo {
-            0%,
-            100% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.1);
-            }
+        .logo-inicio .letra-c {
+            color: var(--magenta);
         }
         .texto-iniciando {
             margin-top: 35px;
@@ -301,6 +290,7 @@
             padding: 14px 0;
             width: 100%;
             outline: none;
+            cursor: none;
         }
         .btn-acceso {
             background: var(--verde-terminal);
@@ -310,7 +300,7 @@
             font-family: inherit;
             font-size: 20px;
             font-weight: bold;
-            cursor: pointer;
+            cursor: none;
             margin-top: 35px;
             letter-spacing: 4px;
             transition: 0.2s;
@@ -342,12 +332,7 @@
     <!-- FASE 1: INICIO -->
     <div id="fase1-inicio">
         <div class="logo-inicio">
-            M<span class="punto">.</span>Y<span class="punto">.</span>
-            <svg class="ojo-svg" viewBox="0 0 38 38">
-                <ellipse cx="19" cy="19" rx="17" ry="12" fill="none" stroke="#d400ff" stroke-width="2.5"/>
-                <circle cx="19" cy="19" r="7" fill="#d400ff" opacity="0.9"/>
-                <circle cx="19" cy="19" r="3.5" fill="#fff"/>
-            </svg>
+            M<span class="punto">.</span>Y<span class="punto">.</span><span class="letra-c">C</span>
         </div>
         <div class="texto-iniciando">INICIANDO...</div>
     </div>
@@ -382,7 +367,7 @@
     </div>
 
     <script>
-        // ============ CURSOR ============
+        // ============ CURSOR OJO (SIEMPRE VISIBLE) ============
         const cursorOjo = document.getElementById('cursor-ojo');
         document.addEventListener('mousemove', (e) => {
             cursorOjo.style.left = (e.clientX - 19) + 'px';
@@ -415,7 +400,6 @@
             } catch (e) {}
         }
 
-        // Sonidos de sistema
         document.addEventListener('click', (e) => {
             if (e.target.matches('button')) playSound(900, 'square', 0.08, 0.06);
             else if (e.target.matches('input')) playSound(400, 'sine', 0.1, 0.03);
@@ -450,7 +434,6 @@
             msg.style.animation = `flotar ${duracion}s ${retraso}s ease-in-out infinite`;
         });
 
-        // Insertamos keyframes dinámicamente
         const styleSheet = document.createElement('style');
         styleSheet.textContent = `
           @keyframes flotar {
@@ -515,7 +498,6 @@
                 alert('> ERROR: Todos los campos son obligatorios.');
                 return;
             }
-
             let nivel = 'DEFAULT';
             let descuento = '';
             if (p === 'MYC-FOUNDER-2024') {
@@ -525,17 +507,12 @@
                 nivel = 'VIP';
                 descuento = '23% DESCUENTO ACTIVADO';
             }
-
             document.getElementById('reg-nivel').innerHTML =
                 `NIVEL: ${nivel} <span style="color:#d400ff;">${descuento}</span>`;
             localStorage.setItem('usuario_myc', JSON.stringify({ usuario: u, email: e, nivel }));
-
-            // Sonido de acceso concedido
             playSound(1300, 'sine', 0.25, 0.12);
             setTimeout(() => playSound(1600, 'sine', 0.3, 0.12), 150);
-
             alert(`> ACCESO CONCEDIDO. BIENVENIDO, ${u}. [NIVEL: ${nivel}]`);
-            // Aquí se redirigirá al escritorio
         }
     </script>
 </body>
