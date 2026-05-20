@@ -12,8 +12,8 @@
         }
 
         body {
-            font-family: 'Helvetica Neue', 'Arial', sans-serif;
-            background: #020008;
+            font-family: 'Courier New', 'Consolas', 'Helvetica Neue', monospace;
+            background: #010508;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -25,77 +25,78 @@
             overflow-x: hidden;
         }
 
-        /* ============ VIGNETTE ============ */
+        /* ============ FONDO HACKING ============ */
+        .hack-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            background: #010508;
+            overflow: hidden;
+        }
+        .code-column {
+            position: absolute;
+            top: -100px;
+            font-family: 'Courier New', 'Consolas', monospace;
+            font-size: 12px;
+            color: #00b8b8;
+            opacity: 0.5;
+            animation: codeFall var(--speed) linear infinite;
+            animation-delay: var(--delay);
+            white-space: nowrap;
+            line-height: 1.6;
+            letter-spacing: 1px;
+        }
+        @keyframes codeFall {
+            0% {
+                transform: translateY(-100px);
+                opacity: 0.4;
+            }
+            50% {
+                opacity: 0.55;
+            }
+            100% {
+                transform: translateY(110vh);
+                opacity: 0.15;
+            }
+        }
+
+        /* Scanlines CRT */
+        .scanlines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 0, 0, 0.03) 2px,
+                    rgba(0, 0, 0, 0.03) 3px);
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* Vignette */
         .vignette {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: radial-gradient(ellipse at center, transparent 35%, rgba(0, 0, 0, 0.75) 85%, #000 100%);
-            z-index: 0;
-            pointer-events: none;
-        }
-
-        /* ============ LLUVIA SUTIL ============ */
-        .rain-layer {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            background: radial-gradient(ellipse at center, transparent 40%, rgba(0, 0, 0, 0.7) 85%, #000 100%);
             z-index: 1;
             pointer-events: none;
-            opacity: 0.25;
-        }
-        .raindrop {
-            position: absolute;
-            width: 1px;
-            height: 15px;
-            background: linear-gradient(180deg, transparent, rgba(180, 150, 255, 0.5));
-            animation: rainFall var(--rdur) linear infinite;
-            animation-delay: var(--rdelay);
-            top: -20px;
-        }
-        @keyframes rainFall {
-            0% {
-                transform: translateY(-20px);
-                opacity: 0;
-            }
-            10% {
-                opacity: 0.6;
-            }
-            90% {
-                opacity: 0.3;
-            }
-            100% {
-                transform: translateY(105vh);
-                opacity: 0;
-            }
         }
 
-        /* ============ ATMÓSFERA ============ */
-        .atmosphere {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(ellipse at 35% 25%, rgba(180, 0, 255, 0.16) 0%, transparent 50%),
-                radial-gradient(ellipse at 65% 55%, rgba(255, 0, 140, 0.12) 0%, transparent 50%),
-                radial-gradient(ellipse at 50% 70%, rgba(80, 0, 180, 0.1) 0%, transparent 40%);
-            z-index: 0;
-            pointer-events: none;
-        }
-
-        /* ============ PARTÍCULAS 3 CAPAS ============ */
+        /* Partículas */
         .particles-layer {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 2;
+            z-index: 1;
             pointer-events: none;
         }
         .particle-fast,
@@ -109,7 +110,7 @@
         .particle-fast {
             width: 1px;
             height: 1px;
-            background: #ff90d0;
+            background: #00b8b8;
             --dur: 4s;
         }
         .particle-mid {
@@ -119,11 +120,10 @@
             --dur: 6s;
         }
         .particle-slow {
-            width: 3px;
-            height: 3px;
-            background: #a000d0;
+            width: 2px;
+            height: 2px;
+            background: #008888;
             --dur: 9s;
-            box-shadow: 0 0 5px rgba(160, 0, 220, 0.4);
         }
         @keyframes floatUp {
             0% {
@@ -134,10 +134,10 @@
                 opacity: 1;
             }
             90% {
-                opacity: 0.7;
+                opacity: 0.6;
             }
             100% {
-                transform: translateY(-10vh) scale(2.5);
+                transform: translateY(-10vh) scale(2);
                 opacity: 0;
             }
         }
@@ -151,40 +151,14 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 10px;
+            gap: 14px;
             opacity: 0;
             transform: scale(0.92);
-            transition: opacity 1.4s ease, transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: opacity 1.2s ease, transform 1s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .main-container.visible {
             opacity: 1;
             transform: scale(1);
-        }
-
-        /* ============ EFECTO PUERTA DE CLUB ============ */
-        .door-effect {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 50;
-            pointer-events: none;
-            background: #000;
-            animation: doorOpen 1.8s cubic-bezier(0.77, 0, 0.175, 1) forwards;
-            animation-delay: 0.3s;
-        }
-        @keyframes doorOpen {
-            0% {
-                clip-path: inset(0 0 0 0);
-            }
-            60% {
-                clip-path: inset(0 0 0 0);
-            }
-            100% {
-                clip-path: inset(0 50% 0 50%);
-                opacity: 0;
-            }
         }
 
         /* ============ LOGO CON LUNA ============ */
@@ -192,44 +166,39 @@
             text-align: center;
             position: relative;
         }
-        .logo-emblem {
-            position: relative;
-            display: inline-block;
-            margin-bottom: 4px;
-        }
         .logo-text {
-            font-size: 52px;
+            font-size: 48px;
             font-weight: 700;
-            letter-spacing: 8px;
+            letter-spacing: 6px;
             color: #fff;
             line-height: 1;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 2px;
-            text-shadow: 0 0 30px rgba(212, 0, 255, 0.5), 0 0 60px rgba(255, 0, 140, 0.3);
-            animation: neonPulse 3.5s ease-in-out infinite, glitchSkew 6s ease-in-out infinite;
+            text-shadow: 0 0 25px rgba(212, 0, 255, 0.45), 0 0 50px rgba(255, 0, 140, 0.25);
+            animation: neonPulse 3.5s ease-in-out infinite, glitchSkew 7s ease-in-out infinite;
         }
         @keyframes neonPulse {
             0%,
             100% {
-                text-shadow: 0 0 30px rgba(212, 0, 255, 0.5), 0 0 60px rgba(255, 0, 140, 0.3);
+                text-shadow: 0 0 25px rgba(212, 0, 255, 0.45), 0 0 50px rgba(255, 0, 140, 0.25);
             }
             50% {
-                text-shadow: 0 0 55px rgba(212, 0, 255, 0.85), 0 0 90px rgba(255, 0, 140, 0.55);
+                text-shadow: 0 0 45px rgba(212, 0, 255, 0.75), 0 0 70px rgba(255, 0, 140, 0.45);
             }
         }
         @keyframes glitchSkew {
             0%,
-            93%,
+            94%,
             100% {
                 transform: skew(0deg);
             }
-            95% {
-                transform: skew(2.5deg);
+            96% {
+                transform: skew(3deg);
             }
-            97% {
-                transform: skew(-1.5deg);
+            98% {
+                transform: skew(-2deg);
             }
         }
         .logo-letter {
@@ -240,7 +209,7 @@
         @keyframes letterPop {
             0% {
                 opacity: 0;
-                transform: translateY(-8px) scale(0.8);
+                transform: translateY(-6px) scale(0.85);
             }
             100% {
                 opacity: 1;
@@ -249,9 +218,8 @@
         }
         .logo-dot {
             color: #d400ff;
-            animation: letterPop 0.2s ease forwards;
         }
-        /* LUNA - La C es una luna creciente */
+        /* LUNA */
         .moon-c {
             display: inline-block;
             width: 42px;
@@ -259,73 +227,38 @@
             position: relative;
             margin: 0 4px;
             animation: moonGlow 3s ease-in-out infinite;
-            filter: drop-shadow(0 0 18px rgba(255, 200, 255, 0.7)) drop-shadow(0 0 35px rgba(212, 0, 255, 0.5));
+            vertical-align: middle;
         }
-        @keyframes moonGlow {
-            0%,
-            100% {
-                filter: drop-shadow(0 0 18px rgba(255, 200, 255, 0.7)) drop-shadow(0 0 35px rgba(212, 0, 255, 0.5));
-            }
-            50% {
-                filter: drop-shadow(0 0 28px rgba(255, 220, 255, 0.9)) drop-shadow(0 0 50px rgba(212, 0, 255, 0.7));
-            }
-        }
-        .moon-c::before {
-            content: '';
-            position: absolute;
+        .moon-c-inner {
             width: 42px;
             height: 42px;
             border-radius: 50%;
-            background: #fff;
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.6), 0 0 50px rgba(212, 0, 255, 0.5), inset 0 0 20px rgba(200, 200, 255, 0.3);
+            background: #ffffff;
+            box-shadow: 0 0 25px rgba(255, 255, 255, 0.65), 0 0 50px rgba(212, 0, 255, 0.4);
+            position: relative;
+            overflow: hidden;
         }
-        .moon-c::after {
+        .moon-c-inner::after {
             content: '';
             position: absolute;
             width: 32px;
             height: 32px;
             border-radius: 50%;
-            background: #0a0018;
-            top: 2px;
+            background: #010508;
+            top: 3px;
             right: -6px;
         }
-
-        /* ============ MENSAJE OCULTO ============ */
-        .hidden-message {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(0);
-            font-size: 12px;
-            letter-spacing: 8px;
-            color: rgba(212, 0, 255, 0);
-            z-index: 60;
-            pointer-events: none;
-            animation: whisperMessage 5s ease-in-out infinite;
-            animation-delay: 4s;
-            text-transform: uppercase;
-        }
-        @keyframes whisperMessage {
+        @keyframes moonGlow {
             0%,
             100% {
-                transform: translate(-50%, -50%) scale(0);
-                color: rgba(212, 0, 255, 0);
+                filter: brightness(1);
             }
-            15% {
-                transform: translate(-50%, -50%) scale(1.2);
-                color: rgba(212, 0, 255, 0.5);
-            }
-            30% {
-                transform: translate(-50%, -50%) scale(1);
-                color: rgba(212, 0, 255, 0.15);
-            }
-            45% {
-                transform: translate(-50%, -50%) scale(0);
-                color: rgba(212, 0, 255, 0);
+            50% {
+                filter: brightness(1.3);
             }
         }
 
-        /* ============ TEXTO SECUNDARIO ============ */
+        /* ============ TEXTOS ============ */
         .slogan {
             font-size: 15px;
             letter-spacing: 5px;
@@ -333,12 +266,12 @@
             text-transform: uppercase;
             margin-top: 2px;
             font-weight: 400;
-            text-shadow: 0 0 15px rgba(212, 0, 255, 0.35);
+            text-shadow: 0 0 15px rgba(212, 0, 255, 0.3);
         }
         .tagline {
             font-size: 9px;
             letter-spacing: 3px;
-            color: #777;
+            color: #666;
             text-transform: uppercase;
             margin-top: 4px;
         }
@@ -353,13 +286,14 @@
             margin-top: 2px;
         }
         .access-code {
-            background: rgba(212, 0, 255, 0.05);
-            border: 1px solid rgba(212, 0, 255, 0.18);
+            background: rgba(0, 180, 180, 0.05);
+            border: 1px solid rgba(0, 180, 180, 0.2);
             padding: 4px 10px;
             border-radius: 12px;
-            color: #d400ff;
+            color: #00b8b8;
             font-size: 9px;
             letter-spacing: 1px;
+            font-family: 'Courier New', monospace;
         }
         .visitor-counter span {
             color: #d400ff;
@@ -376,54 +310,54 @@
             letter-spacing: 2px;
             color: #d400ff;
             text-transform: uppercase;
-            margin-top: 4px;
+            margin-top: 6px;
         }
 
         /* ============ ECUALIZADOR ============ */
         .equalizer {
             display: flex;
             align-items: flex-end;
-            gap: 2px;
-            height: 14px;
+            gap: 3px;
+            height: 16px;
             justify-content: center;
         }
         .eq-bar {
             width: 2px;
-            background: linear-gradient(180deg, #d400ff, #ff0070);
+            background: linear-gradient(180deg, #d400ff, #00b8b8);
             border-radius: 1px;
             animation: eqBounce 0.7s ease-in-out infinite;
         }
         .eq-bar:nth-child(1) {
-            height: 6px;
+            height: 7px;
             animation-delay: 0s;
         }
         .eq-bar:nth-child(2) {
-            height: 11px;
-            animation-delay: 0.07s;
+            height: 12px;
+            animation-delay: 0.08s;
         }
         .eq-bar:nth-child(3) {
             height: 5px;
-            animation-delay: 0.14s;
+            animation-delay: 0.16s;
         }
         .eq-bar:nth-child(4) {
-            height: 14px;
-            animation-delay: 0.21s;
+            height: 15px;
+            animation-delay: 0.24s;
         }
         .eq-bar:nth-child(5) {
-            height: 8px;
-            animation-delay: 0.28s;
+            height: 9px;
+            animation-delay: 0.32s;
         }
         .eq-bar:nth-child(6) {
-            height: 12px;
-            animation-delay: 0.35s;
+            height: 13px;
+            animation-delay: 0.4s;
         }
         .eq-bar:nth-child(7) {
             height: 4px;
-            animation-delay: 0.42s;
+            animation-delay: 0.48s;
         }
         .eq-bar:nth-child(8) {
-            height: 9px;
-            animation-delay: 0.49s;
+            height: 10px;
+            animation-delay: 0.56s;
         }
         @keyframes eqBounce {
             0%,
@@ -438,24 +372,24 @@
         .divider {
             width: 45px;
             height: 1px;
-            background: linear-gradient(90deg, #d400ff, #ff0070, transparent);
+            background: linear-gradient(90deg, #d400ff, #00b8b8, transparent);
             opacity: 0.5;
         }
 
         /* ============ COOKIES ============ */
         .cookie-banner {
             width: 100%;
-            background: rgba(12, 4, 20, 0.9);
-            border: 1px solid rgba(212, 0, 255, 0.12);
-            border-radius: 5px;
-            padding: 9px 12px;
+            background: rgba(5, 8, 15, 0.9);
+            border: 1px solid rgba(0, 180, 180, 0.15);
+            border-radius: 4px;
+            padding: 10px 14px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             flex-wrap: wrap;
-            gap: 6px;
-            font-size: 9px;
-            color: #888;
+            gap: 8px;
+            font-size: 10px;
+            color: #777;
             backdrop-filter: blur(6px);
             transition: all 0.4s;
         }
@@ -464,15 +398,15 @@
         }
         .cookie-btns {
             display: flex;
-            gap: 4px;
+            gap: 5px;
         }
         .cookie-btn {
-            padding: 5px 10px;
+            padding: 6px 12px;
             border: 1px solid #444;
             background: none;
             color: #aaa;
             cursor: pointer;
-            font-size: 8px;
+            font-size: 9px;
             border-radius: 14px;
             letter-spacing: 1px;
             font-family: inherit;
@@ -494,7 +428,7 @@
             width: 100%;
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 10px;
             opacity: 0;
             transform: translateY(8px);
             pointer-events: none;
@@ -507,7 +441,7 @@
         }
         .selectors-row {
             display: flex;
-            gap: 6px;
+            gap: 8px;
             width: 100%;
         }
         .select-group {
@@ -516,12 +450,12 @@
         }
         .select-group select {
             width: 100%;
-            padding: 9px 10px;
-            background: #08081a;
-            border: 1px solid #2a2a3a;
+            padding: 10px 12px;
+            background: #0a0f15;
+            border: 1px solid #2a2a35;
             border-radius: 4px;
             color: #ccc;
-            font-size: 10px;
+            font-size: 11px;
             font-family: inherit;
             outline: none;
             cursor: pointer;
@@ -531,21 +465,21 @@
         .select-group::after {
             content: '▾';
             position: absolute;
-            right: 8px;
+            right: 10px;
             top: 50%;
             transform: translateY(-50%);
             color: #d400ff;
-            font-size: 8px;
+            font-size: 9px;
             pointer-events: none;
         }
         .input-field {
             width: 100%;
-            padding: 12px 14px;
-            background: #08081a;
-            border: 1px solid #2a2a3a;
+            padding: 13px 15px;
+            background: #0a0f15;
+            border: 1px solid #2a2a35;
             border-radius: 4px;
             color: #fff;
-            font-size: 12px;
+            font-size: 13px;
             font-family: inherit;
             outline: none;
             transition: all 0.3s;
@@ -559,12 +493,12 @@
         }
         .btn-enter {
             width: 100%;
-            padding: 13px;
-            background: linear-gradient(135deg, #d400ff, #9000b0);
+            padding: 14px;
+            background: #d400ff;
             border: none;
             border-radius: 4px;
             color: #fff;
-            font-size: 12px;
+            font-size: 13px;
             font-weight: 600;
             cursor: pointer;
             letter-spacing: 3px;
@@ -573,13 +507,12 @@
             transition: all 0.3s;
         }
         .btn-enter:hover {
-            background: linear-gradient(135deg, #e010ff, #a000c0);
+            background: #e010ff;
             box-shadow: 0 0 25px rgba(212, 0, 255, 0.3);
-            transform: translateY(-1px);
         }
         .error-msg {
             color: #ff4060;
-            font-size: 9px;
+            font-size: 10px;
             text-align: center;
             display: none;
         }
@@ -588,131 +521,12 @@
         }
         .password-hint {
             color: #555;
-            font-size: 8px;
+            font-size: 9px;
             text-align: center;
             letter-spacing: 1px;
         }
 
-        /* ============ BOLA DE DISCOTECA REALISTA ============ */
-        .disco-ball-container {
-            position: fixed;
-            top: 30px;
-            right: 28px;
-            z-index: 30;
-            pointer-events: none;
-            opacity: 0;
-            transition: opacity 1s ease;
-        }
-        .disco-ball-container.visible {
-            opacity: 1;
-        }
-        /* Cable */
-        .disco-cable {
-            position: absolute;
-            top: -40px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 1.5px;
-            height: 45px;
-            background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(180, 180, 200, 0.2));
-            z-index: 31;
-        }
-        /* Bola */
-        .disco-ball {
-            width: 38px;
-            height: 38px;
-            background: radial-gradient(circle at 38% 32%, #fff 4%, #e8e8e8 12%, #c0c0c0 28%, #808080 48%, #505050 68%, #222 100%);
-            border-radius: 50%;
-            position: relative;
-            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.6), 0 0 35px rgba(212, 0, 255, 0.3), 0 0 55px rgba(255, 255, 255, 0.08);
-            animation: swingDisco 3s ease-in-out infinite, spinDisco 6s linear infinite;
-            transform-origin: center center;
-        }
-        @keyframes swingDisco {
-            0%,
-            100% {
-                transform: rotate(0deg) translateX(0);
-            }
-            25% {
-                transform: rotate(0deg) translateX(2px);
-            }
-            75% {
-                transform: rotate(0deg) translateX(-2px);
-            }
-        }
-        @keyframes spinDisco {
-            0% {
-                transform: rotate(0deg);
-            }
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-        .disco-ball::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            border-radius: 50%;
-            background: repeating-linear-gradient(0deg, transparent, transparent 4px, rgba(0, 0, 0, 0.18) 4px,
-                    rgba(0, 0, 0, 0.18) 5px),
-                repeating-linear-gradient(90deg, transparent, transparent 4px, rgba(0, 0, 0, 0.18) 4px, rgba(0, 0, 0, 0.18) 5px);
-        }
-        .disco-ball::after {
-            content: '';
-            position: absolute;
-            top: 8%;
-            left: 20%;
-            width: 22%;
-            height: 22%;
-            background: radial-gradient(ellipse, rgba(255, 255, 255, 0.55) 0%, transparent 60%);
-            border-radius: 50%;
-        }
-        .sparkle {
-            position: absolute;
-            width: 2px;
-            height: 2px;
-            background: #fff;
-            border-radius: 50%;
-            animation: sparkleBurst 0.5s ease-out forwards;
-            box-shadow: 0 0 3px #d400ff, 0 0 8px #ff40c0, 0 0 12px #fff;
-        }
-        @keyframes sparkleBurst {
-            0% {
-                transform: translate(0, 0) scale(0);
-                opacity: 1;
-            }
-            100% {
-                transform: translate(var(--dx), var(--dy)) scale(1);
-                opacity: 0;
-            }
-        }
-        .disco-flash {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 60px;
-            height: 60px;
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.4) 0%, rgba(212, 0, 255, 0.25) 30%, transparent 70%);
-            border-radius: 50%;
-            animation: initialFlash 0.5s ease-out forwards;
-            pointer-events: none;
-        }
-        @keyframes initialFlash {
-            0% {
-                transform: translate(-50%, -50%) scale(0);
-                opacity: 1;
-            }
-            100% {
-                transform: translate(-50%, -50%) scale(2.5);
-                opacity: 0;
-            }
-        }
-
-        /* ============ FOOTER LEGAL ============ */
+        /* ============ FOOTER ============ */
         .legal-footer {
             position: fixed;
             bottom: 16px;
@@ -727,11 +541,10 @@
         .legal-footer a {
             color: #3a3a3a;
             text-decoration: none;
-            transition: color 0.2s;
             cursor: pointer;
         }
         .legal-footer a:hover {
-            color: #d400ff;
+            color: #00b8b8;
         }
 
         /* ============ ESCRITORIO ============ */
@@ -792,11 +605,6 @@
             justify-content: center;
             font-size: 38px;
         }
-        .desktop-icon .icon-label {
-            color: white;
-            font-size: 11px;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
-        }
         .taskbar {
             position: fixed;
             bottom: 0;
@@ -816,7 +624,6 @@
             border: none;
             padding: 8px 14px;
             font-size: 12px;
-            font-weight: bold;
             cursor: pointer;
             border-radius: 3px;
             height: 30px;
@@ -920,7 +727,6 @@
             justify-content: space-between;
             font-size: 13px;
             font-weight: bold;
-            border-radius: 8px 8px 0 0;
         }
         .window-close {
             background: none;
@@ -935,62 +741,21 @@
             color: #ccc;
             font-size: 13px;
         }
-        .window-body h3 {
-            color: #d400ff;
-        }
-        .mini-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-top: 12px;
-        }
-        .mini-card {
-            background: #0d0d1a;
-            border: 1px solid #2a2a3e;
-            padding: 12px;
-            cursor: pointer;
-        }
-        .mini-card:hover {
-            border-color: #d400ff;
-        }
-        .tour-line {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 8px 0;
-            border-bottom: 1px solid #2a2a3e;
-        }
-        .tour-date {
-            color: #d400ff;
-            font-weight: bold;
-            min-width: 60px;
-        }
-        .btn-sm {
-            background: #d400ff;
-            color: white;
-            border: none;
-            padding: 6px 14px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 11px;
-        }
 
         @media (max-width: 600px) {
             .logo-text {
-                font-size: 36px;
+                font-size: 34px;
                 letter-spacing: 4px;
             }
-            .moon-c {
+            .moon-c,
+            .moon-c-inner {
                 width: 30px;
                 height: 30px;
             }
-            .moon-c::before {
-                width: 30px;
-                height: 30px;
-            }
-            .moon-c::after {
+            .moon-c-inner::after {
                 width: 22px;
                 height: 22px;
+                top: 2px;
                 right: -4px;
             }
             .slogan {
@@ -1004,33 +769,16 @@
                 left: 8px;
                 gap: 8px;
             }
-            .disco-ball {
-                width: 28px;
-                height: 28px;
-            }
-            .disco-ball-container {
-                top: 20px;
-                right: 16px;
-            }
-            .disco-cable {
-                top: -30px;
-                height: 35px;
-            }
         }
     </style>
 </head>
 <body>
 
+    <!-- FONDO HACKING -->
+    <div class="hack-bg" id="hack-bg"></div>
+    <div class="scanlines"></div>
     <div class="vignette"></div>
-    <div class="atmosphere"></div>
-    <div class="rain-layer" id="rain-layer"></div>
     <div class="particles-layer" id="particles-layer"></div>
-
-    <!-- EFECTO PUERTA -->
-    <div class="door-effect" id="door-effect"></div>
-
-    <!-- MENSAJE OCULTO -->
-    <div class="hidden-message" id="hidden-message">We see you</div>
 
     <!-- LOGIN SCREEN -->
     <div id="login-screen">
@@ -1084,13 +832,6 @@
         </div>
     </div>
 
-    <!-- BOLA DE DISCOTECA -->
-    <div class="disco-ball-container" id="disco-ball-container">
-        <div class="disco-flash" id="disco-flash"></div>
-        <div class="disco-cable"></div>
-        <div class="disco-ball"></div>
-    </div>
-
     <!-- DESKTOP -->
     <div id="desktop-screen">
         <div class="desktop-bg"></div>
@@ -1127,20 +868,35 @@
     </div>
 
     <script>
-        // ============ LLUVIA ============
-        var rl = document.getElementById('rain-layer');
-        for (var i = 0; i < 50; i++) {
-            var rd = document.createElement('div');
-            rd.className = 'raindrop';
-            rd.style.left = Math.random() * 100 + '%';
-            rd.style.setProperty('--rdur', (1.5 + Math.random() * 3) + 's');
-            rd.style.setProperty('--rdelay', Math.random() * 3 + 's');
-            rl.appendChild(rd);
+        // ============ CÓDIGO CAYENDO ============
+        var hackLines = [
+            '0x' + Math.random().toString(16).substring(2, 6).toUpperCase(),
+            '//inject_club.dll',
+            'access_token=' + Math.random().toString(36).substring(2, 10),
+            '0x' + Math.random().toString(16).substring(2, 6).toUpperCase(),
+            '>> LOADING_MODULE',
+            '0x' + Math.random().toString(16).substring(2, 6).toUpperCase(),
+            'M.Y.C://secure',
+            '>> FETCHING_DATA',
+            '0x' + Math.random().toString(16).substring(2, 6).toUpperCase(),
+            '//chaos_with_purpose.exe'
+        ];
+        var hb = document.getElementById('hack-bg');
+        for (var i = 0; i < 20; i++) {
+            var col = document.createElement('div');
+            col.className = 'code-column';
+            col.style.left = Math.random() * 95 + '%';
+            col.style.setProperty('--speed', (15 + Math.random() * 30) + 's');
+            col.style.setProperty('--delay', Math.random() * 15 + 's');
+            var txt = '';
+            for (var j = 0; j < 8; j++) { txt += hackLines[Math.floor(Math.random() * hackLines.length)] + '<br>'; }
+            col.innerHTML = txt;
+            hb.appendChild(col);
         }
 
         // ============ PARTÍCULAS ============
         var pl = document.getElementById('particles-layer');
-        for (var j = 0; j < 18; j++) {
+        for (var k = 0; k < 15; k++) {
             ['particle-fast', 'particle-mid', 'particle-slow'].forEach(function(c) {
                 var p = document.createElement('div');
                 p.className = c;
@@ -1150,94 +906,63 @@
             });
         }
 
-        // ============ SECUENCIA DE ENTRADA ============
-        (function entrance() {
-            var logoEl = document.getElementById('logo-text');
-            var elements = [
-                { type: 'letter', char: 'M' },
-                { type: 'dot', char: '.' },
-                { type: 'letter', char: 'Y' },
-                { type: 'dot', char: '.' },
-                { type: 'moon', char: '' }
-            ];
-            logoEl.innerHTML = '';
-            elements.forEach(function(el, i) {
-                if (el.type === 'moon') {
-                    var moon = document.createElement('span');
-                    moon.className = 'moon-c logo-letter';
-                    moon.style.animationDelay = (i * 0.12) + 's';
-                    logoEl.appendChild(moon);
-                } else {
-                    var span = document.createElement('span');
-                    span.className = 'logo-letter';
-                    if (el.type === 'dot') span.classList.add('logo-dot');
-                    span.textContent = el.char;
-                    span.style.animationDelay = (i * 0.12) + 's';
-                    logoEl.appendChild(span);
-                }
-            });
+        // ============ LOGO LETRA POR LETRA ============
+        var logoEl = document.getElementById('logo-text');
+        var elements = [
+            { t: 'letter', c: 'M' }, { t: 'dot', c: '.' }, { t: 'letter', c: 'Y' }, { t: 'dot', c: '.' },
+        ];
+        logoEl.innerHTML = '';
+        elements.forEach(function(el, i) {
+            var span = document.createElement('span');
+            span.className = 'logo-letter';
+            if (el.t === 'dot') span.classList.add('logo-dot');
+            span.textContent = el.c;
+            span.style.animationDelay = (i * 0.12) + 's';
+            logoEl.appendChild(span);
+        });
+        // Luna
+        var moon = document.createElement('span');
+        moon.className = 'moon-c logo-letter';
+        moon.style.animationDelay = '0.48s';
+        var moonInner = document.createElement('span');
+        moonInner.className = 'moon-c-inner';
+        moon.appendChild(moonInner);
+        logoEl.appendChild(moon);
 
-            setTimeout(function() {
-                document.getElementById('main-container').classList.add('visible');
-            }, 900);
-
-            setTimeout(function() {
-                document.getElementById('disco-ball-container').classList.add('visible');
-                var f = document.getElementById('disco-flash');
-                if (f) f.style.display = 'block';
-                setTimeout(function() { if (f) f.style.display = 'none'; }, 500);
-            }, 1600);
-
-            setTimeout(function() {
-                var door = document.getElementById('door-effect');
-                if (door) door.style.opacity = '0';
-            }, 2100);
-        })();
-
-        // ============ DESTELLOS ============
-        var db = document.getElementById('disco-ball-container');
-        setInterval(function() {
-            var s = document.createElement('div');
-            s.className = 'sparkle';
-            var a = Math.random() * 360;
-            var d = 14 + Math.random() * 24;
-            s.style.setProperty('--dx', Math.cos(a * Math.PI / 180) * d + 'px');
-            s.style.setProperty('--dy', Math.sin(a * Math.PI / 180) * d + 'px');
-            s.style.left = '19px';
-            s.style.top = '19px';
-            db.appendChild(s);
-            setTimeout(function() { s.remove(); }, 500);
-        }, 2000);
+        // Secuencia
+        setTimeout(function() { document.getElementById('main-container').classList.add('visible'); }, 700);
 
         // ============ CÓDIGO + CONTADOR ============
         document.getElementById('access-code').textContent = '#MYC-' + Math.floor(Math.random() * 9000 + 1000);
         document.getElementById('visitor-num').textContent = String(Math.floor(Math.random() * 9000 + 1000)).padStart(4,
-        '0');
+            '0');
 
         // ============ TRADUCCIONES ============
-        var t = {
-            'ES': { slogan: 'Chaos With Purpose', tagline: 'Diseñado en Málaga para el mundo', badge: '🔒 Acceso Privado',
-                cookie: '🍪 Usamos cookies.', reject: 'Rechazar', accept: 'Aceptar', email: 'Email o teléfono',
-                pass: 'Contraseña', hint: '🔑 Pista: La fecha más importante', enter: 'Entrar', terms: 'Términos',
-                privacy: 'Privacidad', help: 'Ayuda', errEmpty: 'Ingresa tu email o teléfono',
-                errPass: 'Contraseña incorrecta' },
-            'EN': { slogan: 'Chaos With Purpose', tagline: 'Designed in Málaga to the world', badge: '🔒 Private Access',
-                cookie: '🍪 We use cookies.', reject: 'Reject', accept: 'Accept', email: 'Email or phone',
-                pass: 'Password', hint: '🔑 Hint: Most important date', enter: 'Enter', terms: 'Terms',
-                privacy: 'Privacy', help: 'Help', errEmpty: 'Enter your email', errPass: 'Incorrect password' },
+        var tr = {
+            'ES': { slogan: 'Chaos With Purpose', tagline: 'Diseñado en Málaga para el mundo',
+                badge: '🔒 Acceso Privado', cookie: '🍪 Usamos cookies.', reject: 'Rechazar', accept: 'Aceptar',
+                email: 'Email o teléfono', pass: 'Contraseña', hint: '🔑 Pista: La fecha más importante',
+                enter: 'Entrar', terms: 'Términos', privacy: 'Privacidad', help: 'Ayuda',
+                errEmpty: 'Ingresa tu email o teléfono', errPass: 'Contraseña incorrecta' },
+            'EN': { slogan: 'Chaos With Purpose', tagline: 'Designed in Málaga to the world',
+                badge: '🔒 Private Access', cookie: '🍪 We use cookies.', reject: 'Reject', accept: 'Accept',
+                email: 'Email or phone', pass: 'Password', hint: '🔑 Hint: Most important date', enter: 'Enter',
+                terms: 'Terms', privacy: 'Privacy', help: 'Help', errEmpty: 'Enter your email',
+            errPass: 'Incorrect password' },
             'IT': { slogan: 'Chaos With Purpose', tagline: 'Progettato a Málaga', badge: '🔒 Accesso Privato',
                 cookie: '🍪 Usiamo i cookie.', reject: 'Rifiutare', accept: 'Accettare', email: 'Email o telefono',
                 pass: 'Password', hint: '🔑 Suggerimento', enter: 'Entrare', terms: 'Termini', privacy: 'Privacy',
                 help: 'Aiuto', errEmpty: 'Inserisci email', errPass: 'Password errata' },
             'FR': { slogan: 'Chaos With Purpose', tagline: 'Conçu à Málaga', badge: '🔒 Accès Privé',
                 cookie: '🍪 Nous utilisons des cookies.', reject: 'Refuser', accept: 'Accepter',
-                email: 'Email ou téléphone', pass: 'Mot de passe', hint: '🔑 Indice', enter: 'Entrer', terms: 'Termes',
-                privacy: 'Confidentialité', help: 'Aide', errEmpty: 'Entrez votre email',
-            errPass: 'Mot de passe incorrect' },
+                email: 'Email ou téléphone', pass: 'Mot de passe', hint: '🔑 Indice', enter: 'Entrer',
+                terms: 'Termes', privacy: 'Confidentialité', help: 'Aide', errEmpty: 'Entrez votre email',
+                errPass: 'Mot de passe incorrect' },
             'DE': { slogan: 'Chaos With Purpose', tagline: 'Entworfen in Málaga', badge: '🔒 Privater Zugang',
                 cookie: '🍪 Wir verwenden Cookies.', reject: 'Ablehnen', accept: 'Akzeptieren',
-                email: 'Email oder Telefon', pass: 'Passwort', hint: '🔑 Hinweis', enter: 'Einloggen', terms: 'AGB',
-                privacy: 'Datenschutz', help: 'Hilfe', errEmpty: 'Email eingeben', errPass: 'Falsches Passwort' },
+                email: 'Email oder Telefon', pass: 'Passwort', hint: '🔑 Hinweis', enter: 'Einloggen',
+                terms: 'AGB', privacy: 'Datenschutz', help: 'Hilfe', errEmpty: 'Email eingeben',
+                errPass: 'Falsches Passwort' },
             'POR': { slogan: 'Chaos With Purpose', tagline: 'Desenhado em Málaga', badge: '🔒 Acesso Privado',
                 cookie: '🍪 Usamos cookies.', reject: 'Rejeitar', accept: 'Aceitar', email: 'Email ou telefone',
                 pass: 'Senha', hint: '🔑 Dica', enter: 'Entrar', terms: 'Termos', privacy: 'Privacidade',
@@ -1246,7 +971,7 @@
 
         function updateTranslations() {
             var l = document.getElementById('lang-select').value;
-            var d = t[l] || t['ES'];
+            var d = tr[l] || tr['ES'];
             var ids = ['slogan-text', 'tagline-text', 'private-badge', 'cookie-text', 'cookie-reject', 'cookie-accept',
                 'password-hint', 'btn-enter', 'legal-terms', 'legal-privacy', 'legal-help'
             ];
@@ -1266,7 +991,7 @@
             document.getElementById('login-panel').classList.add('visible'); }
 
         function login() {
-            var d = window._t || t['ES'];
+            var d = window._t || tr['ES'];
             var e = document.getElementById('email-input').value.trim();
             var p = document.getElementById('password-input').value.trim();
             var err = document.getElementById('error-msg');
