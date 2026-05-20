@@ -5,485 +5,404 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>M.Y.C — The Mayin Buu Club</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
         body {
-            background: #0a6e6e;
-            font-family: 'Segoe UI', 'Tahoma', 'Arial', sans-serif;
+            background: #0a0010;
+            font-family: 'Segoe UI', 'Arial', sans-serif;
             min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        /* FONDO ESCRITORIO */
-        .desktop-bg {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 42px;
-            background: linear-gradient(135deg, #0a5e5e, #0a7a7a, #0a6e6e);
-            z-index: 0;
-        }
-
-        /* ICONOS */
-        .icons-area {
-            position: relative;
-            z-index: 1;
-            padding: 25px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            justify-content: flex-start;
-        }
-
-        .desktop-icon {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 6px;
-            cursor: pointer;
-            padding: 10px;
-            border-radius: 4px;
-            width: 90px;
-            background: none;
-            border: 1px solid transparent;
-            color: white;
-            font-family: inherit;
-            font-size: 11px;
-            transition: background 0.15s;
-        }
-
-        .desktop-icon:hover {
-            background: rgba(255,255,255,0.15);
-            border-color: rgba(255,255,255,0.3);
-        }
-
-        .desktop-icon .icon-img {
-            width: 48px;
-            height: 48px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 38px;
-            pointer-events: none;
-        }
-
-        .desktop-icon .icon-label {
-            color: white;
-            font-size: 11px;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
-            text-align: center;
-            pointer-events: none;
-            line-height: 1.3;
-        }
-
-        /* BARRA DE TAREAS */
-        .taskbar {
-            position: fixed;
-            bottom: 0; left: 0; right: 0;
-            height: 42px;
-            background: #1a1a2e;
-            display: flex;
-            align-items: center;
-            padding: 0 8px;
-            z-index: 1000;
-            gap: 8px;
-        }
-
-        .start-btn {
-            background: #d400ff;
-            color: white;
-            border: none;
-            padding: 8px 14px;
-            font-size: 12px;
-            font-weight: bold;
-            cursor: pointer;
-            border-radius: 3px;
-            height: 30px;
-            font-family: inherit;
-        }
-
-        .start-btn:hover {
-            background: #b000d0;
-        }
-
-        .taskbar-player {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: #ccc;
-            font-size: 12px;
-        }
-
-        .taskbar-player button {
-            background: #d400ff;
-            color: white;
-            border: none;
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 12px;
-        }
-
-        .taskbar-player button:hover {
-            background: #b000d0;
-        }
-
-        .taskbar-time {
-            margin-left: auto;
-            color: #ccc;
-            font-size: 12px;
-        }
-
-        /* MENU INICIO */
-        .start-menu {
-            display: none;
-            position: fixed;
-            bottom: 46px;
-            left: 8px;
-            background: #1a1a2e;
-            border: 1px solid #333;
-            border-radius: 6px;
-            z-index: 1001;
-            width: 170px;
             overflow: hidden;
+            position: relative;
         }
 
-        .start-menu.active {
-            display: block;
-        }
-
-        .start-menu-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 14px;
-            cursor: pointer;
-            font-size: 12px;
-            color: #ccc;
-            border: none;
-            background: none;
-            width: 100%;
-            text-align: left;
-            font-family: inherit;
-        }
-
-        .start-menu-item:hover {
-            background: #d400ff;
-            color: white;
-        }
-
-        /* VENTANAS */
-        .window-overlay {
-            display: none;
+        /* Fondo atmosférico */
+        .atmosphere {
             position: fixed;
-            top: 0; left: 0; right: 0; bottom: 42px;
-            background: rgba(0,0,0,0.5);
-            z-index: 500;
-            align-items: center;
-            justify-content: center;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(ellipse at 20% 50%, rgba(180, 0, 255, 0.15) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 30%, rgba(255, 0, 180, 0.12) 0%, transparent 60%),
+                radial-gradient(ellipse at 50% 80%, rgba(120, 0, 200, 0.1) 0%, transparent 50%),
+                #0a0010;
+            z-index: 0;
+            animation: atmospherePulse 8s ease-in-out infinite;
         }
 
-        .window-overlay.active {
-            display: flex;
+        @keyframes atmospherePulse {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.85;
+            }
         }
 
-        .window-box {
-            background: #1a1a2e;
-            border: 1px solid #d400ff;
-            border-radius: 8px;
-            width: 90%;
-            max-width: 500px;
-            max-height: 65vh;
+        /* Partículas */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: #d400ff;
+            border-radius: 50%;
+            animation: floatUp 6s infinite;
+            opacity: 0;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(100vh) scale(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) scale(1.5);
+                opacity: 0;
+            }
+        }
+
+        /* Contenedor principal */
+        .login-container {
+            position: relative;
+            z-index: 10;
             display: flex;
             flex-direction: column;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.6);
-        }
-
-        .window-titlebar {
-            background: #0d0d1a;
-            color: #d400ff;
-            padding: 10px 14px;
-            display: flex;
             align-items: center;
-            justify-content: space-between;
-            font-size: 13px;
-            font-weight: bold;
-            border-radius: 8px 8px 0 0;
-            border-bottom: 1px solid #d400ff;
+            gap: 25px;
+            padding: 40px 30px;
+            background: rgba(10, 0, 20, 0.8);
+            border: 1px solid rgba(212, 0, 255, 0.3);
+            border-radius: 16px;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 0 60px rgba(180, 0, 255, 0.2), 0 0 120px rgba(255, 0, 180, 0.1);
+            max-width: 400px;
+            width: 90%;
         }
 
-        .window-close {
-            background: none;
-            border: none;
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            color: #ffffff;
+            text-align: center;
+            text-shadow: 0 0 30px rgba(212, 0, 255, 0.6);
+        }
+
+        .logo span {
             color: #d400ff;
-            font-size: 18px;
-            cursor: pointer;
-            padding: 0 4px;
-            font-family: inherit;
         }
 
-        .window-close:hover {
-            color: #ff40ff;
-        }
-
-        .window-body {
-            padding: 16px;
-            overflow-y: auto;
-            color: #ccc;
-            font-size: 13px;
-            line-height: 1.7;
-        }
-
-        .window-body h3 {
-            color: #d400ff;
-            margin-bottom: 10px;
-            font-size: 16px;
-        }
-
-        .window-body p {
-            margin-bottom: 10px;
-        }
-
-        .mini-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-top: 12px;
-        }
-
-        .mini-card {
-            background: #0d0d1a;
-            border: 1px solid #2a2a3e;
-            border-radius: 6px;
-            padding: 12px;
-            cursor: pointer;
-            transition: border-color 0.2s;
-        }
-
-        .mini-card:hover {
-            border-color: #d400ff;
-        }
-
-        .mini-card .icon {
-            font-size: 30px;
-            margin-bottom: 6px;
-        }
-
-        .mini-card b {
-            color: white;
-            display: block;
-            margin-bottom: 2px;
-        }
-
-        .mini-card small {
-            color: #999;
-        }
-
-        .tour-line {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 8px 0;
-            border-bottom: 1px solid #2a2a3e;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-
-        .tour-date {
-            color: #d400ff;
-            font-weight: bold;
-            min-width: 60px;
-        }
-
-        .btn-sm {
-            background: #d400ff;
-            color: white;
-            border: none;
-            padding: 6px 14px;
-            border-radius: 4px;
-            cursor: pointer;
+        .subtitle {
             font-size: 11px;
+            letter-spacing: 5px;
+            color: #999;
+            text-transform: uppercase;
+            margin-top: -15px;
+        }
+
+        .input-group {
+            width: 100%;
+            position: relative;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 14px 16px;
+            background: rgba(20, 0, 30, 0.8);
+            border: 1px solid rgba(212, 0, 255, 0.3);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 15px;
             font-family: inherit;
+            outline: none;
+            transition: all 0.3s;
         }
 
-        .btn-sm:hover {
-            background: #b000d0;
+        .input-group input:focus {
+            border-color: #d400ff;
+            box-shadow: 0 0 20px rgba(212, 0, 255, 0.3);
         }
 
-        @media (max-width: 600px) {
-            .icons-area {
-                justify-content: center;
-                gap: 10px;
+        .input-group input::placeholder {
+            color: #666;
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #d400ff, #ff00b4);
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-family: inherit;
+            transition: all 0.3s;
+        }
+
+        .btn-login:hover {
+            box-shadow: 0 0 40px rgba(212, 0, 255, 0.5);
+            transform: scale(1.02);
+        }
+
+        .error-msg {
+            color: #ff4060;
+            font-size: 12px;
+            text-align: center;
+            display: none;
+        }
+
+        .error-msg.show {
+            display: block;
+        }
+
+        /* KID BUU */
+        .kid-buu {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 20;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .kid-buu:hover {
+            transform: scale(1.1);
+        }
+
+        .kid-buu:active {
+            transform: scale(0.95);
+        }
+
+        .kid-buu-head {
+            width: 80px;
+            height: 80px;
+            background: radial-gradient(circle at 40% 35%, #ffaadd, #d400ff 60%, #4a0080);
+            border-radius: 50% 50% 45% 45%;
+            position: relative;
+            box-shadow: 0 0 30px rgba(212, 0, 255, 0.6), 0 0 60px rgba(255, 0, 180, 0.3);
+            animation: buuFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes buuFloat {
+            0%,
+            100% {
+                transform: translateY(0);
             }
-            .mini-grid {
-                grid-template-columns: 1fr;
+            50% {
+                transform: translateY(-8px);
+            }
+        }
+
+        /* Ojos */
+        .kid-buu-head::before {
+            content: '';
+            position: absolute;
+            top: 25px;
+            left: 18px;
+            width: 14px;
+            height: 16px;
+            background: #000;
+            border-radius: 50%;
+            box-shadow: 30px 0 0 #000;
+        }
+
+        /* Ojos blancos */
+        .kid-buu-head::after {
+            content: '';
+            position: absolute;
+            top: 27px;
+            left: 21px;
+            width: 6px;
+            height: 7px;
+            background: #fff;
+            border-radius: 50%;
+            box-shadow: 30px 0 0 #fff;
+        }
+
+        /* Boca */
+        .buu-mouth {
+            position: absolute;
+            bottom: 18px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 10px;
+            border: 2px solid #000;
+            border-top: none;
+            border-radius: 0 0 10px 10px;
+        }
+
+        /* Tooltip de contraseña */
+        .password-tooltip {
+            display: none;
+            position: fixed;
+            bottom: 110px;
+            right: 30px;
+            background: rgba(0, 0, 0, 0.9);
+            border: 1px solid #d400ff;
+            color: #d400ff;
+            padding: 12px 18px;
+            border-radius: 8px;
+            font-size: 14px;
+            z-index: 25;
+            box-shadow: 0 0 20px rgba(212, 0, 255, 0.4);
+            animation: fadeInTooltip 0.3s ease;
+        }
+
+        .password-tooltip.show {
+            display: block;
+        }
+
+        @keyframes fadeInTooltip {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 30px 20px;
+            }
+            .logo {
+                font-size: 22px;
+            }
+            .kid-buu-head {
+                width: 60px;
+                height: 60px;
             }
         }
     </style>
 </head>
 <body>
 
-    <div class="desktop-bg" onclick="deselectAll()"></div>
+    <!-- Fondo atmosférico -->
+    <div class="atmosphere"></div>
 
-    <div class="icons-area">
-        <button class="desktop-icon" ondblclick="openWindow('myc')">
-            <div class="icon-img">🎤</div>
-            <span class="icon-label">M.Y.C</span>
-        </button>
-        <button class="desktop-icon" ondblclick="openWindow('store')">
-            <div class="icon-img">💿</div>
-            <span class="icon-label">Store</span>
-        </button>
-        <button class="desktop-icon" ondblclick="openWindow('merch')">
-            <div class="icon-img">👕</div>
-            <span class="icon-label">Merch</span>
-        </button>
-        <button class="desktop-icon" ondblclick="openWindow('tours')">
-            <div class="icon-img">🌍</div>
-            <span class="icon-label">Tours</span>
-        </button>
-        <button class="desktop-icon" ondblclick="openWindow('babybuus')">
-            <div class="icon-img">👶</div>
-            <span class="icon-label">Baby Buu's</span>
-        </button>
-        <button class="desktop-icon" ondblclick="openWindow('artists')">
-            <div class="icon-img">🎨</div>
-            <span class="icon-label">Artists</span>
-        </button>
+    <!-- Partículas -->
+    <div class="particles" id="particles"></div>
+
+    <!-- Login -->
+    <div class="login-container" id="login-screen">
+        <div class="logo">THE <span>MAYIN BUU</span> CLUB</div>
+        <div class="subtitle">M.Y.C — Access Portal</div>
+
+        <div class="input-group">
+            <input type="text" id="email-input" placeholder="Email o número de teléfono">
+        </div>
+
+        <div class="input-group">
+            <input type="password" id="password-input" placeholder="Contraseña">
+        </div>
+
+        <div class="error-msg" id="error-msg">Credenciales incorrectas</div>
+
+        <button class="btn-login" onclick="login()">Entrar</button>
     </div>
 
-    <div class="window-overlay" id="window-overlay" onclick="closeWindow(event)">
-        <div class="window-box" onclick="event.stopPropagation()">
-            <div class="window-titlebar">
-                <span id="window-title">Ventana</span>
-                <button class="window-close" onclick="closeWindowDirect()">✕</button>
-            </div>
-            <div class="window-body" id="window-body"></div>
+    <!-- Kid Buu -->
+    <div class="kid-buu" onclick="showPassword()" title="¿Olvidaste la contraseña?">
+        <div class="kid-buu-head">
+            <div class="buu-mouth"></div>
         </div>
     </div>
 
-    <div class="start-menu" id="start-menu">
-        <div class="start-menu-item" onclick="openWindow('myc');toggleStart()">🎤 M.Y.C</div>
-        <div class="start-menu-item" onclick="openWindow('store');toggleStart()">💿 Store</div>
-        <div class="start-menu-item" onclick="openWindow('merch');toggleStart()">👕 Merch</div>
-        <div class="start-menu-item" onclick="openWindow('tours');toggleStart()">🌍 Tours</div>
-        <div class="start-menu-item" onclick="openWindow('babybuus');toggleStart()">👶 Baby Buu's</div>
-        <div class="start-menu-item" onclick="openWindow('artists');toggleStart()">🎨 Artists</div>
-    </div>
-
-    <div class="taskbar">
-        <button class="start-btn" onclick="toggleStart()">🏠 Inicio</button>
-        <div class="taskbar-player">
-            <span>🎵 SYNTH</span>
-            <button id="play-btn" onclick="togglePlay()">▶</button>
-        </div>
-        <div class="taskbar-time" id="taskbar-time"></div>
+    <!-- Tooltip contraseña -->
+    <div class="password-tooltip" id="password-tooltip">
+        🔑 Contraseña: <b>23/10/2026</b>
     </div>
 
     <script>
-        function updateClock() {
-            var d = new Date();
-            document.getElementById('taskbar-time').textContent = d.toLocaleTimeString('es-ES', {hour:'2-digit',minute:'2-digit'});
-        }
-        updateClock();
-        setInterval(updateClock, 1000);
-
-        function deselectAll() {}
-
-        function toggleStart() {
-            document.getElementById('start-menu').classList.toggle('active');
+        // Crear partículas
+        var particlesContainer = document.getElementById('particles');
+        for (var i = 0; i < 30; i++) {
+            var particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 6 + 's';
+            particle.style.animationDuration = (4 + Math.random() * 6) + 's';
+            particlesContainer.appendChild(particle);
         }
 
-        document.addEventListener('click', function(e) {
-            var m = document.getElementById('start-menu');
-            var b = document.querySelector('.start-btn');
-            if (!m.contains(e.target) && e.target !== b && !b.contains(e.target)) {
-                m.classList.remove('active');
+        // Mostrar contraseña al hacer clic en Kid Buu
+        function showPassword() {
+            var tooltip = document.getElementById('password-tooltip');
+            tooltip.classList.toggle('show');
+
+            // Ocultar después de 4 segundos
+            if (tooltip.classList.contains('show')) {
+                setTimeout(function() {
+                    tooltip.classList.remove('show');
+                }, 4000);
+            }
+        }
+
+        // Login
+        function login() {
+            var email = document.getElementById('email-input').value.trim();
+            var password = document.getElementById('password-input').value.trim();
+            var errorMsg = document.getElementById('error-msg');
+
+            if (!email) {
+                errorMsg.textContent = 'Ingresa tu email o teléfono';
+                errorMsg.classList.add('show');
+                return;
+            }
+
+            if (password === '23/10/2026') {
+                errorMsg.classList.remove('show');
+                // Redirigir al escritorio
+                window.location.href = 'escritorio.html';
+            } else {
+                errorMsg.textContent = 'Contraseña incorrecta. ¿Probaste a hacer clic en Kid Buu?';
+                errorMsg.classList.add('show');
+            }
+        }
+
+        // Permitir Enter para login
+        document.getElementById('password-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                login();
             }
         });
-
-        var contents = {
-            'myc': {
-                title: 'M.Y.C — The Mayin Buu Club',
-                body: '<h3>M.Y.C</h3><p>Fundado en 2024. Sello independiente de musica electronica de vanguardia.</p><p>Synthwave, techno experimental y mas.</p><div class="mini-grid"><div class="mini-card"><div class="icon">🎹</div><b>Produccion</b><small>Estudio analogico y digital</small></div><div class="mini-card"><div class="icon">🎛️</div><b>Mastering</b><small>Mezcla profesional</small></div></div>'
-            },
-            'store': {
-                title: 'STORE — Discos',
-                body: '<h3>STORE</h3><div class="mini-grid"><div class="mini-card"><div class="icon">💿</div><b>Neon Void Vol.1</b><small>24.99 - Vinilo</small></div><div class="mini-card"><div class="icon">📀</div><b>First Steps EP</b><small>12.99 - Digital</small></div><div class="mini-card"><div class="icon">💾</div><b>Club Edits 001</b><small>18.00 - Cassette</small></div><div class="mini-card"><div class="icon">🎵</div><b>Synth Series 1-3</b><small>34.99 - Box Set</small></div></div>'
-            },
-            'merch': {
-                title: 'MERCH — Ropa',
-                body: '<h3>MERCH</h3><div class="mini-grid"><div class="mini-card"><div class="icon">👕</div><b>Camiseta M.Y.C</b><small>29.99</small></div><div class="mini-card"><div class="icon">🧢</div><b>Gorra Baby Buu</b><small>22.00</small></div><div class="mini-card"><div class="icon">🎒</div><b>Tote Bag</b><small>15.99</small></div><div class="mini-card"><div class="icon">📿</div><b>Colgante Limitado</b><small>45.00</small></div></div>'
-            },
-            'tours': {
-                title: 'TOURS — Fechas',
-                body: '<h3>TOURS</h3><div class="tour-line"><span class="tour-date">15 DIC</span><span>Tokyo - Cyberdome</span><button class="btn-sm">Tickets</button></div><div class="tour-line"><span class="tour-date">20 ENE</span><span>Berlin - Kraftwerk</span><button class="btn-sm">Tickets</button></div><div class="tour-line"><span class="tour-date">14 FEB</span><span>Miami - Vice Club</span><button class="btn-sm">Tickets</button></div><div class="tour-line"><span class="tour-date">08 MAR</span><span>London - Electric</span><button class="btn-sm">Tickets</button></div>'
-            },
-            'babybuus': {
-                title: 'BABY BUUS — Subsello',
-                body: '<h3>BABY BUUS</h3><p>Subsello de M.Y.C enfocado en sonidos experimentales y ludicos.</p><div class="mini-grid"><div class="mini-card"><div class="icon">🍼</div><b>Baby Buu</b><small>Artista principal</small></div><div class="mini-card"><div class="icon">🧸</div><b>First Steps EP</b><small>Vinilo 12" limitado</small></div></div>'
-            },
-            'artists': {
-                title: 'ARTISTS — Roster',
-                body: '<h3>ARTISTS</h3><div class="mini-grid"><div class="mini-card"><div class="icon">🎹</div><b>VHS GLITCH</b><small>Synthwave</small></div><div class="mini-card"><div class="icon">🎛️</div><b>TERMINAL X</b><small>Cyberpunk</small></div><div class="mini-card"><div class="icon">👻</div><b>CRT GHOST</b><small>Vaporwave</small></div><div class="mini-card"><div class="icon">💻</div><b>DATA PHANTOM</b><small>Darksynth</small></div></div>'
+        document.getElementById('email-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                document.getElementById('password-input').focus();
             }
-        };
-
-        function openWindow(page) {
-            var o = document.getElementById('window-overlay');
-            var t = document.getElementById('window-title');
-            var b = document.getElementById('window-body');
-            if (contents[page]) {
-                t.textContent = contents[page].title;
-                b.innerHTML = contents[page].body;
-                o.classList.add('active');
-            }
-        }
-
-        function closeWindowDirect() {
-            document.getElementById('window-overlay').classList.remove('active');
-        }
-
-        function closeWindow(e) {
-            if (e.target === document.getElementById('window-overlay')) {
-                document.getElementById('window-overlay').classList.remove('active');
-            }
-        }
-
-        var ctx = null, playing = false, osc = null, gain = null;
-
-        function initAudio() {
-            if (!ctx) {
-                ctx = new (window.AudioContext || window.webkitAudioContext)();
-                osc = ctx.createOscillator();
-                gain = ctx.createGain();
-                var f = ctx.createBiquadFilter();
-                osc.type = 'sawtooth';
-                osc.frequency.setValueAtTime(110, ctx.currentTime);
-                f.type = 'lowpass';
-                f.frequency.setValueAtTime(600, ctx.currentTime);
-                gain.gain.setValueAtTime(0, ctx.currentTime);
-                osc.connect(f); f.connect(gain); gain.connect(ctx.destination);
-                osc.start();
-                setInterval(function() {
-                    if (playing && osc) osc.frequency.setValueAtTime(110 + Math.sin(Date.now()*0.001)*5, ctx.currentTime);
-                }, 100);
-            }
-        }
-
-        function togglePlay() {
-            var btn = document.getElementById('play-btn');
-            initAudio();
-            if (ctx.state === 'suspended') ctx.resume();
-            if (playing) {
-                gain.gain.setValueAtTime(0, ctx.currentTime);
-                btn.textContent = '▶';
-                playing = false;
-            } else {
-                gain.gain.setValueAtTime(0.15, ctx.currentTime);
-                btn.textContent = '⏸';
-                playing = true;
-            }
-        }
+        });
     </script>
 </body>
 </html>
