@@ -25,54 +25,77 @@
             overflow-x: hidden;
         }
 
-        /* ============ VIGNETTE (oscurecimiento bordes) ============ */
+        /* ============ VIGNETTE ============ */
         .vignette {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: radial-gradient(ellipse at center, transparent 40%, rgba(0, 0, 0, 0.7) 80%, #000 100%);
+            background: radial-gradient(ellipse at center, transparent 35%, rgba(0, 0, 0, 0.75) 85%, #000 100%);
             z-index: 0;
             pointer-events: none;
         }
 
-        /* ============ ATMÓSFERA CON PROFUNDIDAD ============ */
-        .atmosphere {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(ellipse at 35% 25%, rgba(180, 0, 255, 0.18) 0%, transparent 50%),
-                radial-gradient(ellipse at 65% 55%, rgba(255, 0, 150, 0.14) 0%, transparent 50%),
-                radial-gradient(ellipse at 50% 75%, rgba(100, 0, 200, 0.1) 0%, transparent 40%);
-            z-index: 0;
-            pointer-events: none;
-            animation: atmosBreathe 7s ease-in-out infinite;
-        }
-
-        @keyframes atmosBreathe {
-            0%,
-            100% {
-                opacity: 0.8;
-            }
-            30% {
-                opacity: 1;
-            }
-            60% {
-                opacity: 0.75;
-            }
-        }
-
-        /* ============ PARTÍCULAS (3 CAPAS) ============ */
-        .particles-layer {
+        /* ============ LLUVIA SUTIL ============ */
+        .rain-layer {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             z-index: 1;
+            pointer-events: none;
+            opacity: 0.25;
+        }
+        .raindrop {
+            position: absolute;
+            width: 1px;
+            height: 15px;
+            background: linear-gradient(180deg, transparent, rgba(180, 150, 255, 0.5));
+            animation: rainFall var(--rdur) linear infinite;
+            animation-delay: var(--rdelay);
+            top: -20px;
+        }
+        @keyframes rainFall {
+            0% {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.6;
+            }
+            90% {
+                opacity: 0.3;
+            }
+            100% {
+                transform: translateY(105vh);
+                opacity: 0;
+            }
+        }
+
+        /* ============ ATMÓSFERA ============ */
+        .atmosphere {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at 35% 25%, rgba(180, 0, 255, 0.16) 0%, transparent 50%),
+                radial-gradient(ellipse at 65% 55%, rgba(255, 0, 140, 0.12) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 70%, rgba(80, 0, 180, 0.1) 0%, transparent 40%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* ============ PARTÍCULAS 3 CAPAS ============ */
+        .particles-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
             pointer-events: none;
         }
         .particle-fast,
@@ -86,7 +109,7 @@
         .particle-fast {
             width: 1px;
             height: 1px;
-            background: #ff80d0;
+            background: #ff90d0;
             --dur: 4s;
         }
         .particle-mid {
@@ -98,9 +121,9 @@
         .particle-slow {
             width: 3px;
             height: 3px;
-            background: #b000e0;
+            background: #a000d0;
             --dur: 9s;
-            box-shadow: 0 0 6px rgba(180, 0, 255, 0.4);
+            box-shadow: 0 0 5px rgba(160, 0, 220, 0.4);
         }
         @keyframes floatUp {
             0% {
@@ -111,7 +134,7 @@
                 opacity: 1;
             }
             90% {
-                opacity: 0.8;
+                opacity: 0.7;
             }
             100% {
                 transform: translateY(-10vh) scale(2.5);
@@ -128,155 +151,215 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
             opacity: 0;
-            transform: scale(0.95);
-            transition: opacity 1.2s ease, transform 1s ease;
+            transform: scale(0.92);
+            transition: opacity 1.4s ease, transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .main-container.visible {
             opacity: 1;
             transform: scale(1);
         }
 
-        /* ============ LOGO ============ */
+        /* ============ EFECTO PUERTA DE CLUB ============ */
+        .door-effect {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 50;
+            pointer-events: none;
+            background: #000;
+            animation: doorOpen 1.8s cubic-bezier(0.77, 0, 0.175, 1) forwards;
+            animation-delay: 0.3s;
+        }
+        @keyframes doorOpen {
+            0% {
+                clip-path: inset(0 0 0 0);
+            }
+            60% {
+                clip-path: inset(0 0 0 0);
+            }
+            100% {
+                clip-path: inset(0 50% 0 50%);
+                opacity: 0;
+            }
+        }
+
+        /* ============ LOGO CON LUNA ============ */
         .logo-area {
             text-align: center;
             position: relative;
         }
-        .rings {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 110px;
-            height: 110px;
-            pointer-events: none;
-        }
-        .ring {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            border: 1px solid rgba(212, 0, 255, 0.15);
-            border-radius: 50%;
-            animation: ringExpand 4s ease-out infinite;
-        }
-        .ring:nth-child(1) {
-            width: 50px;
-            height: 50px;
-            animation-delay: 0s;
-        }
-        .ring:nth-child(2) {
-            width: 75px;
-            height: 75px;
-            animation-delay: 1.3s;
-        }
-        .ring:nth-child(3) {
-            width: 100px;
-            height: 100px;
-            animation-delay: 2.6s;
-        }
-        @keyframes ringExpand {
-            0% {
-                opacity: 0.5;
-                transform: translate(-50%, -50%) scale(0.7);
-            }
-            50% {
-                opacity: 0.1;
-                transform: translate(-50%, -50%) scale(1.3);
-            }
-            100% {
-                opacity: 0;
-                transform: translate(-50%, -50%) scale(1.7);
-            }
-        }
-        .logo-text {
-            font-size: 48px;
-            font-weight: 700;
-            letter-spacing: 10px;
-            color: #fff;
-            line-height: 1;
-            text-shadow: 0 0 35px rgba(212, 0, 255, 0.6), 0 0 70px rgba(255, 0, 150, 0.35);
-            animation: neonPulse 3.5s ease-in-out infinite, glitchSkew 6s ease-in-out infinite;
+        .logo-emblem {
             position: relative;
             display: inline-block;
+            margin-bottom: 4px;
+        }
+        .logo-text {
+            font-size: 52px;
+            font-weight: 700;
+            letter-spacing: 8px;
+            color: #fff;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 2px;
+            text-shadow: 0 0 30px rgba(212, 0, 255, 0.5), 0 0 60px rgba(255, 0, 140, 0.3);
+            animation: neonPulse 3.5s ease-in-out infinite, glitchSkew 6s ease-in-out infinite;
         }
         @keyframes neonPulse {
             0%,
             100% {
-                text-shadow: 0 0 35px rgba(212, 0, 255, 0.6), 0 0 70px rgba(255, 0, 150, 0.35);
+                text-shadow: 0 0 30px rgba(212, 0, 255, 0.5), 0 0 60px rgba(255, 0, 140, 0.3);
             }
             50% {
-                text-shadow: 0 0 60px rgba(212, 0, 255, 0.9), 0 0 100px rgba(255, 0, 150, 0.6), 0 0 130px rgba(180, 0, 255, 0.4);
+                text-shadow: 0 0 55px rgba(212, 0, 255, 0.85), 0 0 90px rgba(255, 0, 140, 0.55);
             }
         }
         @keyframes glitchSkew {
             0%,
-            92%,
+            93%,
             100% {
                 transform: skew(0deg);
             }
-            94% {
-                transform: skew(3deg);
+            95% {
+                transform: skew(2.5deg);
             }
-            96% {
-                transform: skew(-2deg);
+            97% {
+                transform: skew(-1.5deg);
             }
-            98% {
-                transform: skew(0deg);
-            }
-        }
-        .logo-dot {
-            color: #d400ff;
         }
         .logo-letter {
             display: inline-block;
             opacity: 0;
-            animation: letterReveal 0.15s ease forwards;
+            animation: letterPop 0.2s ease forwards;
         }
-        @keyframes letterReveal {
-            to {
+        @keyframes letterPop {
+            0% {
+                opacity: 0;
+                transform: translateY(-8px) scale(0.8);
+            }
+            100% {
                 opacity: 1;
+                transform: translateY(0) scale(1);
             }
         }
+        .logo-dot {
+            color: #d400ff;
+            animation: letterPop 0.2s ease forwards;
+        }
+        /* LUNA - La C es una luna creciente */
+        .moon-c {
+            display: inline-block;
+            width: 42px;
+            height: 42px;
+            position: relative;
+            margin: 0 4px;
+            animation: moonGlow 3s ease-in-out infinite;
+            filter: drop-shadow(0 0 18px rgba(255, 200, 255, 0.7)) drop-shadow(0 0 35px rgba(212, 0, 255, 0.5));
+        }
+        @keyframes moonGlow {
+            0%,
+            100% {
+                filter: drop-shadow(0 0 18px rgba(255, 200, 255, 0.7)) drop-shadow(0 0 35px rgba(212, 0, 255, 0.5));
+            }
+            50% {
+                filter: drop-shadow(0 0 28px rgba(255, 220, 255, 0.9)) drop-shadow(0 0 50px rgba(212, 0, 255, 0.7));
+            }
+        }
+        .moon-c::before {
+            content: '';
+            position: absolute;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: #fff;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.6), 0 0 50px rgba(212, 0, 255, 0.5), inset 0 0 20px rgba(200, 200, 255, 0.3);
+        }
+        .moon-c::after {
+            content: '';
+            position: absolute;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #0a0018;
+            top: 2px;
+            right: -6px;
+        }
+
+        /* ============ MENSAJE OCULTO ============ */
+        .hidden-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            font-size: 12px;
+            letter-spacing: 8px;
+            color: rgba(212, 0, 255, 0);
+            z-index: 60;
+            pointer-events: none;
+            animation: whisperMessage 5s ease-in-out infinite;
+            animation-delay: 4s;
+            text-transform: uppercase;
+        }
+        @keyframes whisperMessage {
+            0%,
+            100% {
+                transform: translate(-50%, -50%) scale(0);
+                color: rgba(212, 0, 255, 0);
+            }
+            15% {
+                transform: translate(-50%, -50%) scale(1.2);
+                color: rgba(212, 0, 255, 0.5);
+            }
+            30% {
+                transform: translate(-50%, -50%) scale(1);
+                color: rgba(212, 0, 255, 0.15);
+            }
+            45% {
+                transform: translate(-50%, -50%) scale(0);
+                color: rgba(212, 0, 255, 0);
+            }
+        }
+
+        /* ============ TEXTO SECUNDARIO ============ */
         .slogan {
-            font-size: 16px;
+            font-size: 15px;
             letter-spacing: 5px;
             color: #d400ff;
             text-transform: uppercase;
-            margin-top: 4px;
+            margin-top: 2px;
             font-weight: 400;
-            text-shadow: 0 0 18px rgba(212, 0, 255, 0.4);
+            text-shadow: 0 0 15px rgba(212, 0, 255, 0.35);
         }
         .tagline {
-            font-size: 10px;
+            font-size: 9px;
             letter-spacing: 3px;
             color: #777;
             text-transform: uppercase;
-            margin-top: 6px;
+            margin-top: 4px;
         }
-
-        /* ============ ACCESS CODE + CONTADOR ============ */
         .access-info {
             display: flex;
             align-items: center;
-            gap: 16px;
-            font-size: 9px;
+            gap: 14px;
+            font-size: 8px;
             letter-spacing: 2px;
             color: #555;
             text-transform: uppercase;
+            margin-top: 2px;
         }
         .access-code {
-            background: rgba(212, 0, 255, 0.06);
-            border: 1px solid rgba(212, 0, 255, 0.2);
-            padding: 5px 12px;
-            border-radius: 14px;
+            background: rgba(212, 0, 255, 0.05);
+            border: 1px solid rgba(212, 0, 255, 0.18);
+            padding: 4px 10px;
+            border-radius: 12px;
             color: #d400ff;
-            font-size: 10px;
+            font-size: 9px;
             letter-spacing: 1px;
-        }
-        .visitor-counter {
-            color: #555;
         }
         .visitor-counter span {
             color: #d400ff;
@@ -285,61 +368,62 @@
             display: inline-flex;
             align-items: center;
             gap: 5px;
-            background: rgba(212, 0, 255, 0.07);
-            border: 1px solid rgba(212, 0, 255, 0.2);
-            padding: 5px 14px;
-            border-radius: 16px;
-            font-size: 9px;
+            background: rgba(212, 0, 255, 0.06);
+            border: 1px solid rgba(212, 0, 255, 0.18);
+            padding: 4px 12px;
+            border-radius: 14px;
+            font-size: 8px;
             letter-spacing: 2px;
             color: #d400ff;
             text-transform: uppercase;
+            margin-top: 4px;
         }
 
         /* ============ ECUALIZADOR ============ */
         .equalizer {
             display: flex;
             align-items: flex-end;
-            gap: 3px;
-            height: 18px;
+            gap: 2px;
+            height: 14px;
             justify-content: center;
         }
         .eq-bar {
             width: 2px;
-            background: linear-gradient(180deg, #d400ff, #ff0090);
+            background: linear-gradient(180deg, #d400ff, #ff0070);
             border-radius: 1px;
             animation: eqBounce 0.7s ease-in-out infinite;
         }
         .eq-bar:nth-child(1) {
-            height: 8px;
+            height: 6px;
             animation-delay: 0s;
         }
         .eq-bar:nth-child(2) {
-            height: 14px;
-            animation-delay: 0.08s;
+            height: 11px;
+            animation-delay: 0.07s;
         }
         .eq-bar:nth-child(3) {
-            height: 6px;
-            animation-delay: 0.16s;
+            height: 5px;
+            animation-delay: 0.14s;
         }
         .eq-bar:nth-child(4) {
-            height: 18px;
-            animation-delay: 0.24s;
+            height: 14px;
+            animation-delay: 0.21s;
         }
         .eq-bar:nth-child(5) {
-            height: 10px;
-            animation-delay: 0.32s;
+            height: 8px;
+            animation-delay: 0.28s;
         }
         .eq-bar:nth-child(6) {
-            height: 16px;
-            animation-delay: 0.4s;
+            height: 12px;
+            animation-delay: 0.35s;
         }
         .eq-bar:nth-child(7) {
-            height: 5px;
-            animation-delay: 0.48s;
+            height: 4px;
+            animation-delay: 0.42s;
         }
         .eq-bar:nth-child(8) {
-            height: 12px;
-            animation-delay: 0.56s;
+            height: 9px;
+            animation-delay: 0.49s;
         }
         @keyframes eqBounce {
             0%,
@@ -347,33 +431,32 @@
                 transform: scaleY(1);
             }
             50% {
-                transform: scaleY(0.35);
+                transform: scaleY(0.3);
             }
         }
 
-        /* ============ DIVIDER ============ */
         .divider {
-            width: 50px;
+            width: 45px;
             height: 1px;
-            background: linear-gradient(90deg, #d400ff, #ff0090, transparent);
-            opacity: 0.6;
+            background: linear-gradient(90deg, #d400ff, #ff0070, transparent);
+            opacity: 0.5;
         }
 
         /* ============ COOKIES ============ */
         .cookie-banner {
             width: 100%;
-            background: rgba(15, 5, 25, 0.9);
-            border: 1px solid rgba(212, 0, 255, 0.15);
-            border-radius: 6px;
-            padding: 10px 14px;
+            background: rgba(12, 4, 20, 0.9);
+            border: 1px solid rgba(212, 0, 255, 0.12);
+            border-radius: 5px;
+            padding: 9px 12px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             flex-wrap: wrap;
-            gap: 8px;
-            font-size: 10px;
+            gap: 6px;
+            font-size: 9px;
             color: #888;
-            backdrop-filter: blur(8px);
+            backdrop-filter: blur(6px);
             transition: all 0.4s;
         }
         .cookie-banner.hidden {
@@ -381,16 +464,16 @@
         }
         .cookie-btns {
             display: flex;
-            gap: 5px;
+            gap: 4px;
         }
         .cookie-btn {
-            padding: 6px 12px;
+            padding: 5px 10px;
             border: 1px solid #444;
             background: none;
             color: #aaa;
             cursor: pointer;
-            font-size: 9px;
-            border-radius: 16px;
+            font-size: 8px;
+            border-radius: 14px;
             letter-spacing: 1px;
             font-family: inherit;
             transition: all 0.2s;
@@ -411,9 +494,9 @@
             width: 100%;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 8px;
             opacity: 0;
-            transform: translateY(10px);
+            transform: translateY(8px);
             pointer-events: none;
             transition: all 0.5s ease;
         }
@@ -424,7 +507,7 @@
         }
         .selectors-row {
             display: flex;
-            gap: 8px;
+            gap: 6px;
             width: 100%;
         }
         .select-group {
@@ -433,12 +516,12 @@
         }
         .select-group select {
             width: 100%;
-            padding: 10px 12px;
-            background: #0a0a1a;
+            padding: 9px 10px;
+            background: #08081a;
             border: 1px solid #2a2a3a;
-            border-radius: 5px;
+            border-radius: 4px;
             color: #ccc;
-            font-size: 11px;
+            font-size: 10px;
             font-family: inherit;
             outline: none;
             cursor: pointer;
@@ -448,40 +531,40 @@
         .select-group::after {
             content: '▾';
             position: absolute;
-            right: 10px;
+            right: 8px;
             top: 50%;
             transform: translateY(-50%);
             color: #d400ff;
-            font-size: 9px;
+            font-size: 8px;
             pointer-events: none;
         }
         .input-field {
             width: 100%;
-            padding: 13px 15px;
-            background: #0a0a1a;
+            padding: 12px 14px;
+            background: #08081a;
             border: 1px solid #2a2a3a;
-            border-radius: 5px;
+            border-radius: 4px;
             color: #fff;
-            font-size: 13px;
+            font-size: 12px;
             font-family: inherit;
             outline: none;
             transition: all 0.3s;
         }
         .input-field:focus {
             border-color: #d400ff;
-            box-shadow: 0 0 18px rgba(212, 0, 255, 0.1);
+            box-shadow: 0 0 15px rgba(212, 0, 255, 0.08);
         }
         .input-field::placeholder {
             color: #555;
         }
         .btn-enter {
             width: 100%;
-            padding: 14px;
-            background: linear-gradient(135deg, #d400ff, #a000c0);
+            padding: 13px;
+            background: linear-gradient(135deg, #d400ff, #9000b0);
             border: none;
-            border-radius: 5px;
+            border-radius: 4px;
             color: #fff;
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 600;
             cursor: pointer;
             letter-spacing: 3px;
@@ -490,13 +573,13 @@
             transition: all 0.3s;
         }
         .btn-enter:hover {
-            background: linear-gradient(135deg, #e010ff, #b000d0);
-            box-shadow: 0 0 30px rgba(212, 0, 255, 0.35);
+            background: linear-gradient(135deg, #e010ff, #a000c0);
+            box-shadow: 0 0 25px rgba(212, 0, 255, 0.3);
             transform: translateY(-1px);
         }
         .error-msg {
             color: #ff4060;
-            font-size: 10px;
+            font-size: 9px;
             text-align: center;
             display: none;
         }
@@ -505,32 +588,57 @@
         }
         .password-hint {
             color: #555;
-            font-size: 9px;
+            font-size: 8px;
             text-align: center;
             letter-spacing: 1px;
         }
 
-        /* ============ BOLA DE DISCOTECA (REDISEÑADA) ============ */
+        /* ============ BOLA DE DISCOTECA REALISTA ============ */
         .disco-ball-container {
             position: fixed;
-            bottom: 28px;
-            right: 22px;
+            top: 30px;
+            right: 28px;
             z-index: 30;
             pointer-events: none;
             opacity: 0;
-            transition: opacity 0.8s ease;
+            transition: opacity 1s ease;
         }
         .disco-ball-container.visible {
             opacity: 1;
         }
+        /* Cable */
+        .disco-cable {
+            position: absolute;
+            top: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 1.5px;
+            height: 45px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(180, 180, 200, 0.2));
+            z-index: 31;
+        }
+        /* Bola */
         .disco-ball {
-            width: 42px;
-            height: 42px;
-            background: radial-gradient(circle at 40% 35%, #fff 5%, #ddd 15%, #bbb 30%, #777 50%, #444 70%, #222 100%);
+            width: 38px;
+            height: 38px;
+            background: radial-gradient(circle at 38% 32%, #fff 4%, #e8e8e8 12%, #c0c0c0 28%, #808080 48%, #505050 68%, #222 100%);
             border-radius: 50%;
             position: relative;
-            box-shadow: 0 0 30px rgba(212, 0, 255, 0.35), 0 0 50px rgba(255, 255, 255, 0.1);
-            animation: spinDisco 5s linear infinite;
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.6), 0 0 35px rgba(212, 0, 255, 0.3), 0 0 55px rgba(255, 255, 255, 0.08);
+            animation: swingDisco 3s ease-in-out infinite, spinDisco 6s linear infinite;
+            transform-origin: center center;
+        }
+        @keyframes swingDisco {
+            0%,
+            100% {
+                transform: rotate(0deg) translateX(0);
+            }
+            25% {
+                transform: rotate(0deg) translateX(2px);
+            }
+            75% {
+                transform: rotate(0deg) translateX(-2px);
+            }
         }
         @keyframes spinDisco {
             0% {
@@ -548,18 +656,18 @@
             right: 0;
             bottom: 0;
             border-radius: 50%;
-            background: repeating-linear-gradient(0deg, transparent, transparent 5px, rgba(0, 0, 0, 0.2) 5px,
-                    rgba(0, 0, 0, 0.2) 6px),
-                repeating-linear-gradient(90deg, transparent, transparent 5px, rgba(0, 0, 0, 0.2) 5px, rgba(0, 0, 0, 0.2) 6px);
+            background: repeating-linear-gradient(0deg, transparent, transparent 4px, rgba(0, 0, 0, 0.18) 4px,
+                    rgba(0, 0, 0, 0.18) 5px),
+                repeating-linear-gradient(90deg, transparent, transparent 4px, rgba(0, 0, 0, 0.18) 4px, rgba(0, 0, 0, 0.18) 5px);
         }
         .disco-ball::after {
             content: '';
             position: absolute;
-            top: 10%;
-            left: 22%;
-            width: 25%;
-            height: 25%;
-            background: radial-gradient(ellipse, rgba(255, 255, 255, 0.6) 0%, transparent 60%);
+            top: 8%;
+            left: 20%;
+            width: 22%;
+            height: 22%;
+            background: radial-gradient(ellipse, rgba(255, 255, 255, 0.55) 0%, transparent 60%);
             border-radius: 50%;
         }
         .sparkle {
@@ -568,8 +676,8 @@
             height: 2px;
             background: #fff;
             border-radius: 50%;
-            animation: sparkleBurst 0.6s ease-out forwards;
-            box-shadow: 0 0 4px #d400ff, 0 0 10px #ff40c0;
+            animation: sparkleBurst 0.5s ease-out forwards;
+            box-shadow: 0 0 3px #d400ff, 0 0 8px #ff40c0, 0 0 12px #fff;
         }
         @keyframes sparkleBurst {
             0% {
@@ -586,11 +694,11 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 70px;
-            height: 70px;
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.5) 0%, rgba(212, 0, 255, 0.3) 30%, transparent 70%);
+            width: 60px;
+            height: 60px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.4) 0%, rgba(212, 0, 255, 0.25) 30%, transparent 70%);
             border-radius: 50%;
-            animation: initialFlash 0.6s ease-out forwards;
+            animation: initialFlash 0.5s ease-out forwards;
             pointer-events: none;
         }
         @keyframes initialFlash {
@@ -599,7 +707,7 @@
                 opacity: 1;
             }
             100% {
-                transform: translate(-50%, -50%) scale(3);
+                transform: translate(-50%, -50%) scale(2.5);
                 opacity: 0;
             }
         }
@@ -607,12 +715,12 @@
         /* ============ FOOTER LEGAL ============ */
         .legal-footer {
             position: fixed;
-            bottom: 18px;
-            left: 18px;
+            bottom: 16px;
+            left: 16px;
             display: flex;
-            gap: 16px;
+            gap: 14px;
             flex-wrap: wrap;
-            font-size: 9px;
+            font-size: 8px;
             color: #3a3a3a;
             z-index: 5;
         }
@@ -656,7 +764,6 @@
             display: flex;
             flex-wrap: wrap;
             gap: 15px;
-            justify-content: flex-start;
         }
         .desktop-icon {
             display: flex;
@@ -684,14 +791,11 @@
             align-items: center;
             justify-content: center;
             font-size: 38px;
-            pointer-events: none;
         }
         .desktop-icon .icon-label {
             color: white;
             font-size: 11px;
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
-            text-align: center;
-            pointer-events: none;
         }
         .taskbar {
             position: fixed;
@@ -760,7 +864,6 @@
             border-radius: 6px;
             z-index: 1001;
             width: 170px;
-            overflow: hidden;
         }
         .start-menu.active {
             display: block;
@@ -818,7 +921,6 @@
             font-size: 13px;
             font-weight: bold;
             border-radius: 8px 8px 0 0;
-            border-bottom: 1px solid #d400ff;
         }
         .window-close {
             background: none;
@@ -845,15 +947,11 @@
         .mini-card {
             background: #0d0d1a;
             border: 1px solid #2a2a3e;
-            border-radius: 6px;
             padding: 12px;
             cursor: pointer;
         }
         .mini-card:hover {
             border-color: #d400ff;
-        }
-        .mini-card .icon {
-            font-size: 30px;
         }
         .tour-line {
             display: flex;
@@ -861,8 +959,6 @@
             align-items: center;
             padding: 8px 0;
             border-bottom: 1px solid #2a2a3e;
-            flex-wrap: wrap;
-            gap: 8px;
         }
         .tour-date {
             color: #d400ff;
@@ -877,39 +973,48 @@
             border-radius: 4px;
             cursor: pointer;
             font-size: 11px;
-            font-family: inherit;
         }
 
         @media (max-width: 600px) {
             .logo-text {
-                font-size: 34px;
-                letter-spacing: 6px;
+                font-size: 36px;
+                letter-spacing: 4px;
+            }
+            .moon-c {
+                width: 30px;
+                height: 30px;
+            }
+            .moon-c::before {
+                width: 30px;
+                height: 30px;
+            }
+            .moon-c::after {
+                width: 22px;
+                height: 22px;
+                right: -4px;
             }
             .slogan {
-                font-size: 13px;
+                font-size: 12px;
             }
             .selectors-row {
                 flex-direction: column;
             }
             .legal-footer {
-                bottom: 10px;
-                left: 10px;
-                gap: 10px;
-                font-size: 8px;
-            }
-            .icons-area {
-                justify-content: center;
-            }
-            .mini-grid {
-                grid-template-columns: 1fr;
+                bottom: 8px;
+                left: 8px;
+                gap: 8px;
             }
             .disco-ball {
-                width: 34px;
-                height: 34px;
+                width: 28px;
+                height: 28px;
             }
             .disco-ball-container {
-                bottom: 20px;
-                right: 14px;
+                top: 20px;
+                right: 16px;
+            }
+            .disco-cable {
+                top: -30px;
+                height: 35px;
             }
         }
     </style>
@@ -918,15 +1023,19 @@
 
     <div class="vignette"></div>
     <div class="atmosphere"></div>
+    <div class="rain-layer" id="rain-layer"></div>
     <div class="particles-layer" id="particles-layer"></div>
+
+    <!-- EFECTO PUERTA -->
+    <div class="door-effect" id="door-effect"></div>
+
+    <!-- MENSAJE OCULTO -->
+    <div class="hidden-message" id="hidden-message">We see you</div>
 
     <!-- LOGIN SCREEN -->
     <div id="login-screen">
         <div class="main-container" id="main-container">
             <div class="logo-area">
-                <div class="rings">
-                    <div class="ring"></div><div class="ring"></div><div class="ring"></div>
-                </div>
                 <div class="logo-text" id="logo-text"></div>
                 <div class="slogan" id="slogan-text">Chaos With Purpose</div>
                 <div class="tagline" id="tagline-text">Designed in Málaga to the world</div>
@@ -946,7 +1055,7 @@
             <div class="divider"></div>
 
             <div class="cookie-banner" id="cookie-banner">
-                <span id="cookie-text">🍪 Usamos cookies para mejorar tu experiencia.</span>
+                <span id="cookie-text">🍪 Usamos cookies.</span>
                 <div class="cookie-btns">
                     <button class="cookie-btn" id="cookie-reject" onclick="rejectCookies()">Rechazar</button>
                     <button class="cookie-btn accept" id="cookie-accept" onclick="acceptCookies()">Aceptar</button>
@@ -956,38 +1065,29 @@
             <div class="login-panel" id="login-panel">
                 <div class="selectors-row">
                     <div class="select-group">
-                        <select id="region-select" onchange="updateTranslations()">
-                            <option value="ES">🌍 España</option><option value="IT">🌍 Italia</option>
-                            <option value="FR">🌍 France</option><option value="EN">🌍 English</option>
-                            <option value="DE">🌍 Deutschland</option><option value="POR">🌍 Portugal</option>
-                        </select>
-                    </div>
-                    <div class="select-group">
                         <select id="lang-select" onchange="updateTranslations()">
-                            <option value="ES">🌐 Español</option><option value="IT">🌐 Italiano</option>
-                            <option value="FR">🌐 Français</option><option value="EN">🌐 English</option>
+                            <option value="ES">🌐 Español</option><option value="EN">🌐 English</option>
+                            <option value="IT">🌐 Italiano</option><option value="FR">🌐 Français</option>
                             <option value="DE">🌐 Deutsch</option><option value="POR">🌐 Português</option>
                         </select>
                     </div>
                 </div>
-                <input type="text" class="input-field" id="email-input" placeholder="Email o número de teléfono">
+                <input type="text" class="input-field" id="email-input" placeholder="Email o teléfono">
                 <input type="password" class="input-field" id="password-input" placeholder="Contraseña">
                 <div class="error-msg" id="error-msg"></div>
-                <div class="password-hint" id="password-hint">🔑 Pista: La fecha más importante del club</div>
+                <div class="password-hint" id="password-hint">🔑 Pista: La fecha más importante</div>
                 <button class="btn-enter" id="btn-enter" onclick="login()">Entrar</button>
             </div>
         </div>
         <div class="legal-footer">
-            <a id="legal-terms">Términos y condiciones</a>
-            <a id="legal-privacy">Privacidad</a>
-            <a id="legal-help">Ayuda</a>
-            <a id="legal-access">Accesibilidad</a>
+            <a id="legal-terms">Términos</a><a id="legal-privacy">Privacidad</a><a id="legal-help">Ayuda</a>
         </div>
     </div>
 
     <!-- BOLA DE DISCOTECA -->
     <div class="disco-ball-container" id="disco-ball-container">
         <div class="disco-flash" id="disco-flash"></div>
+        <div class="disco-cable"></div>
         <div class="disco-ball"></div>
     </div>
 
@@ -1027,239 +1127,157 @@
     </div>
 
     <script>
-        // ============ SECUENCIA DE ENTRADA ============
-        (function entranceSequence() {
-            var container = document.getElementById('main-container');
-            var discoContainer = document.getElementById('disco-ball-container');
-            var flash = document.getElementById('disco-flash');
+        // ============ LLUVIA ============
+        var rl = document.getElementById('rain-layer');
+        for (var i = 0; i < 50; i++) {
+            var rd = document.createElement('div');
+            rd.className = 'raindrop';
+            rd.style.left = Math.random() * 100 + '%';
+            rd.style.setProperty('--rdur', (1.5 + Math.random() * 3) + 's');
+            rd.style.setProperty('--rdelay', Math.random() * 3 + 's');
+            rl.appendChild(rd);
+        }
 
-            // Logo letra por letra
+        // ============ PARTÍCULAS ============
+        var pl = document.getElementById('particles-layer');
+        for (var j = 0; j < 18; j++) {
+            ['particle-fast', 'particle-mid', 'particle-slow'].forEach(function(c) {
+                var p = document.createElement('div');
+                p.className = c;
+                p.style.left = Math.random() * 100 + '%';
+                p.style.animationDelay = Math.random() * 9 + 's';
+                pl.appendChild(p);
+            });
+        }
+
+        // ============ SECUENCIA DE ENTRADA ============
+        (function entrance() {
             var logoEl = document.getElementById('logo-text');
-            var letters = ['M', '.', 'Y', '.', 'C'];
+            var elements = [
+                { type: 'letter', char: 'M' },
+                { type: 'dot', char: '.' },
+                { type: 'letter', char: 'Y' },
+                { type: 'dot', char: '.' },
+                { type: 'moon', char: '' }
+            ];
             logoEl.innerHTML = '';
-            letters.forEach(function(l, i) {
-                var span = document.createElement('span');
-                span.className = 'logo-letter';
-                if (l === '.') span.classList.add('logo-dot');
-                span.textContent = l;
-                span.style.animationDelay = (i * 0.1) + 's';
-                logoEl.appendChild(span);
+            elements.forEach(function(el, i) {
+                if (el.type === 'moon') {
+                    var moon = document.createElement('span');
+                    moon.className = 'moon-c logo-letter';
+                    moon.style.animationDelay = (i * 0.12) + 's';
+                    logoEl.appendChild(moon);
+                } else {
+                    var span = document.createElement('span');
+                    span.className = 'logo-letter';
+                    if (el.type === 'dot') span.classList.add('logo-dot');
+                    span.textContent = el.char;
+                    span.style.animationDelay = (i * 0.12) + 's';
+                    logoEl.appendChild(span);
+                }
             });
 
-            // Secuencia
             setTimeout(function() {
-                container.classList.add('visible');
-            }, 300);
-
-            setTimeout(function() {
-                discoContainer.classList.add('visible');
-            }, 800);
-
-            // Flash inicial
-            setTimeout(function() {
-                if (flash) flash.style.display = 'block';
-                setTimeout(function() { if (flash) flash.style.display = 'none'; }, 600);
+                document.getElementById('main-container').classList.add('visible');
             }, 900);
+
+            setTimeout(function() {
+                document.getElementById('disco-ball-container').classList.add('visible');
+                var f = document.getElementById('disco-flash');
+                if (f) f.style.display = 'block';
+                setTimeout(function() { if (f) f.style.display = 'none'; }, 500);
+            }, 1600);
+
+            setTimeout(function() {
+                var door = document.getElementById('door-effect');
+                if (door) door.style.opacity = '0';
+            }, 2100);
         })();
 
-        // ============ PARTÍCULAS 3 CAPAS ============
-        var pl = document.getElementById('particles-layer');
-        for (var i = 0; i < 20; i++) {
-            var pf = document.createElement('div');
-            pf.className = 'particle-fast';
-            pf.style.left = Math.random() * 100 + '%';
-            pf.style.animationDelay = Math.random() * 4 + 's';
-            pl.appendChild(pf);
-            var pm = document.createElement('div');
-            pm.className = 'particle-mid';
-            pm.style.left = Math.random() * 100 + '%';
-            pm.style.animationDelay = Math.random() * 6 + 's';
-            pl.appendChild(pm);
-            var ps = document.createElement('div');
-            ps.className = 'particle-slow';
-            ps.style.left = Math.random() * 100 + '%';
-            ps.style.animationDelay = Math.random() * 9 + 's';
-            pl.appendChild(ps);
-        }
-
-        // ============ DESTELLOS BOLA ============
-        var discoBall = document.getElementById('disco-ball-container');
-
-        function createSparkle() {
+        // ============ DESTELLOS ============
+        var db = document.getElementById('disco-ball-container');
+        setInterval(function() {
             var s = document.createElement('div');
             s.className = 'sparkle';
-            var angle = Math.random() * 360;
-            var dist = 18 + Math.random() * 30;
-            s.style.setProperty('--dx', Math.cos(angle * Math.PI / 180) * dist + 'px');
-            s.style.setProperty('--dy', Math.sin(angle * Math.PI / 180) * dist + 'px');
-            s.style.left = '21px';
-            s.style.top = '21px';
-            discoBall.appendChild(s);
-            setTimeout(function() { s.remove(); }, 600);
-        }
-        setInterval(createSparkle, 2200);
+            var a = Math.random() * 360;
+            var d = 14 + Math.random() * 24;
+            s.style.setProperty('--dx', Math.cos(a * Math.PI / 180) * d + 'px');
+            s.style.setProperty('--dy', Math.sin(a * Math.PI / 180) * d + 'px');
+            s.style.left = '19px';
+            s.style.top = '19px';
+            db.appendChild(s);
+            setTimeout(function() { s.remove(); }, 500);
+        }, 2000);
 
-        // ============ CÓDIGO DE ACCESO + CONTADOR ============
-        (function() {
-            var code = 'MYC-' + Math.floor(Math.random() * 9000 + 1000);
-            document.getElementById('access-code').textContent = '#' + code;
-            var visitor = Math.floor(Math.random() * 9000 + 1000);
-            document.getElementById('visitor-num').textContent = String(visitor).padStart(4, '0');
-        })();
+        // ============ CÓDIGO + CONTADOR ============
+        document.getElementById('access-code').textContent = '#MYC-' + Math.floor(Math.random() * 9000 + 1000);
+        document.getElementById('visitor-num').textContent = String(Math.floor(Math.random() * 9000 + 1000)).padStart(4,
+        '0');
 
         // ============ TRADUCCIONES ============
-        var translations = {
-            'ES': {
-                slogan: 'Chaos With Purpose',
-                tagline: 'Diseñado en Málaga para el mundo',
-                badge: '🔒 Acceso Privado',
-                cookie: '🍪 Usamos cookies para mejorar tu experiencia.',
-                reject: 'Rechazar',
-                accept: 'Aceptar',
-                emailPlaceholder: 'Email o número de teléfono',
-                passPlaceholder: 'Contraseña',
-                hint: '🔑 Pista: La fecha más importante del club',
-                enter: 'Entrar',
-                terms: 'Términos y condiciones',
-                privacy: 'Privacidad',
-                help: 'Ayuda',
-                access: 'Accesibilidad',
-                errorEmpty: 'Ingresa tu email o teléfono',
-                errorPass: 'Contraseña incorrecta'
-            },
-            'EN': {
-                slogan: 'Chaos With Purpose',
-                tagline: 'Designed in Málaga to the world',
-                badge: '🔒 Private Access',
-                cookie: '🍪 We use cookies to improve your experience.',
-                reject: 'Reject',
-                accept: 'Accept',
-                emailPlaceholder: 'Email or phone number',
-                passPlaceholder: 'Password',
-                hint: '🔑 Hint: The most important date of the club',
-                enter: 'Enter',
-                terms: 'Terms & Conditions',
-                privacy: 'Privacy',
-                help: 'Help',
-                access: 'Accessibility',
-                errorEmpty: 'Enter your email or phone',
-                errorPass: 'Incorrect password'
-            },
-            'IT': {
-                slogan: 'Chaos With Purpose',
-                tagline: 'Progettato a Málaga per il mondo',
-                badge: '🔒 Accesso Privato',
-                cookie: '🍪 Usiamo i cookie per migliorare la tua esperienza.',
-                reject: 'Rifiutare',
-                accept: 'Accettare',
-                emailPlaceholder: 'Email o numero di telefono',
-                passPlaceholder: 'Password',
-                hint: '🔑 Suggerimento: La data più importante del club',
-                enter: 'Entrare',
-                terms: 'Termini e condizioni',
-                privacy: 'Privacy',
-                help: 'Aiuto',
-                access: 'Accessibilità',
-                errorEmpty: 'Inserisci email o telefono',
-                errorPass: 'Password errata'
-            },
-            'FR': {
-                slogan: 'Chaos With Purpose',
-                tagline: 'Conçu à Málaga pour le monde',
-                badge: '🔒 Accès Privé',
-                cookie: '🍪 Nous utilisons des cookies pour améliorer votre expérience.',
-                reject: 'Refuser',
-                accept: 'Accepter',
-                emailPlaceholder: 'Email ou téléphone',
-                passPlaceholder: 'Mot de passe',
-                hint: '🔑 Indice: La date la plus importante du club',
-                enter: 'Entrer',
-                terms: 'Termes et conditions',
-                privacy: 'Confidentialité',
-                help: 'Aide',
-                access: 'Accessibilité',
-                errorEmpty: 'Entrez votre email ou téléphone',
-                errorPass: 'Mot de passe incorrect'
-            },
-            'DE': {
-                slogan: 'Chaos With Purpose',
-                tagline: 'Entworfen in Málaga für die Welt',
-                badge: '🔒 Privater Zugang',
-                cookie: '🍪 Wir verwenden Cookies, um Ihre Erfahrung zu verbessern.',
-                reject: 'Ablehnen',
-                accept: 'Akzeptieren',
-                emailPlaceholder: 'Email oder Telefonnummer',
-                passPlaceholder: 'Passwort',
-                hint: '🔑 Hinweis: Das wichtigste Datum des Clubs',
-                enter: 'Einloggen',
-                terms: 'AGB',
-                privacy: 'Datenschutz',
-                help: 'Hilfe',
-                access: 'Barrierefreiheit',
-                errorEmpty: 'Email oder Telefon eingeben',
-                errorPass: 'Falsches Passwort'
-            },
-            'POR': {
-                slogan: 'Chaos With Purpose',
-                tagline: 'Desenhado em Málaga para o mundo',
-                badge: '🔒 Acesso Privado',
-                cookie: '🍪 Usamos cookies para melhorar a sua experiência.',
-                reject: 'Rejeitar',
-                accept: 'Aceitar',
-                emailPlaceholder: 'Email ou número de telefone',
-                passPlaceholder: 'Senha',
-                hint: '🔑 Dica: A data mais importante do clube',
-                enter: 'Entrar',
-                terms: 'Termos e condições',
-                privacy: 'Privacidade',
-                help: 'Ajuda',
-                access: 'Acessibilidade',
-                errorEmpty: 'Insira seu email ou telefone',
-                errorPass: 'Senha incorreta'
-            }
+        var t = {
+            'ES': { slogan: 'Chaos With Purpose', tagline: 'Diseñado en Málaga para el mundo', badge: '🔒 Acceso Privado',
+                cookie: '🍪 Usamos cookies.', reject: 'Rechazar', accept: 'Aceptar', email: 'Email o teléfono',
+                pass: 'Contraseña', hint: '🔑 Pista: La fecha más importante', enter: 'Entrar', terms: 'Términos',
+                privacy: 'Privacidad', help: 'Ayuda', errEmpty: 'Ingresa tu email o teléfono',
+                errPass: 'Contraseña incorrecta' },
+            'EN': { slogan: 'Chaos With Purpose', tagline: 'Designed in Málaga to the world', badge: '🔒 Private Access',
+                cookie: '🍪 We use cookies.', reject: 'Reject', accept: 'Accept', email: 'Email or phone',
+                pass: 'Password', hint: '🔑 Hint: Most important date', enter: 'Enter', terms: 'Terms',
+                privacy: 'Privacy', help: 'Help', errEmpty: 'Enter your email', errPass: 'Incorrect password' },
+            'IT': { slogan: 'Chaos With Purpose', tagline: 'Progettato a Málaga', badge: '🔒 Accesso Privato',
+                cookie: '🍪 Usiamo i cookie.', reject: 'Rifiutare', accept: 'Accettare', email: 'Email o telefono',
+                pass: 'Password', hint: '🔑 Suggerimento', enter: 'Entrare', terms: 'Termini', privacy: 'Privacy',
+                help: 'Aiuto', errEmpty: 'Inserisci email', errPass: 'Password errata' },
+            'FR': { slogan: 'Chaos With Purpose', tagline: 'Conçu à Málaga', badge: '🔒 Accès Privé',
+                cookie: '🍪 Nous utilisons des cookies.', reject: 'Refuser', accept: 'Accepter',
+                email: 'Email ou téléphone', pass: 'Mot de passe', hint: '🔑 Indice', enter: 'Entrer', terms: 'Termes',
+                privacy: 'Confidentialité', help: 'Aide', errEmpty: 'Entrez votre email',
+            errPass: 'Mot de passe incorrect' },
+            'DE': { slogan: 'Chaos With Purpose', tagline: 'Entworfen in Málaga', badge: '🔒 Privater Zugang',
+                cookie: '🍪 Wir verwenden Cookies.', reject: 'Ablehnen', accept: 'Akzeptieren',
+                email: 'Email oder Telefon', pass: 'Passwort', hint: '🔑 Hinweis', enter: 'Einloggen', terms: 'AGB',
+                privacy: 'Datenschutz', help: 'Hilfe', errEmpty: 'Email eingeben', errPass: 'Falsches Passwort' },
+            'POR': { slogan: 'Chaos With Purpose', tagline: 'Desenhado em Málaga', badge: '🔒 Acesso Privado',
+                cookie: '🍪 Usamos cookies.', reject: 'Rejeitar', accept: 'Aceitar', email: 'Email ou telefone',
+                pass: 'Senha', hint: '🔑 Dica', enter: 'Entrar', terms: 'Termos', privacy: 'Privacidade',
+                help: 'Ajuda', errEmpty: 'Insira seu email', errPass: 'Senha incorreta' }
         };
 
         function updateTranslations() {
-            var lang = document.getElementById('lang-select').value;
-            var t = translations[lang] || translations['ES'];
-            document.getElementById('slogan-text').textContent = t.slogan;
-            document.getElementById('tagline-text').textContent = t.tagline;
-            document.getElementById('private-badge').textContent = t.badge;
-            document.getElementById('cookie-text').textContent = t.cookie;
-            document.getElementById('cookie-reject').textContent = t.reject;
-            document.getElementById('cookie-accept').textContent = t.accept;
-            document.getElementById('email-input').placeholder = t.emailPlaceholder;
-            document.getElementById('password-input').placeholder = t.passPlaceholder;
-            document.getElementById('password-hint').textContent = t.hint;
-            document.getElementById('btn-enter').textContent = t.enter;
-            document.getElementById('legal-terms').textContent = t.terms;
-            document.getElementById('legal-privacy').textContent = t.privacy;
-            document.getElementById('legal-help').textContent = t.help;
-            document.getElementById('legal-access').textContent = t.access;
-            window._currentLang = t;
+            var l = document.getElementById('lang-select').value;
+            var d = t[l] || t['ES'];
+            var ids = ['slogan-text', 'tagline-text', 'private-badge', 'cookie-text', 'cookie-reject', 'cookie-accept',
+                'password-hint', 'btn-enter', 'legal-terms', 'legal-privacy', 'legal-help'
+            ];
+            var keys = ['slogan', 'tagline', 'badge', 'cookie', 'reject', 'accept', 'hint', 'enter', 'terms', 'privacy',
+                'help'
+            ];
+            ids.forEach(function(id, i) { var el = document.getElementById(id); if (el) el.textContent = d[keys[i]]; });
+            document.getElementById('email-input').placeholder = d.email;
+            document.getElementById('password-input').placeholder = d.pass;
+            window._t = d;
         }
 
-        // ============ COOKIES ============
         function acceptCookies() { document.getElementById('cookie-banner').classList.add('hidden');
             document.getElementById('login-panel').classList.add('visible'); }
 
         function rejectCookies() { document.getElementById('cookie-banner').classList.add('hidden');
             document.getElementById('login-panel').classList.add('visible'); }
 
-        // ============ LOGIN ============
         function login() {
-            var t = window._currentLang || translations['ES'];
-            var email = document.getElementById('email-input').value.trim();
-            var pass = document.getElementById('password-input').value.trim();
+            var d = window._t || t['ES'];
+            var e = document.getElementById('email-input').value.trim();
+            var p = document.getElementById('password-input').value.trim();
             var err = document.getElementById('error-msg');
-            if (!email) { err.textContent = t.errorEmpty;
+            if (!e) { err.textContent = d.errEmpty;
                 err.classList.add('show'); return; }
-            if (pass === '23/10/2026') {
+            if (p === '23/10/2026') {
                 document.getElementById('login-screen').style.display = 'none';
                 document.getElementById('desktop-screen').classList.add('active');
                 updateClock();
                 setInterval(updateClock, 1000);
-            } else { err.textContent = t.errorPass;
+            } else { err.textContent = d.errPass;
                 err.classList.add('show'); }
         }
         document.getElementById('password-input').addEventListener('keypress', function(e) { if (e.key === 'Enter')
@@ -1285,20 +1303,20 @@
         var contents = {
             'myc': { title: 'M.Y.C', body: '<h3>M.Y.C</h3><p>Sello independiente. Chaos With Purpose.</p>' },
             'store': { title: 'STORE',
-                body: '<h3>STORE</h3><div class="mini-grid"><div class="mini-card"><div class="icon">💿</div><b>Neon Void Vol.1</b></div></div>' },
+                body: '<h3>STORE</h3><div class="mini-grid"><div class="mini-card">💿 Neon Void Vol.1</div></div>' },
             'merch': { title: 'MERCH',
-                body: '<h3>MERCH</h3><div class="mini-grid"><div class="mini-card"><div class="icon">👕</div><b>Camiseta</b></div></div>' },
+                body: '<h3>MERCH</h3><div class="mini-grid"><div class="mini-card">👕 Camiseta</div></div>' },
             'tours': { title: 'TOURS',
-                body: '<h3>TOURS</h3><div class="tour-line"><span class="tour-date">15 DIC</span>Tokyo</div>' },
+            body: '<h3>TOURS</h3><div class="tour-line"><span class="tour-date">15 DIC</span>Tokyo</div>' },
             'babybuus': { title: 'BABY BUUS', body: '<h3>BABY BUUS</h3><p>Subsello experimental.</p>' },
             'artists': { title: 'ARTISTS',
-                body: '<h3>ARTISTS</h3><div class="mini-grid"><div class="mini-card"><div class="icon">🎹</div><b>VHS GLITCH</b></div></div>' }
+                body: '<h3>ARTISTS</h3><div class="mini-grid"><div class="mini-card">🎹 VHS GLITCH</div></div>' }
         };
 
-        function openWindow(p) { var o = document.getElementById('window-overlay'); var t = document.getElementById(
-                'window-title'); var b = document.getElementById('window-body'); if (contents[p]) { t.textContent =
+        function openWindow(p) { var o = document.getElementById('window-overlay'); var tb = document.getElementById(
+                'window-title'); var bb = document.getElementById('window-body'); if (contents[p]) { tb.textContent =
                 contents[p].title;
-                b.innerHTML = contents[p].body;
+                bb.innerHTML = contents[p].body;
                 o.classList.add('active'); } }
 
         function closeWindowDirect() { document.getElementById('window-overlay').classList.remove('active'); }
