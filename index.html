@@ -1,704 +1,261 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>M.Y.C — The Mayin Buu Club</title>
-    <style>
-        :root {
-            --black: #010508;
-            --magenta: #d400ff;
-            --magenta-glow: rgba(212, 0, 255, 0.7);
-            --cyan: #00b8b8;
-            --green-terminal: #00ff41;
-            --white: #f0f0f0;
-            --panel-bg: rgba(5, 8, 15, 0.9);
-            --border: rgba(0, 180, 180, 0.2);
-            --win95-gray: #c0c0c0;
-            --win95-dark: #808080;
-            --win95-darker: #404040;
-            --win95-white: #ffffff;
-            --win95-black: #000000;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>M.Y.C | Acceso Restringido</title>
+  <style>
+    :root {
+      --negro: #010508;
+      --magenta: #d400ff;
+      --magenta-brillo: rgba(212, 0, 255, 0.8);
+      --cyan: #00b8b8;
+      --verde-terminal: #00ff41;
+      --blanco: #f0f0f0;
+    }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        body {
-            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
-            background: var(--black);
-            min-height: 100vh;
-            overflow: hidden;
-            color: var(--white);
-            cursor: none;
-            user-select: none;
-        }
+    body {
+      font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+      background: var(--negro);
+      height: 100vh;
+      overflow: hidden;
+      color: var(--blanco);
+      cursor: none;
+      user-select: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
-        /* ============ CURSOR OJO ============ */
-        .custom-cursor {
-            position: fixed;
-            width: 32px;
-            height: 32px;
-            z-index: 99999;
-            pointer-events: none;
-            transition: transform 0.05s ease;
-        }
-        .custom-cursor.clicking {
-            transform: scale(0.8);
-        }
-        .custom-cursor svg {
-            width: 100%;
-            height: 100%;
-            filter: drop-shadow(0 0 6px var(--magenta));
-        }
+    /* ========== CURSOR OJO (GUARDIÁN) ========== */
+    #cursor-ojo {
+      position: fixed; width: 38px; height: 38px; z-index: 99999;
+      pointer-events: none; transition: transform 0.1s ease;
+      filter: drop-shadow(0 0 18px var(--magenta));
+    }
+    #cursor-ojo.clicking { transform: scale(0.75); }
 
-        /* ============ PANTALLAS ============ */
-        .screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: none;
-            z-index: 10;
-        }
-        .screen.active {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
+    /* ========== PANTALLA 1: EL DESPERTAR (NEGRO PURO) ========== */
+    #fase1-negro {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: #000; z-index: 100; display: flex;
+      flex-direction: column; align-items: center; justify-content: center;
+      transition: opacity 0.8s ease;
+    }
+    .logo-despertar {
+      font-size: 100px; font-weight: 900; letter-spacing: 25px; color: #fff;
+      text-shadow: 0 0 70px var(--magenta-brillo); opacity: 0;
+      animation: aparecerLogo 0.8s ease-out forwards;
+    }
+    @keyframes aparecerLogo { 0% { opacity: 0; transform: scale(1.2); } 100% { opacity: 1; transform: scale(1); } }
+    .logo-despertar .ojo-c-despertar {
+      display: inline-block; width: 70px; height: 45px; vertical-align: middle;
+      animation: latidoOjo 2s ease-in-out infinite;
+    }
+    @keyframes latidoOjo { 0%,100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+    .texto-iniciando {
+      margin-top: 30px; font-size: 22px; color: #aaa; letter-spacing: 12px;
+      opacity: 0; animation: mostrarTexto 0.5s 0.5s forwards, pulsoTexto 2s 1s infinite;
+    }
+    @keyframes mostrarTexto { to { opacity: 1; } }
+    @keyframes pulsoTexto { 0%,100% { opacity: 0.4; } 50% { opacity: 1; } }
 
-        /* ============ BOOT SCREEN ============ */
-        #boot-screen {
-            background: #000;
-            font-family: 'Courier New', monospace;
-            color: var(--green-terminal);
-            padding: 40px;
-            align-items: flex-start;
-            justify-content: center;
-        }
-        #boot-screen .boot-text {
-            white-space: pre-wrap;
-            font-size: 14px;
-            line-height: 1.6;
-            max-width: 700px;
-            width: 100%;
-        }
-        .boot-line {
-            opacity: 0;
-            animation: fadeInLine 0.1s forwards;
-        }
-        @keyframes fadeInLine {
-            to {
-                opacity: 1;
-            }
-        }
-        .boot-progress {
-            display: inline-block;
-            width: 0;
-            overflow: hidden;
-            white-space: nowrap;
-            animation: fillBar 2s steps(20) forwards;
-        }
-        @keyframes fillBar {
-            to {
-                width: 100%;
-            }
-        }
+    /* ========== PANTALLA 2: EL PORTAL (MORADO HACKER) ========== */
+    #fase2-boot {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: radial-gradient(ellipse at center, #1c0035 0%, #010508 100%);
+      z-index: 90; display: none; flex-direction: column;
+      align-items: center; justify-content: center;
+      font-family: 'Courier New', monospace; color: var(--verde-terminal);
+    }
+    .contenedor-boot {
+      max-width: 900px; width: 90%; padding: 50px;
+      border-left: 2px solid rgba(0, 255, 65, 0.3);
+      position: relative;
+    }
+    .linea-boot {
+      opacity: 0; font-size: 18px; margin: 8px 0; white-space: pre-wrap;
+      animation: escribirLinea 0.25s forwards;
+    }
+    @keyframes escribirLinea { to { opacity: 1; } }
+    
+    /* Bola de discoteca sutil en el fondo */
+    .bola-discoteca {
+      position: absolute; top: 50%; right: -60px; width: 100px; height: 100px;
+      background: radial-gradient(circle, rgba(212,0,255,0.4), transparent 70%);
+      border-radius: 50%; filter: blur(20px); animation: girarBola 6s linear infinite;
+    }
+    @keyframes girarBola { 100% { transform: rotate(360deg); } }
 
-        /* ============ REGISTER SCREEN ============ */
-        #register-screen {
-            background: #000;
-            font-family: 'Courier New', monospace;
-            color: var(--green-terminal);
-        }
-        .register-form {
-            border: 1px solid var(--green-terminal);
-            padding: 30px;
-            max-width: 450px;
-            width: 90%;
-        }
-        .register-form input {
-            background: #000;
-            border: none;
-            border-bottom: 1px solid var(--green-terminal);
-            color: var(--green-terminal);
-            font-family: 'Courier New', monospace;
-            font-size: 16px;
-            padding: 8px 0;
-            width: 100%;
-            outline: none;
-            margin: 10px 0;
-        }
-        .register-form .btn-register {
-            background: var(--green-terminal);
-            color: #000;
-            border: none;
-            padding: 10px 25px;
-            font-family: 'Courier New', monospace;
-            font-size: 14px;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 15px;
-            letter-spacing: 2px;
-        }
+    /* Mensajes Subliminales */
+    .mensaje-fantasma {
+      position: fixed; font-family: 'Courier New', monospace; font-size: 14px;
+      color: var(--cyan); opacity: 0; z-index: 95; pointer-events: none;
+      animation: flotar 7s ease-in-out infinite;
+    }
+    @keyframes flotar {
+      0% { opacity: 0; transform: translateY(0); }
+      25% { opacity: 0.8; }
+      50% { opacity: 0; transform: translateY(-40px); }
+      100% { opacity: 0; }
+    }
 
-        /* ============ DESKTOP SCREEN ============ */
-        #desktop-screen {
-            background: #0a6e6e;
-            display: none;
-            flex-direction: column;
-        }
-        #desktop-screen.active {
-            display: flex;
-        }
-        .desktop-area {
-            flex: 1;
-            position: relative;
-            overflow: hidden;
-            padding: 20px;
-        }
-        .desktop-icon {
-            position: absolute;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-            cursor: pointer;
-            padding: 8px;
-            border-radius: 4px;
-            width: 85px;
-            text-align: center;
-            color: white;
-            font-size: 11px;
-            transition: background 0.15s;
-            z-index: 1;
-        }
-        .desktop-icon:hover {
-            background: rgba(255, 255, 255, 0.15);
-            border: 1px dotted rgba(255, 255, 255, 0.4);
-        }
-        .desktop-icon .icon-img {
-            font-size: 36px;
-            pointer-events: none;
-        }
-        .desktop-icon .icon-label {
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
-            pointer-events: none;
-            line-height: 1.2;
-        }
-        .desktop-icon.selected {
-            background: rgba(0, 0, 128, 0.6);
-            border: 1px dotted rgba(255, 255, 255, 0.6);
-        }
-
-        /* ============ VENTANAS ============ */
-        .window {
-            position: absolute;
-            top: 50px;
-            left: 50px;
-            min-width: 300px;
-            background: var(--win95-gray);
-            border: 2px solid;
-            border-color: var(--win95-white) var(--win95-dark) var(--win95-dark) var(--win95-white);
-            box-shadow: 2px 2px 0 var(--win95-black);
-            z-index: 50;
-            display: flex;
-            flex-direction: column;
-            resize: both;
-            overflow: auto;
-            min-height: 200px;
-        }
-        .window-titlebar {
-            background: linear-gradient(90deg, #000080, #1084d0);
-            color: white;
-            padding: 3px 4px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            font-size: 12px;
-            font-weight: bold;
-            cursor: move;
-            user-select: none;
-            height: 26px;
-        }
-        .window-titlebar .win-btns {
-            display: flex;
-            gap: 2px;
-        }
-        .window-titlebar .win-btns button {
-            background: var(--win95-gray);
-            border: 2px solid;
-            border-color: var(--win95-white) var(--win95-dark) var(--win95-dark) var(--win95-white);
-            width: 20px;
-            height: 20px;
-            cursor: pointer;
-            font-size: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0;
-            color: black;
-        }
-        .window-body {
-            flex: 1;
-            padding: 15px;
-            background: white;
-            color: black;
-            font-size: 12px;
-            overflow: auto;
-        }
-
-        /* ============ TASKBAR ============ */
-        .taskbar {
-            height: 42px;
-            background: var(--win95-gray);
-            border-top: 2px solid var(--win95-white);
-            display: flex;
-            align-items: center;
-            padding: 3px 4px;
-            gap: 4px;
-            z-index: 200;
-        }
-        .start-btn {
-            background: var(--win95-gray);
-            border: 2px solid;
-            border-color: var(--win95-white) var(--win95-dark) var(--win95-dark) var(--win95-white);
-            padding: 4px 10px;
-            font-weight: bold;
-            cursor: pointer;
-            height: 30px;
-            font-family: 'Segoe UI', sans-serif;
-            font-size: 12px;
-        }
-        .start-btn:active {
-            border-color: var(--win95-dark) var(--win95-white) var(--win95-white) var(--win95-dark);
-        }
-        .taskbar-divider {
-            width: 2px;
-            height: 28px;
-            background: var(--win95-dark);
-            border-left: 1px solid var(--win95-white);
-        }
-        .taskbar-time {
-            margin-left: auto;
-            font-size: 11px;
-            color: black;
-            padding: 4px 10px;
-            border: 2px solid;
-            border-color: var(--win95-dark) var(--win95-white) var(--win95-white) var(--win95-dark);
-        }
-        .start-menu {
-            display: none;
-            position: fixed;
-            bottom: 46px;
-            left: 4px;
-            background: var(--win95-gray);
-            border: 2px solid;
-            border-color: var(--win95-white) var(--win95-dark) var(--win95-dark) var(--win95-white);
-            z-index: 300;
-            width: 180px;
-            box-shadow: 2px 2px 0 black;
-        }
-        .start-menu.active {
-            display: block;
-        }
-        .start-menu-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 6px 12px;
-            cursor: pointer;
-            font-size: 12px;
-            color: black;
-        }
-        .start-menu-item:hover {
-            background: #000080;
-            color: white;
-        }
-    </style>
+    /* ========== PANTALLA 3: EL ACCESO (REGISTRO) ========== */
+    #fase3-registro {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: #000; z-index: 80; display: none;
+      font-family: 'Courier New', monospace; color: var(--verde-terminal);
+      align-items: center; justify-content: center;
+    }
+    .formulario-acceso {
+      border: 2px solid var(--verde-terminal); padding: 60px;
+      max-width: 550px; width: 90%; box-shadow: 0 0 30px rgba(0, 255, 65, 0.3);
+    }
+    .formulario-acceso input {
+      background: #000; border: none; border-bottom: 2px solid var(--verde-terminal);
+      color: var(--verde-terminal); font-family: inherit; font-size: 20px;
+      padding: 14px 0; width: 100%; outline: none; margin-bottom: 15px;
+    }
+    .btn-acceso {
+      background: var(--verde-terminal); color: #000; border: none;
+      padding: 16px 45px; font-family: inherit; font-size: 20px; font-weight: bold;
+      cursor: pointer; margin-top: 30px; letter-spacing: 4px; transition: 0.2s;
+    }
+    .btn-acceso:hover { background: #fff; box-shadow: 0 0 40px rgba(0, 255, 65, 0.6); }
+  </style>
 </head>
 <body>
 
-    <!-- ============ CURSOR OJO ============ -->
-    <div class="custom-cursor" id="custom-cursor">
-        <svg viewBox="0 0 32 32">
-            <ellipse cx="16" cy="16" rx="14" ry="10" fill="none" stroke="#d400ff" stroke-width="1.5"/>
-            <circle cx="16" cy="16" r="5" fill="#d400ff" opacity="0.9"/>
-            <circle cx="16" cy="16" r="2.5" fill="#fff"/>
-            <line x1="2" y1="16" x2="0" y2="16" stroke="#d400ff" stroke-width="1"/>
-            <line x1="30" y1="16" x2="32" y2="16" stroke="#d400ff" stroke-width="1"/>
-            <line x1="16" y1="6" x2="16" y2="0" stroke="#d400ff" stroke-width="1"/>
-            <line x1="16" y1="26" x2="16" y2="32" stroke="#d400ff" stroke-width="1"/>
-        </svg>
+  <!-- CURSOR OJO -->
+  <div id="cursor-ojo">
+    <svg width="38" height="38" viewBox="0 0 38 38">
+      <ellipse cx="19" cy="19" rx="17" ry="12" fill="none" stroke="#d400ff" stroke-width="2.5"/>
+      <circle cx="19" cy="19" r="7" fill="#d400ff" opacity="0.9"/>
+      <circle cx="19" cy="19" r="3.5" fill="#fff"/>
+      <path d="M2 19 L0 19 M36 19 L38 19 M19 2 L19 0 M19 36 L19 38" stroke="#d400ff" stroke-width="2.5"/>
+    </svg>
+  </div>
+
+  <!-- FASE 1: NEGRO -->
+  <div id="fase1-negro">
+    <div class="logo-despertar">M<span style="color:var(--magenta);">.</span>Y<span style="color:var(--magenta);">.</span>
+      <svg class="ojo-c-despertar" viewBox="0 0 38 38">
+        <ellipse cx="19" cy="19" rx="17" ry="12" fill="none" stroke="#d400ff" stroke-width="2.5"/>
+        <circle cx="19" cy="19" r="7" fill="#d400ff" opacity="0.9"/>
+        <circle cx="19" cy="19" r="3.5" fill="#fff"/>
+      </svg>
     </div>
+    <div class="texto-iniciando">INICIANDO...</div>
+  </div>
 
-    <!-- ============ BOOT SCREEN ============ -->
-    <div class="screen active" id="boot-screen">
-        <div class="boot-text" id="boot-text"></div>
+  <!-- FASE 2: BOOT + SUBLIMINALES -->
+  <div id="fase2-boot">
+    <div class="contenedor-boot" id="texto-boot">
+      <div class="bola-discoteca"></div>
     </div>
+    <div class="mensaje-fantasma" style="top:12%;left:6%;animation-delay:0s;">ACCESO_RESTRINGIDO</div>
+    <div class="mensaje-fantasma" style="top:80%;right:5%;animation-delay:3.5s;">DETROIT_VISION</div>
+    <div class="mensaje-fantasma" style="top:45%;left:85%;animation-delay:6s;">MALAGA_BASE</div>
+  </div>
 
-    <!-- ============ REGISTER SCREEN ============ -->
-    <div class="screen" id="register-screen">
-        <div class="register-form">
-            <p style="font-size:18px;margin-bottom:15px;">> CREATE NEW USER_</p>
-            <label>> Username:</label>
-            <input type="text" id="reg-username" placeholder="username">
-            <label>> Email:</label>
-            <input type="email" id="reg-email" placeholder="email@club.xxx">
-            <label>> Password:</label>
-            <input type="password" id="reg-password" placeholder="********">
-            <label>> Access Code:</label>
-            <input type="text" id="reg-code" value="23/10/2026" readonly style="opacity:0.7;">
-            <p id="reg-level" style="margin-top:8px;font-size:12px;">Level: DEFAULT</p>
-            <button class="btn-register" onclick="registerUser()">REGISTER</button>
-        </div>
+  <!-- FASE 3: REGISTRO -->
+  <div id="fase3-registro">
+    <div class="formulario-acceso">
+      <p style="font-size:26px;margin-bottom:30px;">> NUEVO USUARIO_</p>
+      <label>> USUARIO:</label>
+      <input type="text" id="reg-usuario" placeholder="username">
+      <label>> EMAIL:</label>
+      <input type="email" id="reg-email" placeholder="email@club.xxx">
+      <label>> CONTRASEÑA:</label>
+      <input type="password" id="reg-contrasena" placeholder="········">
+      <label>> CODIGO DE ACCESO:</label>
+      <input type="text" id="reg-codigo" value="23/10/2026" readonly style="opacity:0.6;">
+      <p id="reg-nivel" style="margin-top:25px;font-size:16px;">NIVEL: DEFAULT</p>
+      <button class="btn-acceso" onclick="procesarAcceso()">ACCEDER</button>
     </div>
+  </div>
 
-    <!-- ============ DESKTOP SCREEN ============ -->
-    <div class="screen" id="desktop-screen">
-        <div class="desktop-area" id="desktop-area">
-            <!-- Iconos se generan dinámicamente -->
-        </div>
-        <div class="start-menu" id="start-menu">
-            <div class="start-menu-item" onclick="openWindow('myc')">🎤 M.Y.C</div>
-            <div class="start-menu-item" onclick="openWindow('store')">💿 Store</div>
-            <div class="start-menu-item" onclick="openWindow('merch')">👕 Merch</div>
-            <div class="start-menu-item" onclick="openWindow('tours')">🌍 Tours</div>
-            <div class="start-menu-item" onclick="openWindow('babybuus')">👶 Baby Buu's</div>
-            <div class="start-menu-item" onclick="openWindow('artists')">🎨 Artists</div>
-            <div class="start-menu-item" id="menu-assist" style="display:none;" onclick="openWindow('assist')">🤖 M.Y.C ASSIST</div>
-            <div style="border-top:1px solid #808080;margin:4px 0;"></div>
-            <div class="start-menu-item" onclick="location.reload()">🚪 Logout</div>
-        </div>
-        <div class="taskbar">
-            <button class="start-btn" onclick="toggleStart()">🏠 Inicio</button>
-            <div class="taskbar-divider"></div>
-            <button id="play-btn" onclick="togglePlay()" style="background:var(--win95-gray);border:2px solid;border-color:var(--win95-white) var(--win95-dark) var(--win95-dark) var(--win95-white);width:28px;height:28px;cursor:pointer;">▶</button>
-            <span style="font-size:11px;color:black;">SYNTHWAVE FM</span>
-            <div class="taskbar-time" id="taskbar-time"></div>
-        </div>
-    </div>
+  <script>
+    // ============ CURSOR ============
+    const cursorOjo = document.getElementById('cursor-ojo');
+    document.addEventListener('mousemove', e => { cursorOjo.style.left = (e.clientX-19)+'px'; cursorOjo.style.top = (e.clientY-19)+'px'; });
+    document.addEventListener('mousedown', () => cursorOjo.classList.add('clicking'));
+    document.addEventListener('mouseup', () => cursorOjo.classList.remove('clicking'));
 
-    <script>
-        // ============ CURSOR OJO ============
-        const cursor = document.getElementById('custom-cursor');
-        document.addEventListener('mousemove', (e) => {
-            cursor.style.left = (e.clientX - 16) + 'px';
-            cursor.style.top = (e.clientY - 16) + 'px';
-        });
-        document.addEventListener('mousedown', () => cursor.classList.add('clicking'));
-        document.addEventListener('mouseup', () => cursor.classList.remove('clicking'));
+    // ============ SONIDOS ============
+    let ctxAudio;
+    function getCtx() { if(!ctxAudio) ctxAudio = new (window.AudioContext||window.webkitAudioContext)(); return ctxAudio; }
+    function playSound(freq, type, dur=0.1, vol=0.05) {
+      const ctx = getCtx(); const o = ctx.createOscillator(); const g = ctx.createGain();
+      o.type = type; o.frequency.setValueAtTime(freq, ctx.currentTime);
+      g.gain.setValueAtTime(vol, ctx.currentTime); g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime+dur);
+      o.connect(g); g.connect(ctx.destination); o.start(); o.stop(ctx.currentTime+dur);
+    }
 
-        // ============ BOOT SEQUENCE ============
-        const bootLines = [
-            'M.Y.C SECURE SYSTEM v.2024',
-            '----------------------------------------',
-            'INITIALIZING CORE MODULES...',
-            'ESTABLISHING CONNECTION TO DETROIT RELAY...',
-            'MÁLAGA NODE: ONLINE',
-            'DETROIT RELAY: ACTIVE',
-            'ENCRYPTING CHANNEL... 256-BIT AES',
-            'ACCESS GATEWAY: OPEN',
-            'LOADING USER DATABASE...',
-            '[████████████████████████████████] 100%',
-            '',
-            '> WELCOME, NEW USER. CREATE YOUR CREDENTIALS._'
-        ];
+    // ============ SECUENCIA DE INICIO ============
+    setTimeout(() => {
+      const fase1 = document.getElementById('fase1-negro');
+      fase1.style.opacity = '0';
+      setTimeout(() => {
+        fase1.style.display = 'none';
+        document.getElementById('fase2-boot').style.display = 'flex';
+        iniciarSecuenciaBoot();
+      }, 800);
+    }, 2000);
 
-        const bootText = document.getElementById('boot-text');
-        let lineIndex = 0;
+    const lineasBoot = [
+      'M.Y.C SECURE SYSTEM v.2024',
+      '──────────────────────────────────────────',
+      'INITIALIZING CORE MODULES...',
+      'ESTABLISHING CONNECTION TO DETROIT RELAY...',
+      'MÁLAGA NODE: ONLINE',
+      'DETROIT RELAY: ACTIVE',
+      'ENCRYPTING CHANNEL... 256-BIT AES',
+      'ACCESS GATEWAY: OPEN',
+      'LOADING USER DATABASE...',
+      '[████████████████████████████████] 100%',
+      '',
+      '> WELCOME. CREATE YOUR CREDENTIALS._'
+    ];
+    let iLinea = 0;
+    function iniciarSecuenciaBoot() {
+      if (iLinea < lineasBoot.length) {
+        const linea = document.createElement('div'); linea.className = 'linea-boot';
+        linea.textContent = lineasBoot[iLinea];
+        document.getElementById('texto-boot').appendChild(linea);
+        playSound(800, 'square', 0.05, 0.02);
+        iLinea++;
+        setTimeout(iniciarSecuenciaBoot, 220 + Math.random() * 100);
+      } else {
+        setTimeout(() => {
+          document.getElementById('fase2-boot').style.display = 'none';
+          document.getElementById('fase3-registro').style.display = 'flex';
+        }, 1000);
+      }
+    }
 
-        function typeBootLine() {
-            if (lineIndex < bootLines.length) {
-                const line = document.createElement('div');
-                line.className = 'boot-line';
-                line.textContent = bootLines[lineIndex];
-                bootText.appendChild(line);
-                lineIndex++;
-                setTimeout(typeBootLine, 250);
-            } else {
-                setTimeout(() => {
-                    document.getElementById('boot-screen').classList.remove('active');
-                    document.getElementById('register-screen').classList.add('active');
-                }, 800);
-            }
-        }
-        setTimeout(typeBootLine, 300);
-
-        // ============ REGISTRO ============
-        function registerUser() {
-            const username = document.getElementById('reg-username').value.trim();
-            const email = document.getElementById('reg-email').value.trim();
-            const password = document.getElementById('reg-password').value.trim();
-            const code = document.getElementById('reg-code').value.trim();
-
-            if (!username || !email || !password) {
-                alert('> ERROR: All fields are required.');
-                return;
-            }
-
-            let level = 'DEFAULT';
-            if (password === 'MYC-FOUNDER-2024') level = 'FOUNDER';
-            else if (code === '23/10/2026') level = 'VIP';
-
-            document.getElementById('reg-level').textContent = 'Level: ' + level;
-
-            // Guardar en localStorage
-            localStorage.setItem('myc_user', JSON.stringify({ username, email, level }));
-
-            // Ir al escritorio
-            document.getElementById('register-screen').classList.remove('active');
-            document.getElementById('desktop-screen').classList.add('active');
-            initDesktop(level);
-        }
-
-        // ============ ESCRITORIO ============
-        let zIndexCounter = 100;
-        let windowIdCounter = 0;
-
-        function initDesktop(level) {
-            const area = document.getElementById('desktop-area');
-            area.innerHTML = '';
-
-            const icons = [
-                { id: 'myc', icon: '🎤', label: 'M.Y.C', top: 20, left: 20 },
-                { id: 'store', icon: '💿', label: 'Store', top: 20, left: 120 },
-                { id: 'merch', icon: '👕', label: 'Merch', top: 20, left: 220 },
-                { id: 'tours', icon: '🌍', label: 'Tours', top: 120, left: 20 },
-                { id: 'babybuus', icon: '👶', label: "Baby Buu's", top: 120, left: 120 },
-                { id: 'artists', icon: '🎨', label: 'Artists', top: 120, left: 220 },
-            ];
-
-            if (level === 'FOUNDER') {
-                icons.push({ id: 'assist', icon: '🤖', label: 'M.Y.C ASSIST', top: 220, left: 20 });
-                document.getElementById('menu-assist').style.display = 'flex';
-            }
-
-            icons.forEach(ic => {
-                const el = document.createElement('div');
-                el.className = 'desktop-icon';
-                el.style.top = ic.top + 'px';
-                el.style.left = ic.left + 'px';
-                el.innerHTML = `<div class="icon-img">${ic.icon}</div><span class="icon-label">${ic.label}</span>`;
-                el.addEventListener('dblclick', () => openWindow(ic.id));
-                el.addEventListener('mousedown', (e) => startDragIcon(e, el));
-                area.appendChild(el);
-            });
-
-            // Reloj
-            updateClock();
-            setInterval(updateClock, 1000);
-
-            // Audio
-            initAudio();
-        }
-
-        // ============ ARRASTRAR ICONOS ============
-        let dragIcon = null;
-        let dragOffsetX = 0,
-            dragOffsetY = 0;
-
-        function startDragIcon(e, el) {
-            e.preventDefault();
-            dragIcon = el;
-            dragOffsetX = e.clientX - el.offsetLeft;
-            dragOffsetY = e.clientY - el.offsetTop;
-            el.style.zIndex = 500;
-            el.classList.add('selected');
-        }
-
-        document.addEventListener('mousemove', (e) => {
-            if (dragIcon) {
-                dragIcon.style.left = (e.clientX - dragOffsetX) + 'px';
-                dragIcon.style.top = (e.clientY - dragOffsetY) + 'px';
-            }
-        });
-
-        document.addEventListener('mouseup', () => {
-            if (dragIcon) {
-                dragIcon.style.zIndex = 1;
-                dragIcon.classList.remove('selected');
-                dragIcon = null;
-            }
-        });
-
-        // ============ VENTANAS ============
-        function openWindow(type) {
-            const area = document.getElementById('desktop-area');
-            const win = document.createElement('div');
-            win.className = 'window';
-            win.id = 'win-' + (++windowIdCounter);
-            win.style.zIndex = ++zIndexCounter;
-            win.style.top = (40 + Math.random() * 100) + 'px';
-            win.style.left = (40 + Math.random() * 200) + 'px';
-
-            let title = '',
-                content = '';
-            switch (type) {
-                case 'myc':
-                    title = 'M.Y.C — Info';
-                    content = '<h3>M.Y.C</h3><p>Sello independiente. Chaos With Purpose.</p><p>Diseñado en Málaga. Visión Detroit.</p>';
-                    break;
-                case 'store':
-                    title = 'STORE';
-                    content = '<h3>STORE</h3><p>💿 Neon Void Vol.1 — 24.99€</p><p>📀 First Steps EP — 12.99€</p>';
-                    break;
-                case 'merch':
-                    title = 'MERCH';
-                    content = '<h3>MERCH</h3><p>👕 Camiseta — 29.99€</p><p>🧢 Gorra — 22.00€</p>';
-                    break;
-                case 'tours':
-                    title = 'TOURS';
-                    content = '<h3>TOURS</h3><p>15 DIC — Tokyo</p><p>20 ENE — Berlin</p>';
-                    break;
-                case 'babybuus':
-                    title = "BABY BUU'S";
-                    content = '<h3>BABY BUUS</h3><p>Subsello experimental.</p>';
-                    break;
-                case 'artists':
-                    title = 'ARTISTS';
-                    content = '<h3>ARTISTS</h3><p>🎹 VHS GLITCH</p><p>🎛️ TERMINAL X</p>';
-                    break;
-                case 'assist':
-                    title = '🤖 M.Y.C ASSIST v1.0';
-                    content =
-                        '<h3>M.Y.C ASSIST</h3><p>> Hola, soy el asistente del club.</p><p>> Conectando con el servidor Python...</p><p style="color:#d400ff;">> Backend pendiente de desplegar.</p>';
-                    break;
-                default:
-                    title = 'Ventana';
-                    content = '<p>Contenido</p>';
-            }
-
-            win.innerHTML = `
-            <div class="window-titlebar" onmousedown="startDragWindow(event, '${win.id}')">
-              <span>${title}</span>
-              <div class="win-btns">
-                <button onclick="minimizeWindow('${win.id}')">─</button>
-                <button onclick="maximizeWindow('${win.id}')">□</button>
-                <button onclick="closeWindow('${win.id}')">✕</button>
-              </div>
-            </div>
-            <div class="window-body">${content}</div>
-          `;
-
-            area.appendChild(win);
-            bringToFront(win);
-        }
-
-        function bringToFront(win) {
-            win.style.zIndex = ++zIndexCounter;
-            win.style.display = 'flex';
-        }
-
-        function closeWindow(id) {
-            const win = document.getElementById(id);
-            if (win) win.remove();
-        }
-
-        function minimizeWindow(id) {
-            const win = document.getElementById(id);
-            if (win) win.style.display = 'none';
-        }
-
-        function maximizeWindow(id) {
-            const win = document.getElementById(id);
-            if (win) {
-                win.style.top = '0';
-                win.style.left = '0';
-                win.style.width = '100%';
-                win.style.height = 'calc(100% - 42px)';
-            }
-        }
-
-        let dragWin = null;
-        let winOffsetX = 0,
-            winOffsetY = 0;
-
-        function startDragWindow(e, winId) {
-            e.preventDefault();
-            dragWin = document.getElementById(winId);
-            if (dragWin) {
-                winOffsetX = e.clientX - dragWin.offsetLeft;
-                winOffsetY = e.clientY - dragWin.offsetTop;
-                bringToFront(dragWin);
-            }
-        }
-
-        document.addEventListener('mousemove', (e) => {
-            if (dragWin) {
-                dragWin.style.left = (e.clientX - winOffsetX) + 'px';
-                dragWin.style.top = (e.clientY - winOffsetY) + 'px';
-            }
-        });
-
-        document.addEventListener('mouseup', () => {
-            dragWin = null;
-        });
-
-        // ============ MENÚ INICIO ============
-        function toggleStart() {
-            document.getElementById('start-menu').classList.toggle('active');
-        }
-        document.addEventListener('click', (e) => {
-            const menu = document.getElementById('start-menu');
-            const btn = document.querySelector('.start-btn');
-            if (menu && !menu.contains(e.target) && e.target !== btn && !btn.contains(e.target)) {
-                menu.classList.remove('active');
-            }
-        });
-
-        // ============ RELOJ ============
-        function updateClock() {
-            const el = document.getElementById('taskbar-time');
-            if (el) el.textContent = new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
-        }
-
-        // ============ AUDIO ============
-        let ctx = null,
-            playing = false,
-            osc = null,
-            gain = null;
-
-        function initAudio() {
-            if (!ctx) {
-                ctx = new(window.AudioContext || window.webkitAudioContext)();
-                osc = ctx.createOscillator();
-                gain = ctx.createGain();
-                const f = ctx.createBiquadFilter();
-                osc.type = 'sawtooth';
-                osc.frequency.setValueAtTime(110, ctx.currentTime);
-                f.type = 'lowpass';
-                f.frequency.setValueAtTime(600, ctx.currentTime);
-                gain.gain.setValueAtTime(0, ctx.currentTime);
-                osc.connect(f);
-                f.connect(gain);
-                gain.connect(ctx.destination);
-                osc.start();
-            }
-        }
-
-        function togglePlay() {
-            const btn = document.getElementById('play-btn');
-            initAudio();
-            if (ctx.state === 'suspended') ctx.resume();
-            if (playing) {
-                gain.gain.setValueAtTime(0, ctx.currentTime);
-                btn.textContent = '▶';
-                playing = false;
-            } else {
-                gain.gain.setValueAtTime(0.12, ctx.currentTime);
-                btn.textContent = '⏸';
-                playing = true;
-            }
-        }
-
-        // ============ INICIO ============
-        setTimeout(typeBootLine, 500);
-    </script>
+    // ============ REGISTRO ============
+    function procesarAcceso() {
+      const u = document.getElementById('reg-usuario').value.trim();
+      const e = document.getElementById('reg-email').value.trim();
+      const p = document.getElementById('reg-contrasena').value.trim();
+      if(!u||!e||!p) { alert('> ERROR: Todos los campos son obligatorios.'); return; }
+      
+      let nivel = 'DEFAULT', descuento = '';
+      if(p === 'MYC-FOUNDER-2024') { nivel = 'FOUNDER'; descuento = '50% DESCUENTO ACTIVADO'; }
+      else if(document.getElementById('reg-codigo').value === '23/10/2026') { nivel = 'VIP'; descuento = '23% DESCUENTO ACTIVADO'; }
+      
+      document.getElementById('reg-nivel').innerHTML = `NIVEL: ${nivel} <span style="color:#d400ff;">${descuento}</span>`;
+      localStorage.setItem('usuario_myc', JSON.stringify({usuario:u, email:e, nivel}));
+      
+      playSound(1200, 'sine', 0.2, 0.1);
+      setTimeout(() => playSound(1500, 'sine', 0.25, 0.1), 150);
+      
+      alert(`> ACCESO CONCEDIDO. BIENVENIDO, ${u}. [NIVEL: ${nivel}]`);
+      // Aquí se cargará el escritorio en el futuro.
+    }
+  </script>
 </body>
 </html>
