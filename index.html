@@ -12,25 +12,33 @@
         }
 
         body {
-            background: #0a0010;
             font-family: 'Segoe UI', 'Arial', sans-serif;
             min-height: 100vh;
+            overflow-x: hidden;
+            background: #0a0010;
+        }
+
+        /* ============ LOGIN ============ */
+        #login-screen {
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
+            min-height: 100vh;
             position: relative;
+            background: #0a0010;
         }
 
-        /* Fondo atmosférico */
+        #login-screen.hidden {
+            display: none;
+        }
+
         .atmosphere {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: 
-                radial-gradient(ellipse at 20% 50%, rgba(180, 0, 255, 0.15) 0%, transparent 60%),
+            background: radial-gradient(ellipse at 20% 50%, rgba(180, 0, 255, 0.15) 0%, transparent 60%),
                 radial-gradient(ellipse at 80% 30%, rgba(255, 0, 180, 0.12) 0%, transparent 60%),
                 radial-gradient(ellipse at 50% 80%, rgba(120, 0, 200, 0.1) 0%, transparent 50%),
                 #0a0010;
@@ -48,7 +56,6 @@
             }
         }
 
-        /* Partículas */
         .particles {
             position: fixed;
             top: 0;
@@ -86,7 +93,6 @@
             }
         }
 
-        /* Contenedor principal */
         .login-container {
             position: relative;
             z-index: 10;
@@ -127,7 +133,6 @@
 
         .input-group {
             width: 100%;
-            position: relative;
         }
 
         .input-group input {
@@ -184,11 +189,11 @@
             display: block;
         }
 
-        /* KID BUU */
+        /* KID BUU REAL */
         .kid-buu {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
+            bottom: 15px;
+            right: 15px;
             z-index: 20;
             cursor: pointer;
             transition: transform 0.3s;
@@ -196,6 +201,7 @@
 
         .kid-buu:hover {
             transform: scale(1.1);
+            filter: drop-shadow(0 0 20px rgba(212, 0, 255, 0.8));
         }
 
         .kid-buu:active {
@@ -203,12 +209,10 @@
         }
 
         .kid-buu-head {
-            width: 80px;
-            height: 80px;
-            background: radial-gradient(circle at 40% 35%, #ffaadd, #d400ff 60%, #4a0080);
-            border-radius: 50% 50% 45% 45%;
-            position: relative;
-            box-shadow: 0 0 30px rgba(212, 0, 255, 0.6), 0 0 60px rgba(255, 0, 180, 0.3);
+            width: 90px;
+            height: auto;
+            border-radius: 50%;
+            box-shadow: 0 0 30px rgba(212, 0, 255, 0.5), 0 0 60px rgba(255, 0, 180, 0.3);
             animation: buuFloat 3s ease-in-out infinite;
         }
 
@@ -222,51 +226,11 @@
             }
         }
 
-        /* Ojos */
-        .kid-buu-head::before {
-            content: '';
-            position: absolute;
-            top: 25px;
-            left: 18px;
-            width: 14px;
-            height: 16px;
-            background: #000;
-            border-radius: 50%;
-            box-shadow: 30px 0 0 #000;
-        }
-
-        /* Ojos blancos */
-        .kid-buu-head::after {
-            content: '';
-            position: absolute;
-            top: 27px;
-            left: 21px;
-            width: 6px;
-            height: 7px;
-            background: #fff;
-            border-radius: 50%;
-            box-shadow: 30px 0 0 #fff;
-        }
-
-        /* Boca */
-        .buu-mouth {
-            position: absolute;
-            bottom: 18px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 20px;
-            height: 10px;
-            border: 2px solid #000;
-            border-top: none;
-            border-radius: 0 0 10px 10px;
-        }
-
-        /* Tooltip de contraseña */
         .password-tooltip {
             display: none;
             position: fixed;
-            bottom: 110px;
-            right: 30px;
+            bottom: 115px;
+            right: 25px;
             background: rgba(0, 0, 0, 0.9);
             border: 1px solid #d400ff;
             color: #d400ff;
@@ -293,80 +257,431 @@
             }
         }
 
-        @media (max-width: 480px) {
-            .login-container {
-                padding: 30px 20px;
+        /* ============ ESCRITORIO ============ */
+        #desktop-screen {
+            display: none;
+            min-height: 100vh;
+            background: #0a6e6e;
+        }
+
+        #desktop-screen.active {
+            display: block;
+        }
+
+        .desktop-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 42px;
+            background: linear-gradient(135deg, #0a5e5e, #0a7a7a, #0a6e6e);
+            z-index: 0;
+        }
+
+        .icons-area {
+            position: relative;
+            z-index: 1;
+            padding: 25px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: flex-start;
+        }
+
+        .desktop-icon {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 4px;
+            width: 90px;
+            background: none;
+            border: 1px solid transparent;
+            color: white;
+            font-family: inherit;
+            font-size: 11px;
+            transition: background 0.15s;
+        }
+
+        .desktop-icon:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .desktop-icon .icon-img {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 38px;
+            pointer-events: none;
+        }
+
+        .desktop-icon .icon-label {
+            color: white;
+            font-size: 11px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+            text-align: center;
+            pointer-events: none;
+            line-height: 1.3;
+        }
+
+        .taskbar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 42px;
+            background: #1a1a2e;
+            display: flex;
+            align-items: center;
+            padding: 0 8px;
+            z-index: 1000;
+            gap: 8px;
+        }
+
+        .start-btn {
+            background: #d400ff;
+            color: white;
+            border: none;
+            padding: 8px 14px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 3px;
+            height: 30px;
+            font-family: inherit;
+        }
+
+        .start-btn:hover {
+            background: #b000d0;
+        }
+
+        .taskbar-player {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #ccc;
+            font-size: 12px;
+        }
+
+        .taskbar-player button {
+            background: #d400ff;
+            color: white;
+            border: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .taskbar-player button:hover {
+            background: #b000d0;
+        }
+
+        .taskbar-time {
+            margin-left: auto;
+            color: #ccc;
+            font-size: 12px;
+        }
+
+        .start-menu {
+            display: none;
+            position: fixed;
+            bottom: 46px;
+            left: 8px;
+            background: #1a1a2e;
+            border: 1px solid #333;
+            border-radius: 6px;
+            z-index: 1001;
+            width: 170px;
+            overflow: hidden;
+        }
+
+        .start-menu.active {
+            display: block;
+        }
+
+        .start-menu-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 14px;
+            cursor: pointer;
+            font-size: 12px;
+            color: #ccc;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+            font-family: inherit;
+        }
+
+        .start-menu-item:hover {
+            background: #d400ff;
+            color: white;
+        }
+
+        .window-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 42px;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 500;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .window-overlay.active {
+            display: flex;
+        }
+
+        .window-box {
+            background: #1a1a2e;
+            border: 1px solid #d400ff;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 65vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+        }
+
+        .window-titlebar {
+            background: #0d0d1a;
+            color: #d400ff;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 13px;
+            font-weight: bold;
+            border-radius: 8px 8px 0 0;
+            border-bottom: 1px solid #d400ff;
+        }
+
+        .window-close {
+            background: none;
+            border: none;
+            color: #d400ff;
+            font-size: 18px;
+            cursor: pointer;
+            padding: 0 4px;
+            font-family: inherit;
+        }
+
+        .window-close:hover {
+            color: #ff40ff;
+        }
+
+        .window-body {
+            padding: 16px;
+            overflow-y: auto;
+            color: #ccc;
+            font-size: 13px;
+            line-height: 1.7;
+        }
+
+        .window-body h3 {
+            color: #d400ff;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .mini-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        .mini-card {
+            background: #0d0d1a;
+            border: 1px solid #2a2a3e;
+            border-radius: 6px;
+            padding: 12px;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+
+        .mini-card:hover {
+            border-color: #d400ff;
+        }
+
+        .mini-card .icon {
+            font-size: 30px;
+            margin-bottom: 6px;
+        }
+
+        .tour-line {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #2a2a3e;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .tour-date {
+            color: #d400ff;
+            font-weight: bold;
+            min-width: 60px;
+        }
+
+        .btn-sm {
+            background: #d400ff;
+            color: white;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 11px;
+            font-family: inherit;
+        }
+
+        .logout-btn {
+            background: none;
+            border: 1px solid #d400ff;
+            color: #d400ff;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 11px;
+            font-family: inherit;
+        }
+
+        @media (max-width: 600px) {
+            .icons-area {
+                justify-content: center;
+                gap: 10px;
             }
-            .logo {
-                font-size: 22px;
+            .mini-grid {
+                grid-template-columns: 1fr;
             }
             .kid-buu-head {
-                width: 60px;
-                height: 60px;
+                width: 65px;
             }
         }
     </style>
 </head>
 <body>
 
-    <!-- Fondo atmosférico -->
-    <div class="atmosphere"></div>
+    <!-- ============ PANTALLA DE LOGIN ============ -->
+    <div id="login-screen">
+        <div class="atmosphere"></div>
+        <div class="particles" id="particles"></div>
 
-    <!-- Partículas -->
-    <div class="particles" id="particles"></div>
+        <div class="login-container">
+            <div class="logo">THE <span>MAYIN BUU</span> CLUB</div>
+            <div class="subtitle">M.Y.C — Access Portal</div>
 
-    <!-- Login -->
-    <div class="login-container" id="login-screen">
-        <div class="logo">THE <span>MAYIN BUU</span> CLUB</div>
-        <div class="subtitle">M.Y.C — Access Portal</div>
+            <div class="input-group">
+                <input type="text" id="email-input" placeholder="Email o número de teléfono">
+            </div>
 
-        <div class="input-group">
-            <input type="text" id="email-input" placeholder="Email o número de teléfono">
+            <div class="input-group">
+                <input type="password" id="password-input" placeholder="Contraseña">
+            </div>
+
+            <div class="error-msg" id="error-msg">Credenciales incorrectas</div>
+
+            <button class="btn-login" onclick="login()">Entrar</button>
         </div>
 
-        <div class="input-group">
-            <input type="password" id="password-input" placeholder="Contraseña">
+        <!-- KID BUU REAL -->
+        <div class="kid-buu" onclick="showPassword()" title="¿Olvidaste la contraseña?">
+            <img src="https://i.imgur.com/HNnXBSu.png" alt="Kid Buu" class="kid-buu-head">
         </div>
 
-        <div class="error-msg" id="error-msg">Credenciales incorrectas</div>
-
-        <button class="btn-login" onclick="login()">Entrar</button>
+        <div class="password-tooltip" id="password-tooltip">
+            🔑 Contraseña: <b>23/10/2026</b>
+        </div>
     </div>
 
-    <!-- Kid Buu -->
-    <div class="kid-buu" onclick="showPassword()" title="¿Olvidaste la contraseña?">
-        <div class="kid-buu-head">
-            <div class="buu-mouth"></div>
-        </div>
-    </div>
+    <!-- ============ ESCRITORIO ============ -->
+    <div id="desktop-screen">
+        <div class="desktop-bg"></div>
 
-    <!-- Tooltip contraseña -->
-    <div class="password-tooltip" id="password-tooltip">
-        🔑 Contraseña: <b>23/10/2026</b>
+        <div class="icons-area">
+            <button class="desktop-icon" ondblclick="openWindow('myc')">
+                <div class="icon-img">🎤</div><span class="icon-label">M.Y.C</span>
+            </button>
+            <button class="desktop-icon" ondblclick="openWindow('store')">
+                <div class="icon-img">💿</div><span class="icon-label">Store</span>
+            </button>
+            <button class="desktop-icon" ondblclick="openWindow('merch')">
+                <div class="icon-img">👕</div><span class="icon-label">Merch</span>
+            </button>
+            <button class="desktop-icon" ondblclick="openWindow('tours')">
+                <div class="icon-img">🌍</div><span class="icon-label">Tours</span>
+            </button>
+            <button class="desktop-icon" ondblclick="openWindow('babybuus')">
+                <div class="icon-img">👶</div><span class="icon-label">Baby Buu's</span>
+            </button>
+            <button class="desktop-icon" ondblclick="openWindow('artists')">
+                <div class="icon-img">🎨</div><span class="icon-label">Artists</span>
+            </button>
+        </div>
+
+        <div class="window-overlay" id="window-overlay" onclick="closeWindow(event)">
+            <div class="window-box" onclick="event.stopPropagation()">
+                <div class="window-titlebar">
+                    <span id="window-title">Ventana</span>
+                    <button class="window-close" onclick="closeWindowDirect()">✕</button>
+                </div>
+                <div class="window-body" id="window-body"></div>
+            </div>
+        </div>
+
+        <div class="start-menu" id="start-menu">
+            <div class="start-menu-item" onclick="openWindow('myc');toggleStart()">🎤 M.Y.C</div>
+            <div class="start-menu-item" onclick="openWindow('store');toggleStart()">💿 Store</div>
+            <div class="start-menu-item" onclick="openWindow('merch');toggleStart()">👕 Merch</div>
+            <div class="start-menu-item" onclick="openWindow('tours');toggleStart()">🌍 Tours</div>
+            <div class="start-menu-item" onclick="openWindow('babybuus');toggleStart()">👶 Baby Buu's</div>
+            <div class="start-menu-item" onclick="openWindow('artists');toggleStart()">🎨 Artists</div>
+            <div style="border-top:1px solid #333; margin:4px 0;"></div>
+            <div class="start-menu-item" onclick="logout()">🚪 Cerrar sesión</div>
+        </div>
+
+        <div class="taskbar">
+            <button class="start-btn" onclick="toggleStart()">🏠 Inicio</button>
+            <div class="taskbar-player">
+                <span>🎵 SYNTH</span>
+                <button id="play-btn" onclick="togglePlay()">▶</button>
+            </div>
+            <button class="logout-btn" onclick="logout()">Salir</button>
+            <div class="taskbar-time" id="taskbar-time"></div>
+        </div>
     </div>
 
     <script>
-        // Crear partículas
-        var particlesContainer = document.getElementById('particles');
+        // Partículas
+        var pc = document.getElementById('particles');
         for (var i = 0; i < 30; i++) {
-            var particle = document.createElement('div');
-            particle.className = 'particle';
-            particle.style.left = Math.random() * 100 + '%';
-            particle.style.animationDelay = Math.random() * 6 + 's';
-            particle.style.animationDuration = (4 + Math.random() * 6) + 's';
-            particlesContainer.appendChild(particle);
+            var p = document.createElement('div');
+            p.className = 'particle';
+            p.style.left = Math.random() * 100 + '%';
+            p.style.animationDelay = Math.random() * 6 + 's';
+            p.style.animationDuration = (4 + Math.random() * 6) + 's';
+            pc.appendChild(p);
         }
 
-        // Mostrar contraseña al hacer clic en Kid Buu
+        // Mostrar contraseña
         function showPassword() {
-            var tooltip = document.getElementById('password-tooltip');
-            tooltip.classList.toggle('show');
-
-            // Ocultar después de 4 segundos
-            if (tooltip.classList.contains('show')) {
-                setTimeout(function() {
-                    tooltip.classList.remove('show');
-                }, 4000);
+            var t = document.getElementById('password-tooltip');
+            t.classList.toggle('show');
+            if (t.classList.contains('show')) {
+                setTimeout(function() { t.classList.remove('show'); }, 4000);
             }
         }
 
@@ -374,35 +689,146 @@
         function login() {
             var email = document.getElementById('email-input').value.trim();
             var password = document.getElementById('password-input').value.trim();
-            var errorMsg = document.getElementById('error-msg');
+            var error = document.getElementById('error-msg');
 
             if (!email) {
-                errorMsg.textContent = 'Ingresa tu email o teléfono';
-                errorMsg.classList.add('show');
+                error.textContent = 'Ingresa tu email o telefono';
+                error.classList.add('show');
                 return;
             }
-
             if (password === '23/10/2026') {
-                errorMsg.classList.remove('show');
-                // Redirigir al escritorio
-                window.location.href = 'escritorio.html';
+                document.getElementById('login-screen').classList.add('hidden');
+                document.getElementById('desktop-screen').classList.add('active');
+                updateClock();
+                setInterval(updateClock, 1000);
             } else {
-                errorMsg.textContent = 'Contraseña incorrecta. ¿Probaste a hacer clic en Kid Buu?';
-                errorMsg.classList.add('show');
+                error.textContent = 'Contrasena incorrecta. Haz clic en Kid Buu';
+                error.classList.add('show');
             }
         }
 
-        // Permitir Enter para login
         document.getElementById('password-input').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                login();
+            if (e.key === 'Enter') login();
+        });
+
+        function logout() {
+            document.getElementById('desktop-screen').classList.remove('active');
+            document.getElementById('login-screen').classList.remove('hidden');
+            document.getElementById('password-input').value = '';
+            document.getElementById('error-msg').classList.remove('show');
+        }
+
+        // Reloj
+        function updateClock() {
+            var d = new Date();
+            var el = document.getElementById('taskbar-time');
+            if (el) el.textContent = d.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+        }
+
+        // Menú inicio
+        function toggleStart() {
+            document.getElementById('start-menu').classList.toggle('active');
+        }
+
+        document.addEventListener('click', function(e) {
+            var m = document.getElementById('start-menu');
+            var b = document.querySelector('.start-btn');
+            if (m && !m.contains(e.target) && e.target !== b && !b.contains(e.target)) {
+                m.classList.remove('active');
             }
         });
-        document.getElementById('email-input').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                document.getElementById('password-input').focus();
+
+        // Ventanas
+        var contents = {
+            'myc': {
+                title: 'M.Y.C — The Mayin Buu Club',
+                body: '<h3>M.Y.C</h3><p>Fundado en 2024. Sello independiente de musica electronica.</p><div class="mini-grid"><div class="mini-card"><div class="icon">🎹</div><b>Produccion</b><small>Estudio analogico y digital</small></div><div class="mini-card"><div class="icon">🎛️</div><b>Mastering</b><small>Mezcla profesional</small></div></div>'
+            },
+            'store': {
+                title: 'STORE — Discos',
+                body: '<h3>STORE</h3><div class="mini-grid"><div class="mini-card"><div class="icon">💿</div><b>Neon Void Vol.1</b><small>24.99 - Vinilo</small></div><div class="mini-card"><div class="icon">📀</div><b>First Steps EP</b><small>12.99 - Digital</small></div><div class="mini-card"><div class="icon">💾</div><b>Club Edits 001</b><small>18.00 - Cassette</small></div><div class="mini-card"><div class="icon">🎵</div><b>Synth Series 1-3</b><small>34.99 - Box Set</small></div></div>'
+            },
+            'merch': {
+                title: 'MERCH — Ropa',
+                body: '<h3>MERCH</h3><div class="mini-grid"><div class="mini-card"><div class="icon">👕</div><b>Camiseta M.Y.C</b><small>29.99</small></div><div class="mini-card"><div class="icon">🧢</div><b>Gorra Baby Buu</b><small>22.00</small></div><div class="mini-card"><div class="icon">🎒</div><b>Tote Bag</b><small>15.99</small></div><div class="mini-card"><div class="icon">📿</div><b>Colgante Limitado</b><small>45.00</small></div></div>'
+            },
+            'tours': {
+                title: 'TOURS — Fechas',
+                body: '<h3>TOURS</h3><div class="tour-line"><span class="tour-date">15 DIC</span><span>Tokyo</span><button class="btn-sm">Tickets</button></div><div class="tour-line"><span class="tour-date">20 ENE</span><span>Berlin</span><button class="btn-sm">Tickets</button></div><div class="tour-line"><span class="tour-date">14 FEB</span><span>Miami</span><button class="btn-sm">Tickets</button></div><div class="tour-line"><span class="tour-date">08 MAR</span><span>London</span><button class="btn-sm">Tickets</button></div>'
+            },
+            'babybuus': {
+                title: 'BABY BUUS — Subsello',
+                body: '<h3>BABY BUUS</h3><p>Subsello de M.Y.C. Sonidos experimentales.</p><div class="mini-grid"><div class="mini-card"><div class="icon">🍼</div><b>Baby Buu</b><small>Artista principal</small></div><div class="mini-card"><div class="icon">🧸</div><b>First Steps EP</b><small>Vinilo limitado</small></div></div>'
+            },
+            'artists': {
+                title: 'ARTISTS — Roster',
+                body: '<h3>ARTISTS</h3><div class="mini-grid"><div class="mini-card"><div class="icon">🎹</div><b>VHS GLITCH</b><small>Synthwave</small></div><div class="mini-card"><div class="icon">🎛️</div><b>TERMINAL X</b><small>Cyberpunk</small></div><div class="mini-card"><div class="icon">👻</div><b>CRT GHOST</b><small>Vaporwave</small></div><div class="mini-card"><div class="icon">💻</div><b>DATA PHANTOM</b><small>Darksynth</small></div></div>'
             }
-        });
+        };
+
+        function openWindow(page) {
+            var o = document.getElementById('window-overlay');
+            var t = document.getElementById('window-title');
+            var b = document.getElementById('window-body');
+            if (contents[page]) {
+                t.textContent = contents[page].title;
+                b.innerHTML = contents[page].body;
+                o.classList.add('active');
+            }
+        }
+
+        function closeWindowDirect() {
+            document.getElementById('window-overlay').classList.remove('active');
+        }
+
+        function closeWindow(e) {
+            if (e.target === document.getElementById('window-overlay')) {
+                document.getElementById('window-overlay').classList.remove('active');
+            }
+        }
+
+        // Reproductor
+        var ctx = null,
+            playing = false,
+            osc = null,
+            gain = null;
+
+        function initAudio() {
+            if (!ctx) {
+                ctx = new(window.AudioContext || window.webkitAudioContext)();
+                osc = ctx.createOscillator();
+                gain = ctx.createGain();
+                var f = ctx.createBiquadFilter();
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(110, ctx.currentTime);
+                f.type = 'lowpass';
+                f.frequency.setValueAtTime(600, ctx.currentTime);
+                gain.gain.setValueAtTime(0, ctx.currentTime);
+                osc.connect(f);
+                f.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start();
+                setInterval(function() {
+                    if (playing && osc) osc.frequency.setValueAtTime(110 + Math.sin(Date.now() * 0.001) * 5,
+                        ctx.currentTime);
+                }, 100);
+            }
+        }
+
+        function togglePlay() {
+            var btn = document.getElementById('play-btn');
+            initAudio();
+            if (ctx.state === 'suspended') ctx.resume();
+            if (playing) {
+                gain.gain.setValueAtTime(0, ctx.currentTime);
+                btn.textContent = '▶';
+                playing = false;
+            } else {
+                gain.gain.setValueAtTime(0.15, ctx.currentTime);
+                btn.textContent = '⏸';
+                playing = true;
+            }
+        }
     </script>
 </body>
 </html>
