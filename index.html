@@ -13,7 +13,7 @@
 
         body {
             font-family: 'Helvetica Neue', 'Arial', sans-serif;
-            background: #050010;
+            background: #020008;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -25,35 +25,48 @@
             overflow-x: hidden;
         }
 
-        /* ATMÓSFERA CON TEXTURA */
+        /* ============ VIGNETTE (oscurecimiento bordes) ============ */
+        .vignette {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at center, transparent 40%, rgba(0, 0, 0, 0.7) 80%, #000 100%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* ============ ATMÓSFERA CON PROFUNDIDAD ============ */
         .atmosphere {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: radial-gradient(ellipse at 30% 20%, rgba(180, 0, 255, 0.15) 0%, transparent 55%),
-                radial-gradient(ellipse at 70% 50%, rgba(255, 0, 150, 0.12) 0%, transparent 55%),
-                radial-gradient(ellipse at 50% 80%, rgba(100, 0, 200, 0.1) 0%, transparent 45%),
-                repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(212, 0, 255, 0.03) 3px, rgba(212, 0, 255, 0.03) 4px),
-                repeating-linear-gradient(90deg, transparent, transparent 3px, rgba(180, 0, 255, 0.02) 3px, rgba(180, 0, 255, 0.02) 4px);
+            background: radial-gradient(ellipse at 35% 25%, rgba(180, 0, 255, 0.18) 0%, transparent 50%),
+                radial-gradient(ellipse at 65% 55%, rgba(255, 0, 150, 0.14) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 75%, rgba(100, 0, 200, 0.1) 0%, transparent 40%);
             z-index: 0;
             pointer-events: none;
-            animation: atmosPulse 5s ease-in-out infinite;
+            animation: atmosBreathe 7s ease-in-out infinite;
         }
 
-        @keyframes atmosPulse {
+        @keyframes atmosBreathe {
             0%,
             100% {
-                opacity: 0.85;
+                opacity: 0.8;
             }
-            50% {
+            30% {
                 opacity: 1;
+            }
+            60% {
+                opacity: 0.75;
             }
         }
 
-        /* PARTÍCULAS */
-        .particles {
+        /* ============ PARTÍCULAS (3 CAPAS) ============ */
+        .particles-layer {
             position: fixed;
             top: 0;
             left: 0;
@@ -62,33 +75,51 @@
             z-index: 1;
             pointer-events: none;
         }
-        .particle {
+        .particle-fast,
+        .particle-mid,
+        .particle-slow {
             position: absolute;
+            border-radius: 50%;
+            animation: floatUp var(--dur) infinite;
+            opacity: 0;
+        }
+        .particle-fast {
+            width: 1px;
+            height: 1px;
+            background: #ff80d0;
+            --dur: 4s;
+        }
+        .particle-mid {
             width: 2px;
             height: 2px;
             background: #d400ff;
-            border-radius: 50%;
-            animation: floatUp 7s infinite;
-            opacity: 0;
+            --dur: 6s;
+        }
+        .particle-slow {
+            width: 3px;
+            height: 3px;
+            background: #b000e0;
+            --dur: 9s;
+            box-shadow: 0 0 6px rgba(180, 0, 255, 0.4);
         }
         @keyframes floatUp {
             0% {
                 transform: translateY(105vh) scale(0);
                 opacity: 0;
             }
-            15% {
+            10% {
                 opacity: 1;
             }
-            85% {
-                opacity: 1;
+            90% {
+                opacity: 0.8;
             }
             100% {
-                transform: translateY(-10vh) scale(2);
+                transform: translateY(-10vh) scale(2.5);
                 opacity: 0;
             }
         }
 
-        /* CONTENEDOR LOGIN */
+        /* ============ CONTENEDOR PRINCIPAL ============ */
         .main-container {
             position: relative;
             z-index: 10;
@@ -97,13 +128,19 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 14px;
+            gap: 12px;
+            opacity: 0;
+            transform: scale(0.95);
+            transition: opacity 1.2s ease, transform 1s ease;
+        }
+        .main-container.visible {
+            opacity: 1;
+            transform: scale(1);
         }
 
-        /* LOGO CON GLITCH + ANILLOS */
+        /* ============ LOGO ============ */
         .logo-area {
             text-align: center;
-            margin-bottom: 5px;
             position: relative;
         }
         .rings {
@@ -111,8 +148,8 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 130px;
-            height: 130px;
+            width: 110px;
+            height: 110px;
             pointer-events: none;
         }
         .ring {
@@ -120,77 +157,87 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            border: 1px solid rgba(212, 0, 255, 0.2);
+            border: 1px solid rgba(212, 0, 255, 0.15);
             border-radius: 50%;
-            animation: ringExpand 3s ease-out infinite;
+            animation: ringExpand 4s ease-out infinite;
         }
         .ring:nth-child(1) {
-            width: 60px;
-            height: 60px;
+            width: 50px;
+            height: 50px;
             animation-delay: 0s;
         }
         .ring:nth-child(2) {
-            width: 90px;
-            height: 90px;
-            animation-delay: 1s;
+            width: 75px;
+            height: 75px;
+            animation-delay: 1.3s;
         }
         .ring:nth-child(3) {
-            width: 120px;
-            height: 120px;
-            animation-delay: 2s;
+            width: 100px;
+            height: 100px;
+            animation-delay: 2.6s;
         }
         @keyframes ringExpand {
             0% {
-                opacity: 0.6;
-                transform: translate(-50%, -50%) scale(0.8);
+                opacity: 0.5;
+                transform: translate(-50%, -50%) scale(0.7);
             }
             50% {
-                opacity: 0.15;
+                opacity: 0.1;
                 transform: translate(-50%, -50%) scale(1.3);
             }
             100% {
                 opacity: 0;
-                transform: translate(-50%, -50%) scale(1.6);
+                transform: translate(-50%, -50%) scale(1.7);
             }
         }
         .logo-text {
             font-size: 48px;
             font-weight: 700;
             letter-spacing: 10px;
-            color: #ffffff;
+            color: #fff;
             line-height: 1;
-            text-shadow: 0 0 40px rgba(212, 0, 255, 0.7), 0 0 80px rgba(255, 0, 150, 0.4), 0 0 120px rgba(180, 0, 255, 0.3);
-            animation: neonPulse 3s ease-in-out infinite, glitchSkew 5s ease-in-out infinite;
+            text-shadow: 0 0 35px rgba(212, 0, 255, 0.6), 0 0 70px rgba(255, 0, 150, 0.35);
+            animation: neonPulse 3.5s ease-in-out infinite, glitchSkew 6s ease-in-out infinite;
             position: relative;
             display: inline-block;
         }
         @keyframes neonPulse {
             0%,
             100% {
-                text-shadow: 0 0 40px rgba(212, 0, 255, 0.7), 0 0 80px rgba(255, 0, 150, 0.4);
+                text-shadow: 0 0 35px rgba(212, 0, 255, 0.6), 0 0 70px rgba(255, 0, 150, 0.35);
             }
             50% {
-                text-shadow: 0 0 70px rgba(212, 0, 255, 1), 0 0 120px rgba(255, 0, 150, 0.7), 0 0 150px rgba(200, 0, 255, 0.5);
+                text-shadow: 0 0 60px rgba(212, 0, 255, 0.9), 0 0 100px rgba(255, 0, 150, 0.6), 0 0 130px rgba(180, 0, 255, 0.4);
             }
         }
         @keyframes glitchSkew {
             0%,
-            90%,
+            92%,
             100% {
                 transform: skew(0deg);
             }
-            92% {
-                transform: skew(2deg);
-            }
             94% {
-                transform: skew(-1deg);
+                transform: skew(3deg);
             }
             96% {
+                transform: skew(-2deg);
+            }
+            98% {
                 transform: skew(0deg);
             }
         }
         .logo-dot {
             color: #d400ff;
+        }
+        .logo-letter {
+            display: inline-block;
+            opacity: 0;
+            animation: letterReveal 0.15s ease forwards;
+        }
+        @keyframes letterReveal {
+            to {
+                opacity: 1;
+            }
         }
         .slogan {
             font-size: 16px;
@@ -199,7 +246,7 @@
             text-transform: uppercase;
             margin-top: 4px;
             font-weight: 400;
-            text-shadow: 0 0 20px rgba(212, 0, 255, 0.5);
+            text-shadow: 0 0 18px rgba(212, 0, 255, 0.4);
         }
         .tagline {
             font-size: 10px;
@@ -208,66 +255,91 @@
             text-transform: uppercase;
             margin-top: 6px;
         }
+
+        /* ============ ACCESS CODE + CONTADOR ============ */
+        .access-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            font-size: 9px;
+            letter-spacing: 2px;
+            color: #555;
+            text-transform: uppercase;
+        }
+        .access-code {
+            background: rgba(212, 0, 255, 0.06);
+            border: 1px solid rgba(212, 0, 255, 0.2);
+            padding: 5px 12px;
+            border-radius: 14px;
+            color: #d400ff;
+            font-size: 10px;
+            letter-spacing: 1px;
+        }
+        .visitor-counter {
+            color: #555;
+        }
+        .visitor-counter span {
+            color: #d400ff;
+        }
         .private-badge {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            background: rgba(212, 0, 255, 0.08);
-            border: 1px solid rgba(212, 0, 255, 0.25);
-            padding: 6px 18px;
-            border-radius: 20px;
-            font-size: 10px;
+            gap: 5px;
+            background: rgba(212, 0, 255, 0.07);
+            border: 1px solid rgba(212, 0, 255, 0.2);
+            padding: 5px 14px;
+            border-radius: 16px;
+            font-size: 9px;
             letter-spacing: 2px;
             color: #d400ff;
             text-transform: uppercase;
-            margin-top: 8px;
         }
 
-        /* ECUALIZADOR */
+        /* ============ ECUALIZADOR ============ */
         .equalizer {
             display: flex;
             align-items: flex-end;
-            gap: 4px;
-            height: 24px;
+            gap: 3px;
+            height: 18px;
             justify-content: center;
         }
         .eq-bar {
-            width: 3px;
+            width: 2px;
             background: linear-gradient(180deg, #d400ff, #ff0090);
-            border-radius: 2px;
-            animation: eqBounce 0.8s ease-in-out infinite;
+            border-radius: 1px;
+            animation: eqBounce 0.7s ease-in-out infinite;
         }
         .eq-bar:nth-child(1) {
-            height: 10px;
+            height: 8px;
             animation-delay: 0s;
         }
         .eq-bar:nth-child(2) {
-            height: 18px;
-            animation-delay: 0.1s;
+            height: 14px;
+            animation-delay: 0.08s;
         }
         .eq-bar:nth-child(3) {
-            height: 8px;
-            animation-delay: 0.2s;
+            height: 6px;
+            animation-delay: 0.16s;
         }
         .eq-bar:nth-child(4) {
-            height: 22px;
-            animation-delay: 0.3s;
+            height: 18px;
+            animation-delay: 0.24s;
         }
         .eq-bar:nth-child(5) {
-            height: 14px;
-            animation-delay: 0.4s;
+            height: 10px;
+            animation-delay: 0.32s;
         }
         .eq-bar:nth-child(6) {
-            height: 20px;
-            animation-delay: 0.5s;
+            height: 16px;
+            animation-delay: 0.4s;
         }
         .eq-bar:nth-child(7) {
-            height: 6px;
-            animation-delay: 0.6s;
+            height: 5px;
+            animation-delay: 0.48s;
         }
         .eq-bar:nth-child(8) {
-            height: 16px;
-            animation-delay: 0.7s;
+            height: 12px;
+            animation-delay: 0.56s;
         }
         @keyframes eqBounce {
             0%,
@@ -275,34 +347,33 @@
                 transform: scaleY(1);
             }
             50% {
-                transform: scaleY(0.4);
+                transform: scaleY(0.35);
             }
         }
 
-        /* LÍNEA DIVISORIA */
+        /* ============ DIVIDER ============ */
         .divider {
-            width: 60px;
-            height: 2px;
+            width: 50px;
+            height: 1px;
             background: linear-gradient(90deg, #d400ff, #ff0090, transparent);
-            margin: 0 auto;
-            opacity: 0.7;
+            opacity: 0.6;
         }
 
-        /* COOKIES */
+        /* ============ COOKIES ============ */
         .cookie-banner {
             width: 100%;
-            background: rgba(20, 5, 30, 0.9);
-            border: 1px solid rgba(212, 0, 255, 0.2);
-            border-radius: 8px;
-            padding: 12px 16px;
+            background: rgba(15, 5, 25, 0.9);
+            border: 1px solid rgba(212, 0, 255, 0.15);
+            border-radius: 6px;
+            padding: 10px 14px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             flex-wrap: wrap;
-            gap: 10px;
-            font-size: 11px;
-            color: #999;
-            backdrop-filter: blur(10px);
+            gap: 8px;
+            font-size: 10px;
+            color: #888;
+            backdrop-filter: blur(8px);
             transition: all 0.4s;
         }
         .cookie-banner.hidden {
@@ -310,16 +381,16 @@
         }
         .cookie-btns {
             display: flex;
-            gap: 6px;
+            gap: 5px;
         }
         .cookie-btn {
-            padding: 7px 14px;
+            padding: 6px 12px;
             border: 1px solid #444;
             background: none;
             color: #aaa;
             cursor: pointer;
-            font-size: 10px;
-            border-radius: 20px;
+            font-size: 9px;
+            border-radius: 16px;
             letter-spacing: 1px;
             font-family: inherit;
             transition: all 0.2s;
@@ -335,14 +406,14 @@
             color: #fff;
         }
 
-        /* LOGIN PANEL */
+        /* ============ LOGIN PANEL ============ */
         .login-panel {
             width: 100%;
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 10px;
             opacity: 0;
-            transform: translateY(12px);
+            transform: translateY(10px);
             pointer-events: none;
             transition: all 0.5s ease;
         }
@@ -353,7 +424,7 @@
         }
         .selectors-row {
             display: flex;
-            gap: 10px;
+            gap: 8px;
             width: 100%;
         }
         .select-group {
@@ -362,12 +433,12 @@
         }
         .select-group select {
             width: 100%;
-            padding: 12px 14px;
-            background: #0d0d1a;
+            padding: 10px 12px;
+            background: #0a0a1a;
             border: 1px solid #2a2a3a;
-            border-radius: 6px;
+            border-radius: 5px;
             color: #ccc;
-            font-size: 12px;
+            font-size: 11px;
             font-family: inherit;
             outline: none;
             cursor: pointer;
@@ -377,43 +448,40 @@
         .select-group::after {
             content: '▾';
             position: absolute;
-            right: 12px;
+            right: 10px;
             top: 50%;
             transform: translateY(-50%);
             color: #d400ff;
-            font-size: 10px;
+            font-size: 9px;
             pointer-events: none;
-        }
-        .select-group select:focus {
-            border-color: #d400ff;
         }
         .input-field {
             width: 100%;
-            padding: 14px 16px;
-            background: #0d0d1a;
+            padding: 13px 15px;
+            background: #0a0a1a;
             border: 1px solid #2a2a3a;
-            border-radius: 6px;
+            border-radius: 5px;
             color: #fff;
-            font-size: 14px;
+            font-size: 13px;
             font-family: inherit;
             outline: none;
             transition: all 0.3s;
         }
         .input-field:focus {
             border-color: #d400ff;
-            box-shadow: 0 0 20px rgba(212, 0, 255, 0.12);
+            box-shadow: 0 0 18px rgba(212, 0, 255, 0.1);
         }
         .input-field::placeholder {
             color: #555;
         }
         .btn-enter {
             width: 100%;
-            padding: 15px;
-            background: linear-gradient(135deg, #d400ff, #b000d0);
+            padding: 14px;
+            background: linear-gradient(135deg, #d400ff, #a000c0);
             border: none;
-            border-radius: 6px;
+            border-radius: 5px;
             color: #fff;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
             cursor: pointer;
             letter-spacing: 3px;
@@ -422,13 +490,13 @@
             transition: all 0.3s;
         }
         .btn-enter:hover {
-            background: linear-gradient(135deg, #e010ff, #c000e0);
-            box-shadow: 0 0 35px rgba(212, 0, 255, 0.4);
+            background: linear-gradient(135deg, #e010ff, #b000d0);
+            box-shadow: 0 0 30px rgba(212, 0, 255, 0.35);
             transform: translateY(-1px);
         }
         .error-msg {
             color: #ff4060;
-            font-size: 11px;
+            font-size: 10px;
             text-align: center;
             display: none;
         }
@@ -437,49 +505,32 @@
         }
         .password-hint {
             color: #555;
-            font-size: 10px;
+            font-size: 9px;
             text-align: center;
             letter-spacing: 1px;
         }
 
-        /* FOOTER LEGAL */
-        .legal-footer {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            display: flex;
-            gap: 18px;
-            flex-wrap: wrap;
-            font-size: 10px;
-            color: #444;
-            z-index: 5;
-        }
-        .legal-footer a {
-            color: #444;
-            text-decoration: none;
-            transition: color 0.2s;
-            cursor: pointer;
-        }
-        .legal-footer a:hover {
-            color: #d400ff;
-        }
-
-        /* BOLA DE DISCOTECA */
+        /* ============ BOLA DE DISCOTECA (REDISEÑADA) ============ */
         .disco-ball-container {
             position: fixed;
-            bottom: 30px;
-            right: 25px;
+            bottom: 28px;
+            right: 22px;
             z-index: 30;
             pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.8s ease;
+        }
+        .disco-ball-container.visible {
+            opacity: 1;
         }
         .disco-ball {
-            width: 75px;
-            height: 75px;
-            background: radial-gradient(circle at 40% 35%, #fff 5%, #e0e0e0 15%, #c0c0c0 30%, #888 50%, #555 70%, #333 100%);
+            width: 42px;
+            height: 42px;
+            background: radial-gradient(circle at 40% 35%, #fff 5%, #ddd 15%, #bbb 30%, #777 50%, #444 70%, #222 100%);
             border-radius: 50%;
             position: relative;
-            box-shadow: 0 0 50px rgba(212, 0, 255, 0.5), 0 0 80px rgba(255, 255, 255, 0.2);
-            animation: spinDisco 4s linear infinite;
+            box-shadow: 0 0 30px rgba(212, 0, 255, 0.35), 0 0 50px rgba(255, 255, 255, 0.1);
+            animation: spinDisco 5s linear infinite;
         }
         @keyframes spinDisco {
             0% {
@@ -497,28 +548,28 @@
             right: 0;
             bottom: 0;
             border-radius: 50%;
-            background: repeating-linear-gradient(0deg, transparent, transparent 6px, rgba(0, 0, 0, 0.25) 6px,
-                    rgba(0, 0, 0, 0.25) 8px),
-                repeating-linear-gradient(90deg, transparent, transparent 6px, rgba(0, 0, 0, 0.25) 6px, rgba(0, 0, 0, 0.25) 8px);
+            background: repeating-linear-gradient(0deg, transparent, transparent 5px, rgba(0, 0, 0, 0.2) 5px,
+                    rgba(0, 0, 0, 0.2) 6px),
+                repeating-linear-gradient(90deg, transparent, transparent 5px, rgba(0, 0, 0, 0.2) 5px, rgba(0, 0, 0, 0.2) 6px);
         }
         .disco-ball::after {
             content: '';
             position: absolute;
             top: 10%;
-            left: 20%;
-            width: 30%;
-            height: 30%;
-            background: radial-gradient(ellipse, rgba(255, 255, 255, 0.7) 0%, transparent 70%);
+            left: 22%;
+            width: 25%;
+            height: 25%;
+            background: radial-gradient(ellipse, rgba(255, 255, 255, 0.6) 0%, transparent 60%);
             border-radius: 50%;
         }
         .sparkle {
             position: absolute;
-            width: 5px;
-            height: 5px;
+            width: 2px;
+            height: 2px;
             background: #fff;
             border-radius: 50%;
-            animation: sparkleBurst 0.7s ease-out forwards;
-            box-shadow: 0 0 8px #d400ff, 0 0 18px #ff00b4, 0 0 25px #fff;
+            animation: sparkleBurst 0.6s ease-out forwards;
+            box-shadow: 0 0 4px #d400ff, 0 0 10px #ff40c0;
         }
         @keyframes sparkleBurst {
             0% {
@@ -530,8 +581,52 @@
                 opacity: 0;
             }
         }
+        .disco-flash {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 70px;
+            height: 70px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.5) 0%, rgba(212, 0, 255, 0.3) 30%, transparent 70%);
+            border-radius: 50%;
+            animation: initialFlash 0.6s ease-out forwards;
+            pointer-events: none;
+        }
+        @keyframes initialFlash {
+            0% {
+                transform: translate(-50%, -50%) scale(0);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(3);
+                opacity: 0;
+            }
+        }
 
-        /* ESCRITORIO */
+        /* ============ FOOTER LEGAL ============ */
+        .legal-footer {
+            position: fixed;
+            bottom: 18px;
+            left: 18px;
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            font-size: 9px;
+            color: #3a3a3a;
+            z-index: 5;
+        }
+        .legal-footer a {
+            color: #3a3a3a;
+            text-decoration: none;
+            transition: color 0.2s;
+            cursor: pointer;
+        }
+        .legal-footer a:hover {
+            color: #d400ff;
+        }
+
+        /* ============ ESCRITORIO ============ */
         #desktop-screen {
             display: none;
             min-height: 100vh;
@@ -800,7 +895,7 @@
                 bottom: 10px;
                 left: 10px;
                 gap: 10px;
-                font-size: 9px;
+                font-size: 8px;
             }
             .icons-area {
                 justify-content: center;
@@ -809,32 +904,37 @@
                 grid-template-columns: 1fr;
             }
             .disco-ball {
-                width: 55px;
-                height: 55px;
+                width: 34px;
+                height: 34px;
             }
             .disco-ball-container {
                 bottom: 20px;
-                right: 15px;
+                right: 14px;
             }
         }
     </style>
 </head>
 <body>
 
+    <div class="vignette"></div>
     <div class="atmosphere"></div>
-    <div class="particles" id="particles"></div>
+    <div class="particles-layer" id="particles-layer"></div>
 
     <!-- LOGIN SCREEN -->
     <div id="login-screen">
-        <div class="main-container">
+        <div class="main-container" id="main-container">
             <div class="logo-area">
                 <div class="rings">
                     <div class="ring"></div><div class="ring"></div><div class="ring"></div>
                 </div>
-                <div class="logo-text">M<span class="logo-dot">.</span>Y<span class="logo-dot">.</span>C</div>
-                <div class="slogan">Chaos With Purpose</div>
-                <div class="tagline">Designed in Málaga to the world</div>
-                <span class="private-badge">🔒 Private Access</span>
+                <div class="logo-text" id="logo-text"></div>
+                <div class="slogan" id="slogan-text">Chaos With Purpose</div>
+                <div class="tagline" id="tagline-text">Designed in Málaga to the world</div>
+                <div class="access-info">
+                    <span class="access-code" id="access-code">#MYC-</span>
+                    <span class="visitor-counter">VISITOR <span id="visitor-num">0001</span></span>
+                </div>
+                <span class="private-badge" id="private-badge">🔒 Private Access</span>
             </div>
 
             <div class="equalizer">
@@ -846,36 +946,48 @@
             <div class="divider"></div>
 
             <div class="cookie-banner" id="cookie-banner">
-                <span>🍪 Usamos cookies para mejorar tu experiencia.</span>
+                <span id="cookie-text">🍪 Usamos cookies para mejorar tu experiencia.</span>
                 <div class="cookie-btns">
-                    <button class="cookie-btn" onclick="rejectCookies()">Rechazar</button>
-                    <button class="cookie-btn accept" onclick="acceptCookies()">Aceptar todo</button>
+                    <button class="cookie-btn" id="cookie-reject" onclick="rejectCookies()">Rechazar</button>
+                    <button class="cookie-btn accept" id="cookie-accept" onclick="acceptCookies()">Aceptar</button>
                 </div>
             </div>
 
             <div class="login-panel" id="login-panel">
                 <div class="selectors-row">
                     <div class="select-group">
-                        <select><option>🌍 España</option><option>🌍 Italia</option><option>🌍 France</option><option>🌍 English</option><option>🌍 Deutschland</option><option>🌍 Portugal</option></select>
+                        <select id="region-select" onchange="updateTranslations()">
+                            <option value="ES">🌍 España</option><option value="IT">🌍 Italia</option>
+                            <option value="FR">🌍 France</option><option value="EN">🌍 English</option>
+                            <option value="DE">🌍 Deutschland</option><option value="POR">🌍 Portugal</option>
+                        </select>
                     </div>
                     <div class="select-group">
-                        <select><option>🌐 Español</option><option>🌐 Italiano</option><option>🌐 Français</option><option>🌐 English</option><option>🌐 Deutsch</option><option>🌐 Português</option></select>
+                        <select id="lang-select" onchange="updateTranslations()">
+                            <option value="ES">🌐 Español</option><option value="IT">🌐 Italiano</option>
+                            <option value="FR">🌐 Français</option><option value="EN">🌐 English</option>
+                            <option value="DE">🌐 Deutsch</option><option value="POR">🌐 Português</option>
+                        </select>
                     </div>
                 </div>
                 <input type="text" class="input-field" id="email-input" placeholder="Email o número de teléfono">
                 <input type="password" class="input-field" id="password-input" placeholder="Contraseña">
                 <div class="error-msg" id="error-msg"></div>
-                <div class="password-hint">🔑 Pista: La fecha más importante del club</div>
-                <button class="btn-enter" onclick="login()">Entrar</button>
+                <div class="password-hint" id="password-hint">🔑 Pista: La fecha más importante del club</div>
+                <button class="btn-enter" id="btn-enter" onclick="login()">Entrar</button>
             </div>
         </div>
         <div class="legal-footer">
-            <a>Términos y condiciones</a><a>Privacidad</a><a>Ayuda</a><a>Accesibilidad</a>
+            <a id="legal-terms">Términos y condiciones</a>
+            <a id="legal-privacy">Privacidad</a>
+            <a id="legal-help">Ayuda</a>
+            <a id="legal-access">Accesibilidad</a>
         </div>
     </div>
 
     <!-- BOLA DE DISCOTECA -->
     <div class="disco-ball-container" id="disco-ball-container">
+        <div class="disco-flash" id="disco-flash"></div>
         <div class="disco-ball"></div>
     </div>
 
@@ -915,52 +1027,242 @@
     </div>
 
     <script>
-        var pc = document.getElementById('particles');
-        for (var i = 0; i < 35; i++) {
-            var p = document.createElement('div');
-            p.className = 'particle';
-            p.style.left = Math.random() * 100 + '%';
-            p.style.animationDelay = Math.random() * 7 + 's';
-            p.style.animationDuration = (5 + Math.random() * 6) + 's';
-            pc.appendChild(p);
-        }
-        var ball = document.getElementById('disco-ball-container');
+        // ============ SECUENCIA DE ENTRADA ============
+        (function entranceSequence() {
+            var container = document.getElementById('main-container');
+            var discoContainer = document.getElementById('disco-ball-container');
+            var flash = document.getElementById('disco-flash');
 
-        function sparkle() {
+            // Logo letra por letra
+            var logoEl = document.getElementById('logo-text');
+            var letters = ['M', '.', 'Y', '.', 'C'];
+            logoEl.innerHTML = '';
+            letters.forEach(function(l, i) {
+                var span = document.createElement('span');
+                span.className = 'logo-letter';
+                if (l === '.') span.classList.add('logo-dot');
+                span.textContent = l;
+                span.style.animationDelay = (i * 0.1) + 's';
+                logoEl.appendChild(span);
+            });
+
+            // Secuencia
+            setTimeout(function() {
+                container.classList.add('visible');
+            }, 300);
+
+            setTimeout(function() {
+                discoContainer.classList.add('visible');
+            }, 800);
+
+            // Flash inicial
+            setTimeout(function() {
+                if (flash) flash.style.display = 'block';
+                setTimeout(function() { if (flash) flash.style.display = 'none'; }, 600);
+            }, 900);
+        })();
+
+        // ============ PARTÍCULAS 3 CAPAS ============
+        var pl = document.getElementById('particles-layer');
+        for (var i = 0; i < 20; i++) {
+            var pf = document.createElement('div');
+            pf.className = 'particle-fast';
+            pf.style.left = Math.random() * 100 + '%';
+            pf.style.animationDelay = Math.random() * 4 + 's';
+            pl.appendChild(pf);
+            var pm = document.createElement('div');
+            pm.className = 'particle-mid';
+            pm.style.left = Math.random() * 100 + '%';
+            pm.style.animationDelay = Math.random() * 6 + 's';
+            pl.appendChild(pm);
+            var ps = document.createElement('div');
+            ps.className = 'particle-slow';
+            ps.style.left = Math.random() * 100 + '%';
+            ps.style.animationDelay = Math.random() * 9 + 's';
+            pl.appendChild(ps);
+        }
+
+        // ============ DESTELLOS BOLA ============
+        var discoBall = document.getElementById('disco-ball-container');
+
+        function createSparkle() {
             var s = document.createElement('div');
             s.className = 'sparkle';
-            var a = Math.random() * 360;
-            var d = 25 + Math.random() * 55;
-            s.style.setProperty('--dx', Math.cos(a * Math.PI / 180) * d + 'px');
-            s.style.setProperty('--dy', Math.sin(a * Math.PI / 180) * d + 'px');
-            s.style.left = '37px';
-            s.style.top = '37px';
-            ball.appendChild(s);
-            setTimeout(function() { s.remove(); }, 700);
+            var angle = Math.random() * 360;
+            var dist = 18 + Math.random() * 30;
+            s.style.setProperty('--dx', Math.cos(angle * Math.PI / 180) * dist + 'px');
+            s.style.setProperty('--dy', Math.sin(angle * Math.PI / 180) * dist + 'px');
+            s.style.left = '21px';
+            s.style.top = '21px';
+            discoBall.appendChild(s);
+            setTimeout(function() { s.remove(); }, 600);
         }
-        setInterval(sparkle, 1800);
+        setInterval(createSparkle, 2200);
 
+        // ============ CÓDIGO DE ACCESO + CONTADOR ============
+        (function() {
+            var code = 'MYC-' + Math.floor(Math.random() * 9000 + 1000);
+            document.getElementById('access-code').textContent = '#' + code;
+            var visitor = Math.floor(Math.random() * 9000 + 1000);
+            document.getElementById('visitor-num').textContent = String(visitor).padStart(4, '0');
+        })();
+
+        // ============ TRADUCCIONES ============
+        var translations = {
+            'ES': {
+                slogan: 'Chaos With Purpose',
+                tagline: 'Diseñado en Málaga para el mundo',
+                badge: '🔒 Acceso Privado',
+                cookie: '🍪 Usamos cookies para mejorar tu experiencia.',
+                reject: 'Rechazar',
+                accept: 'Aceptar',
+                emailPlaceholder: 'Email o número de teléfono',
+                passPlaceholder: 'Contraseña',
+                hint: '🔑 Pista: La fecha más importante del club',
+                enter: 'Entrar',
+                terms: 'Términos y condiciones',
+                privacy: 'Privacidad',
+                help: 'Ayuda',
+                access: 'Accesibilidad',
+                errorEmpty: 'Ingresa tu email o teléfono',
+                errorPass: 'Contraseña incorrecta'
+            },
+            'EN': {
+                slogan: 'Chaos With Purpose',
+                tagline: 'Designed in Málaga to the world',
+                badge: '🔒 Private Access',
+                cookie: '🍪 We use cookies to improve your experience.',
+                reject: 'Reject',
+                accept: 'Accept',
+                emailPlaceholder: 'Email or phone number',
+                passPlaceholder: 'Password',
+                hint: '🔑 Hint: The most important date of the club',
+                enter: 'Enter',
+                terms: 'Terms & Conditions',
+                privacy: 'Privacy',
+                help: 'Help',
+                access: 'Accessibility',
+                errorEmpty: 'Enter your email or phone',
+                errorPass: 'Incorrect password'
+            },
+            'IT': {
+                slogan: 'Chaos With Purpose',
+                tagline: 'Progettato a Málaga per il mondo',
+                badge: '🔒 Accesso Privato',
+                cookie: '🍪 Usiamo i cookie per migliorare la tua esperienza.',
+                reject: 'Rifiutare',
+                accept: 'Accettare',
+                emailPlaceholder: 'Email o numero di telefono',
+                passPlaceholder: 'Password',
+                hint: '🔑 Suggerimento: La data più importante del club',
+                enter: 'Entrare',
+                terms: 'Termini e condizioni',
+                privacy: 'Privacy',
+                help: 'Aiuto',
+                access: 'Accessibilità',
+                errorEmpty: 'Inserisci email o telefono',
+                errorPass: 'Password errata'
+            },
+            'FR': {
+                slogan: 'Chaos With Purpose',
+                tagline: 'Conçu à Málaga pour le monde',
+                badge: '🔒 Accès Privé',
+                cookie: '🍪 Nous utilisons des cookies pour améliorer votre expérience.',
+                reject: 'Refuser',
+                accept: 'Accepter',
+                emailPlaceholder: 'Email ou téléphone',
+                passPlaceholder: 'Mot de passe',
+                hint: '🔑 Indice: La date la plus importante du club',
+                enter: 'Entrer',
+                terms: 'Termes et conditions',
+                privacy: 'Confidentialité',
+                help: 'Aide',
+                access: 'Accessibilité',
+                errorEmpty: 'Entrez votre email ou téléphone',
+                errorPass: 'Mot de passe incorrect'
+            },
+            'DE': {
+                slogan: 'Chaos With Purpose',
+                tagline: 'Entworfen in Málaga für die Welt',
+                badge: '🔒 Privater Zugang',
+                cookie: '🍪 Wir verwenden Cookies, um Ihre Erfahrung zu verbessern.',
+                reject: 'Ablehnen',
+                accept: 'Akzeptieren',
+                emailPlaceholder: 'Email oder Telefonnummer',
+                passPlaceholder: 'Passwort',
+                hint: '🔑 Hinweis: Das wichtigste Datum des Clubs',
+                enter: 'Einloggen',
+                terms: 'AGB',
+                privacy: 'Datenschutz',
+                help: 'Hilfe',
+                access: 'Barrierefreiheit',
+                errorEmpty: 'Email oder Telefon eingeben',
+                errorPass: 'Falsches Passwort'
+            },
+            'POR': {
+                slogan: 'Chaos With Purpose',
+                tagline: 'Desenhado em Málaga para o mundo',
+                badge: '🔒 Acesso Privado',
+                cookie: '🍪 Usamos cookies para melhorar a sua experiência.',
+                reject: 'Rejeitar',
+                accept: 'Aceitar',
+                emailPlaceholder: 'Email ou número de telefone',
+                passPlaceholder: 'Senha',
+                hint: '🔑 Dica: A data mais importante do clube',
+                enter: 'Entrar',
+                terms: 'Termos e condições',
+                privacy: 'Privacidade',
+                help: 'Ajuda',
+                access: 'Acessibilidade',
+                errorEmpty: 'Insira seu email ou telefone',
+                errorPass: 'Senha incorreta'
+            }
+        };
+
+        function updateTranslations() {
+            var lang = document.getElementById('lang-select').value;
+            var t = translations[lang] || translations['ES'];
+            document.getElementById('slogan-text').textContent = t.slogan;
+            document.getElementById('tagline-text').textContent = t.tagline;
+            document.getElementById('private-badge').textContent = t.badge;
+            document.getElementById('cookie-text').textContent = t.cookie;
+            document.getElementById('cookie-reject').textContent = t.reject;
+            document.getElementById('cookie-accept').textContent = t.accept;
+            document.getElementById('email-input').placeholder = t.emailPlaceholder;
+            document.getElementById('password-input').placeholder = t.passPlaceholder;
+            document.getElementById('password-hint').textContent = t.hint;
+            document.getElementById('btn-enter').textContent = t.enter;
+            document.getElementById('legal-terms').textContent = t.terms;
+            document.getElementById('legal-privacy').textContent = t.privacy;
+            document.getElementById('legal-help').textContent = t.help;
+            document.getElementById('legal-access').textContent = t.access;
+            window._currentLang = t;
+        }
+
+        // ============ COOKIES ============
         function acceptCookies() { document.getElementById('cookie-banner').classList.add('hidden');
             document.getElementById('login-panel').classList.add('visible'); }
 
         function rejectCookies() { document.getElementById('cookie-banner').classList.add('hidden');
             document.getElementById('login-panel').classList.add('visible'); }
 
+        // ============ LOGIN ============
         function login() {
-            var e = document.getElementById('email-input').value.trim();
-            var p = document.getElementById('password-input').value.trim();
+            var t = window._currentLang || translations['ES'];
+            var email = document.getElementById('email-input').value.trim();
+            var pass = document.getElementById('password-input').value.trim();
             var err = document.getElementById('error-msg');
-            if (!e) { err.textContent = 'Ingresa tu email o telefono';
+            if (!email) { err.textContent = t.errorEmpty;
                 err.classList.add('show'); return; }
-            if (p === '23/10/2026') {
+            if (pass === '23/10/2026') {
                 document.getElementById('login-screen').style.display = 'none';
                 document.getElementById('desktop-screen').classList.add('active');
                 updateClock();
                 setInterval(updateClock, 1000);
-            } else { err.textContent = 'Contrasena incorrecta';
+            } else { err.textContent = t.errorPass;
                 err.classList.add('show'); }
         }
-        document.getElementById('password-input').addEventListener('keypress', function(ev) { if (ev.key === 'Enter')
+        document.getElementById('password-input').addEventListener('keypress', function(e) { if (e.key === 'Enter')
             login(); });
 
         function logout() {
@@ -976,11 +1278,11 @@
                 .textContent = d.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }); }
 
         function toggleStart() { document.getElementById('start-menu').classList.toggle('active'); }
-        document.addEventListener('click', function(ev) { var m = document.getElementById('start-menu'); var b = document
-                .querySelector('.start-btn'); if (m && !m.contains(ev.target) && ev.target !== b && !b.contains(ev.target))
+        document.addEventListener('click', function(e) { var m = document.getElementById('start-menu'); var b = document
+                .querySelector('.start-btn'); if (m && !m.contains(e.target) && e.target !== b && !b.contains(e.target))
                 m.classList.remove('active'); });
 
-        var c = {
+        var contents = {
             'myc': { title: 'M.Y.C', body: '<h3>M.Y.C</h3><p>Sello independiente. Chaos With Purpose.</p>' },
             'store': { title: 'STORE',
                 body: '<h3>STORE</h3><div class="mini-grid"><div class="mini-card"><div class="icon">💿</div><b>Neon Void Vol.1</b></div></div>' },
@@ -994,13 +1296,14 @@
         };
 
         function openWindow(p) { var o = document.getElementById('window-overlay'); var t = document.getElementById(
-                'window-title'); var b = document.getElementById('window-body'); if (c[p]) { t.textContent = c[p].title;
-                b.innerHTML = c[p].body;
+                'window-title'); var b = document.getElementById('window-body'); if (contents[p]) { t.textContent =
+                contents[p].title;
+                b.innerHTML = contents[p].body;
                 o.classList.add('active'); } }
 
         function closeWindowDirect() { document.getElementById('window-overlay').classList.remove('active'); }
 
-        function closeWindow(ev) { if (ev.target === document.getElementById('window-overlay')) document.getElementById(
+        function closeWindow(e) { if (e.target === document.getElementById('window-overlay')) document.getElementById(
                 'window-overlay').classList.remove('active'); }
 
         var ctx = null,
