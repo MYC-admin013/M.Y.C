@@ -1,3 +1,4 @@
+html
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -6,59 +7,33 @@
     <title>M.Y.C — The Mayin Buu Club</title>
     <style>
         :root {
-            --win95-bg: #008080;
-            --win95-gray: #c0c0c0;
-            --win95-dark: #808080;
-            --win95-darker: #404040;
-            --win95-light: #dfdfdf;
-            --win95-white: #ffffff;
-            --win95-black: #000000;
+            --bg: #008080;
+            --gray: #c0c0c0;
+            --dark: #808080;
+            --darker: #404040;
+            --light: #dfdfdf;
+            --white: #ffffff;
+            --black: #000000;
             --magenta: #d400ff;
-            --magenta-glow: rgba(212, 0, 255, 0.4);
-            --desktop-bg: #0a6e6e;
+            --desk: #0a6e6e;
         }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            background: var(--desktop-bg);
+            background: var(--desk);
             font-family: 'MS Sans Serif', 'Segoe UI', 'Tahoma', sans-serif;
             min-height: 100vh;
             overflow-x: hidden;
             cursor: default;
-            -webkit-font-smoothing: none;
-            image-rendering: pixelated;
         }
-
-        /* ============ FONDO DE ESCRITORIO ============ */
         .desktop-wallpaper {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: calc(100vh - 42px);
-            background: 
-                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px),
-                repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px),
-                linear-gradient(135deg, #0a5e5e 0%, #0a7a7a 50%, #0a6e6e 100%);
+            background: linear-gradient(135deg, #0a5e5e 0%, #0a7a7a 50%, #0a6e6e 100%);
             z-index: 0;
         }
-
-        .desktop-wallpaper::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(ellipse at center, transparent 60%, rgba(0,0,0,0.3) 100%);
-        }
-
-        /* ============ ICONOS DEL ESCRITORIO ============ */
         .desktop-icons-area {
             position: relative;
             z-index: 1;
@@ -67,10 +42,8 @@
             grid-template-columns: repeat(3, 100px);
             gap: 8px 5px;
             justify-content: start;
-            align-content: start;
             min-height: calc(100vh - 42px);
         }
-
         .desktop-icon {
             display: flex;
             flex-direction: column;
@@ -78,28 +51,24 @@
             gap: 4px;
             cursor: pointer;
             padding: 8px 6px;
-            border-radius: 0;
             border: 1px solid transparent;
-            transition: none;
             width: 90px;
             text-align: center;
             background: none;
             font-family: 'MS Sans Serif', 'Segoe UI', 'Tahoma', sans-serif;
-            color: var(--win95-white);
+            color: var(--white);
             font-size: 11px;
             user-select: none;
+            border-radius: 0;
         }
-
         .desktop-icon:hover {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px dotted rgba(255, 255, 255, 0.4);
+            background: rgba(255,255,255,0.1);
+            border: 1px dotted rgba(255,255,255,0.4);
         }
-
         .desktop-icon.selected {
-            background: rgba(0, 0, 128, 0.6);
-            border: 1px dotted rgba(255, 255, 255, 0.6);
+            background: rgba(0,0,128,0.6);
+            border: 1px dotted rgba(255,255,255,0.6);
         }
-
         .desktop-icon .icon-img {
             width: 48px;
             height: 48px;
@@ -107,110 +76,84 @@
             align-items: center;
             justify-content: center;
             font-size: 36px;
-            filter: drop-shadow(1px 1px 1px rgba(0,0,0,0.5));
             pointer-events: none;
         }
-
         .desktop-icon .icon-label {
-            color: var(--win95-white);
+            color: var(--white);
             font-size: 11px;
-            letter-spacing: 0;
             text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
             pointer-events: none;
             line-height: 1.2;
         }
-
-        /* ============ BARRA DE TAREAS ============ */
         .taskbar {
             position: fixed;
             bottom: 0;
             left: 0;
             right: 0;
             height: 42px;
-            background: var(--win95-gray);
-            border-top: 2px solid var(--win95-white);
-            box-shadow: 0 -1px 0 var(--win95-dark);
+            background: var(--gray);
+            border-top: 2px solid var(--white);
             display: flex;
             align-items: center;
             padding: 3px 4px;
             z-index: 10000;
             gap: 4px;
         }
-
         .start-btn {
-            background: var(--win95-gray);
+            background: var(--gray);
             border: 2px solid;
-            border-color: var(--win95-white) var(--win95-dark) var(--win95-dark) var(--win95-white);
+            border-color: var(--white) var(--dark) var(--dark) var(--white);
             padding: 4px 8px;
             font-family: 'MS Sans Serif', 'Segoe UI', 'Tahoma', sans-serif;
             font-size: 12px;
             font-weight: bold;
             cursor: pointer;
-            letter-spacing: 0.5px;
-            display: flex;
-            align-items: center;
-            gap: 4px;
             height: 30px;
             user-select: none;
         }
-
         .start-btn:active {
-            border-color: var(--win95-dark) var(--win95-white) var(--win95-white) var(--win95-dark);
+            border-color: var(--dark) var(--white) var(--white) var(--dark);
         }
-
-        .start-btn .start-icon {
-            font-size: 16px;
-        }
-
         .taskbar-divider {
             width: 2px;
             height: 28px;
-            background: var(--win95-dark);
-            border-left: 1px solid var(--win95-white);
+            background: var(--dark);
+            border-left: 1px solid var(--white);
         }
-
         .taskbar-player {
             display: flex;
             align-items: center;
             gap: 6px;
             font-size: 11px;
-            color: var(--win95-black);
+            color: var(--black);
             padding: 2px 8px;
-            background: var(--win95-gray);
+            background: var(--gray);
             border: 2px solid;
-            border-color: var(--win95-dark) var(--win95-white) var(--win95-white) var(--win95-dark);
+            border-color: var(--dark) var(--white) var(--white) var(--dark);
             height: 28px;
         }
-
         .taskbar-player button {
-            background: var(--win95-gray);
+            background: var(--gray);
             border: 2px solid;
-            border-color: var(--win95-white) var(--win95-dark) var(--win95-dark) var(--win95-white);
+            border-color: var(--white) var(--dark) var(--dark) var(--white);
             width: 24px;
             height: 24px;
             cursor: pointer;
             font-size: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             padding: 0;
         }
-
         .taskbar-player button:active {
-            border-color: var(--win95-dark) var(--win95-white) var(--win95-white) var(--win95-dark);
+            border-color: var(--dark) var(--white) var(--white) var(--dark);
         }
-
         .taskbar-time {
             margin-left: auto;
             font-size: 11px;
-            color: var(--win95-black);
+            color: var(--black);
             padding: 4px 10px;
-            background: var(--win95-gray);
+            background: var(--gray);
             border: 2px solid;
-            border-color: var(--win95-dark) var(--win95-white) var(--win95-white) var(--win95-dark);
+            border-color: var(--dark) var(--white) var(--white) var(--dark);
         }
-
-        /* ============ VENTANAS ============ */
         .window-overlay {
             display: none;
             position: fixed;
@@ -219,23 +162,19 @@
             width: 100%;
             height: calc(100vh - 42px);
             z-index: 100;
-            pointer-events: none;
         }
-
         .window-overlay.active {
             display: block;
-            pointer-events: all;
         }
-
-        .window {
+        .window-box {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: var(--win95-gray);
+            background: var(--gray);
             border: 2px solid;
-            border-color: var(--win95-white) var(--win95-dark) var(--win95-dark) var(--win95-white);
-            box-shadow: 2px 2px 0 var(--win95-black);
+            border-color: var(--white) var(--dark) var(--dark) var(--white);
+            box-shadow: 2px 2px 0 var(--black);
             min-width: 350px;
             max-width: 600px;
             width: 90%;
@@ -244,10 +183,9 @@
             flex-direction: column;
             z-index: 101;
         }
-
         .window-titlebar {
             background: linear-gradient(90deg, #000080, #1084d0);
-            color: var(--win95-white);
+            color: var(--white);
             padding: 3px 4px;
             display: flex;
             align-items: center;
@@ -258,17 +196,10 @@
             user-select: none;
             height: 26px;
         }
-
-        .window-titlebar span {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
         .window-close {
-            background: var(--win95-gray);
+            background: var(--gray);
             border: 2px solid;
-            border-color: var(--win95-white) var(--win95-dark) var(--win95-dark) var(--win95-white);
+            border-color: var(--white) var(--dark) var(--dark) var(--white);
             width: 20px;
             height: 20px;
             cursor: pointer;
@@ -278,112 +209,94 @@
             align-items: center;
             justify-content: center;
             padding: 0;
-            line-height: 1;
-            color: var(--win95-black);
+            color: var(--black);
             font-family: 'MS Sans Serif', sans-serif;
         }
-
         .window-close:active {
-            border-color: var(--win95-dark) var(--win95-white) var(--win95-white) var(--win95-dark);
+            border-color: var(--dark) var(--white) var(--white) var(--dark);
         }
-
         .window-body {
             padding: 12px;
             overflow-y: auto;
             flex: 1;
-            background: var(--win95-white);
-            color: var(--win95-black);
+            background: var(--white);
+            color: var(--black);
             font-size: 12px;
             line-height: 1.6;
         }
-
         .window-body h3 {
             font-size: 14px;
             margin-bottom: 8px;
             color: #000080;
         }
-
         .window-body p {
             margin-bottom: 10px;
             font-size: 12px;
         }
-
         .win95-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 8px;
             margin-top: 10px;
         }
-
         .win95-card {
-            background: var(--win95-white);
+            background: var(--white);
             border: 2px solid;
-            border-color: var(--win95-white) var(--win95-dark) var(--win95-dark) var(--win95-white);
+            border-color: var(--white) var(--dark) var(--dark) var(--white);
             padding: 10px;
             cursor: pointer;
             font-size: 11px;
         }
-
         .win95-card:active {
-            border-color: var(--win95-dark) var(--win95-white) var(--win95-white) var(--win95-dark);
+            border-color: var(--dark) var(--white) var(--white) var(--dark);
         }
-
         .win95-card .icon {
             font-size: 28px;
             margin-bottom: 6px;
         }
-
         .win95-btn {
-            background: var(--win95-gray);
+            background: var(--gray);
             border: 2px solid;
-            border-color: var(--win95-white) var(--win95-dark) var(--win95-dark) var(--win95-white);
+            border-color: var(--white) var(--dark) var(--dark) var(--white);
             padding: 6px 16px;
             font-family: 'MS Sans Serif', 'Segoe UI', 'Tahoma', sans-serif;
             font-size: 12px;
             cursor: pointer;
-            color: var(--win95-black);
+            color: var(--black);
         }
-
         .win95-btn:active {
-            border-color: var(--win95-dark) var(--win95-white) var(--win95-white) var(--win95-dark);
+            border-color: var(--dark) var(--white) var(--white) var(--dark);
         }
-
         .tour-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 6px 0;
-            border-bottom: 1px solid var(--win95-dark);
+            border-bottom: 1px solid var(--dark);
             font-size: 12px;
             flex-wrap: wrap;
             gap: 6px;
         }
-
         .tour-date {
             font-weight: bold;
             color: #000080;
             min-width: 60px;
         }
-
-        /* ============ MENÚ INICIO ============ */
         .start-menu {
             display: none;
             position: fixed;
             bottom: 46px;
             left: 4px;
-            background: var(--win95-gray);
+            background: var(--gray);
             border: 2px solid;
-            border-color: var(--win95-white) var(--win95-dark) var(--win95-dark) var(--win95-white);
+            border-color: var(--white) var(--dark) var(--dark) var(--white);
             z-index: 10001;
             width: 180px;
-            padding: 0;
-            box-shadow: 2px 2px 0 var(--win95-black);
+            box-shadow: 2px 2px 0 var(--black);
         }
-
         .start-menu.active {
             display: block;
         }
-
         .start-menu-item {
             display: flex;
             align-items: center;
@@ -391,37 +304,33 @@
             padding: 6px 12px;
             cursor: pointer;
             font-size: 12px;
-            color: var(--win95-black);
+            color: var(--black);
             border: none;
             background: none;
             width: 100%;
             text-align: left;
             font-family: 'MS Sans Serif', 'Segoe UI', 'Tahoma', sans-serif;
         }
-
         .start-menu-item:hover {
             background: #000080;
-            color: var(--win95-white);
+            color: var(--white);
         }
-
         .start-menu-divider {
             height: 1px;
-            background: var(--win95-dark);
+            background: var(--dark);
             margin: 2px 4px;
-            border-top: 1px solid var(--win95-white);
+            border-top: 1px solid var(--white);
         }
-
         @media (max-width: 768px) {
             .desktop-icons-area {
                 grid-template-columns: repeat(2, 100px);
             }
-            .window {
+            .window-box {
                 width: 95%;
                 min-width: auto;
                 max-height: 60vh;
             }
         }
-
         @media (max-width: 480px) {
             .desktop-icons-area {
                 grid-template-columns: repeat(2, 90px);
@@ -435,10 +344,8 @@
 </head>
 <body>
 
-    <!-- Fondo de escritorio -->
-    <div class="desktop-wallpaper"></div>
+    <div class="desktop-wallpaper" onclick="deselectAll()"></div>
 
-    <!-- Iconos del escritorio -->
     <div class="desktop-icons-area" id="desktop-icons">
         <button class="desktop-icon" ondblclick="openWindow('myc')" onclick="selectIcon(this)">
             <div class="icon-img">🎤</div>
@@ -466,9 +373,8 @@
         </button>
     </div>
 
-    <!-- Ventanas -->
     <div class="window-overlay" id="window-overlay" onclick="closeWindow(event)">
-        <div class="window" id="window-box" onclick="event.stopPropagation()">
+        <div class="window-box" id="window-box" onclick="event.stopPropagation()">
             <div class="window-titlebar">
                 <span id="window-title">📁 Ventana</span>
                 <button class="window-close" onclick="closeWindowDirect()">✕</button>
@@ -477,7 +383,6 @@
         </div>
     </div>
 
-    <!-- Menú Inicio -->
     <div class="start-menu" id="start-menu">
         <div class="start-menu-item" onclick="openWindow('myc'); toggleStart()">🎤 M.Y.C</div>
         <div class="start-menu-item" onclick="openWindow('store'); toggleStart()">💿 Store</div>
@@ -488,11 +393,8 @@
         <div class="start-menu-item" onclick="openWindow('artists'); toggleStart()">🎨 Artists</div>
     </div>
 
-    <!-- Barra de tareas -->
     <div class="taskbar">
-        <button class="start-btn" onclick="toggleStart()">
-            <span class="start-icon">🏠</span> Inicio
-        </button>
+        <button class="start-btn" onclick="toggleStart()">🏠 Inicio</button>
         <div class="taskbar-divider"></div>
         <div class="taskbar-player">
             <span>🎵</span>
@@ -502,7 +404,6 @@
     </div>
 
     <script>
-        // ============ RELOJ ============
         function updateClock() {
             var now = new Date();
             var time = now.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
@@ -511,7 +412,6 @@
         updateClock();
         setInterval(updateClock, 1000);
 
-        // ============ SELECCIÓN DE ICONOS ============
         function selectIcon(el) {
             document.querySelectorAll('.desktop-icon').forEach(function(icon) {
                 icon.classList.remove('selected');
@@ -519,20 +419,16 @@
             el.classList.add('selected');
         }
 
-        // Clic en el fondo: deseleccionar
-        document.querySelector('.desktop-wallpaper').addEventListener('click', function() {
+        function deselectAll() {
             document.querySelectorAll('.desktop-icon').forEach(function(icon) {
                 icon.classList.remove('selected');
             });
-        });
-
-        // ============ MENÚ INICIO ============
-        function toggleStart() {
-            var menu = document.getElementById('start-menu');
-            menu.classList.toggle('active');
         }
 
-        // Cerrar menú al hacer clic fuera
+        function toggleStart() {
+            document.getElementById('start-menu').classList.toggle('active');
+        }
+
         document.addEventListener('click', function(e) {
             var menu = document.getElementById('start-menu');
             var startBtn = document.querySelector('.start-btn');
@@ -541,31 +437,30 @@
             }
         });
 
-        // ============ VENTANAS ============
         var windowContents = {
             'myc': {
-                title: '📁 M.Y.C — The Mayin Buu Club',
-                body: '<h3>🎤 M.Y.C</h3><p>Fundado en 2024, <b>M.Y.C</b> es un sello discográfico independiente dedicado a la música electrónica de vanguardia.</p><p>Nuestro catálogo abarca desde el synthwave más nostálgico hasta el techno más experimental.</p><div class="win95-grid"><div class="win95-card"><div class="icon">🎹</div><b>Producción Musical</b><br><small>Estudio analógico y digital</small></div><div class="win95-card"><div class="icon">🎛️</div><b>Mastering</b><br><small>Mezcla profesional</small></div></div>'
+                title: 'M.Y.C — The Mayin Buu Club',
+                body: '<h3>M.Y.C</h3><p>Fundado en 2024, <b>M.Y.C</b> es un sello discografico independiente dedicado a la musica electronica de vanguardia.</p><p>Nuestro catalogo abarca desde el synthwave mas nostalgico hasta el techno mas experimental.</p><div class="win95-grid"><div class="win95-card"><div class="icon">🎹</div><b>Produccion Musical</b><br><small>Estudio analogico y digital</small></div><div class="win95-card"><div class="icon">🎛️</div><b>Mastering</b><br><small>Mezcla profesional</small></div></div>'
             },
             'store': {
-                title: '📁 STORE — Discos y Vinilos',
-                body: '<h3>💿 STORE</h3><div class="win95-grid"><div class="win95-card"><div class="icon">💿</div><b>VA — Neon Void Vol.1</b><br><small>€24.99 — Vinilo</small></div><div class="win95-card"><div class="icon">📀</div><b>Baby Buu\'s — First Steps EP</b><br><small>€12.99 — Digital</small></div><div class="win95-card"><div class="icon">💾</div><b>M.Y.C — Club Edits 001</b><br><small>€18.00 — Cassette</small></div><div class="win95-card"><div class="icon">🎵</div><b>Synth Series 1-3</b><br><small>€34.99 — Box Set</small></div></div>'
+                title: 'STORE — Discos y Vinilos',
+                body: '<h3>STORE</h3><div class="win95-grid"><div class="win95-card"><div class="icon">💿</div><b>VA - Neon Void Vol.1</b><br><small>24.99 - Vinilo</small></div><div class="win95-card"><div class="icon">📀</div><b>Baby Buu - First Steps EP</b><br><small>12.99 - Digital</small></div><div class="win95-card"><div class="icon">💾</div><b>M.Y.C - Club Edits 001</b><br><small>18.00 - Cassette</small></div><div class="win95-card"><div class="icon">🎵</div><b>Synth Series 1-3</b><br><small>34.99 - Box Set</small></div></div>'
             },
             'merch': {
-                title: '📁 MERCH — Ropa y Accesorios',
-                body: '<h3>👕 MERCH</h3><div class="win95-grid"><div class="win95-card"><div class="icon">👕</div><b>Camiseta M.Y.C</b><br><small>€29.99</small></div><div class="win95-card"><div class="icon">🧢</div><b>Gorra Baby Buu\'s</b><br><small>€22.00</small></div><div class="win95-card"><div class="icon">🎒</div><b>Tote Bag M.Y.C</b><br><small>€15.99</small></div><div class="win95-card"><div class="icon">📿</div><b>Colgante Ed. Limitada</b><br><small>€45.00</small></div></div>'
+                title: 'MERCH — Ropa y Accesorios',
+                body: '<h3>MERCH</h3><div class="win95-grid"><div class="win95-card"><div class="icon">👕</div><b>Camiseta M.Y.C</b><br><small>29.99</small></div><div class="win95-card"><div class="icon">🧢</div><b>Gorra Baby Buu</b><br><small>22.00</small></div><div class="win95-card"><div class="icon">🎒</div><b>Tote Bag M.Y.C</b><br><small>15.99</small></div><div class="win95-card"><div class="icon">📿</div><b>Colgante Ed. Limitada</b><br><small>45.00</small></div></div>'
             },
             'tours': {
-                title: '📁 TOURS — Próximas Fechas',
-                body: '<h3>🌍 TOURS</h3><div class="tour-row"><span class="tour-date">15 DIC</span><span>Tokyo — Cyberdome</span><button class="win95-btn">Tickets</button></div><div class="tour-row"><span class="tour-date">20 ENE</span><span>Berlin — Kraftwerk</span><button class="win95-btn">Tickets</button></div><div class="tour-row"><span class="tour-date">14 FEB</span><span>Miami — Vice Club</span><button class="win95-btn">Tickets</button></div><div class="tour-row"><span class="tour-date">08 MAR</span><span>London — Electric</span><button class="win95-btn">Tickets</button></div><div class="tour-row"><span class="tour-date">22 ABR</span><span>CDMX — Foro Indie</span><button class="win95-btn">Tickets</button></div>'
+                title: 'TOURS — Proximas Fechas',
+                body: '<h3>TOURS</h3><div class="tour-row"><span class="tour-date">15 DIC</span><span>Tokyo - Cyberdome</span><button class="win95-btn">Tickets</button></div><div class="tour-row"><span class="tour-date">20 ENE</span><span>Berlin - Kraftwerk</span><button class="win95-btn">Tickets</button></div><div class="tour-row"><span class="tour-date">14 FEB</span><span>Miami - Vice Club</span><button class="win95-btn">Tickets</button></div><div class="tour-row"><span class="tour-date">08 MAR</span><span>London - Electric</span><button class="win95-btn">Tickets</button></div><div class="tour-row"><span class="tour-date">22 ABR</span><span>CDMX - Foro Indie</span><button class="win95-btn">Tickets</button></div>'
             },
             'babybuus': {
-                title: '📁 BABY BUU\'S — Subsello Oficial',
-                body: '<h3>👶 BABY BUU\'S</h3><p><b>Baby Buu\'s</b> es el subsello de M.Y.C enfocado en sonidos más experimentales y lúdicos.</p><div class="win95-grid"><div class="win95-card"><div class="icon">🍼</div><b>Baby Buu</b><br><small>Artista principal</small></div><div class="win95-card"><div class="icon">🧸</div><b>First Steps EP</b><br><small>Vinilo 12" limitado</small></div></div>'
+                title: 'BABY BUUS — Subsello Oficial',
+                body: '<h3>BABY BUUS</h3><p><b>Baby Buus</b> es el subsello de M.Y.C enfocado en sonidos mas experimentales y ludicos.</p><div class="win95-grid"><div class="win95-card"><div class="icon">🍼</div><b>Baby Buu</b><br><small>Artista principal</small></div><div class="win95-card"><div class="icon">🧸</div><b>First Steps EP</b><br><small>Vinilo 12" limitado</small></div></div>'
             },
             'artists': {
-                title: '📁 ARTISTS — Roster Oficial',
-                body: '<h3>🎨 ARTISTS</h3><div class="win95-grid"><div class="win95-card"><div class="icon">🎹</div><b>VHS GLITCH</b><br><small>Synthwave / Darkwave</small></div><div class="win95-card"><div class="icon">🎛️</div><b>TERMINAL X</b><br><small>Cyberpunk / Industrial</small></div><div class="win95-card"><div class="icon">👻</div><b>CRT GHOST</b><br><small>Vaporwave / Ambient</small></div><div class="win95-card"><div class="icon">💻</div><b>DATA PHANTOM</b><br><small>Darksynth / Retrowave</small></div></div>'
+                title: 'ARTISTS — Roster Oficial',
+                body: '<h3>ARTISTS</h3><div class="win95-grid"><div class="win95-card"><div class="icon">🎹</div><b>VHS GLITCH</b><br><small>Synthwave / Darkwave</small></div><div class="win95-card"><div class="icon">🎛️</div><b>TERMINAL X</b><br><small>Cyberpunk / Industrial</small></div><div class="win95-card"><div class="icon">👻</div><b>CRT GHOST</b><br><small>Vaporwave / Ambient</small></div><div class="win95-card"><div class="icon">💻</div><b>DATA PHANTOM</b><br><small>Darksynth / Retrowave</small></div></div>'
             }
         };
 
@@ -573,7 +468,6 @@
             var overlay = document.getElementById('window-overlay');
             var titleEl = document.getElementById('window-title');
             var bodyEl = document.getElementById('window-body');
-
             if (windowContents[page]) {
                 titleEl.textContent = windowContents[page].title;
                 bodyEl.innerHTML = windowContents[page].body;
@@ -591,7 +485,6 @@
             }
         }
 
-        // ============ REPRODUCTOR ============
         var audioContext = null;
         var isPlaying = false;
         var oscNode = null;
@@ -599,7 +492,7 @@
 
         function initAudio() {
             if (!audioContext) {
-                audioContext = new(window.AudioContext || window.webkitAudioContext)();
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
                 oscNode = audioContext.createOscillator();
                 gainNode = audioContext.createGain();
                 var filter = audioContext.createBiquadFilter();
@@ -635,23 +528,6 @@
                 isPlaying = true;
             }
         }
-
-        // Doble clic en iconos para abrir
-        document.querySelectorAll('.desktop-icon').forEach(function(icon) {
-            icon.addEventListener('dblclick', function() {
-                var label = this.querySelector('.icon-label').textContent.toLowerCase();
-                var pageMap = {
-                    'm.y.c': 'myc',
-                    'store': 'store',
-                    'merch': 'merch',
-                    'tours': 'tours',
-                    "baby buu's": 'babybuus',
-                    'artists': 'artists'
-                };
-                var page = pageMap[label] || label.replace(/[^a-z]/g, '');
-                openWindow(page);
-            });
-        });
     </script>
 </body>
 </html>
