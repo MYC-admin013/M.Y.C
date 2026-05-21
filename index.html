@@ -39,7 +39,6 @@
             cursor: none;
         }
 
-        /* ============ CURSOR OJO MEJORADO ============ */
         #cursor-ojo {
             position: fixed;
             width: 40px;
@@ -76,7 +75,6 @@
             }
         }
 
-        /* Trail del cursor */
         .cursor-trail {
             position: fixed;
             width: 4px;
@@ -95,7 +93,6 @@
             }
         }
 
-        /* ============ GLITCH IMPERFECCIÓN CONTROLADA ============ */
         @keyframes glitchSystem {
             0%,
             100% {
@@ -106,24 +103,10 @@
                 filter: hue-rotate(90deg);
             }
         }
-        @keyframes glitchText {
-            0%,
-            100% {
-                opacity: 1;
-            }
-            50% {
-                opacity: 0.7;
-                text-shadow: 2px 0 var(--cyan), -2px 0 var(--magenta);
-            }
-        }
         .glitch-sistema {
             animation: glitchSystem 0.15s ease;
         }
-        .glitch-texto {
-            animation: glitchText 0.2s ease;
-        }
 
-        /* ============ SCARCITY - MENSAJES TEMPORALES ============ */
         .mensaje-temporal {
             position: fixed;
             top: 10%;
@@ -158,23 +141,6 @@
             }
         }
 
-        /* ============ DELAYED REVEALS ============ */
-        .reveal-delayed {
-            opacity: 0;
-            animation: revealDelay 1.5s ease forwards;
-        }
-        @keyframes revealDelay {
-            0% {
-                opacity: 0;
-                transform: translateY(5px);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* ============ SONIDO ============ */
         .sound-toggle {
             position: fixed;
             bottom: 20px;
@@ -201,7 +167,6 @@
             color: #444;
         }
 
-        /* ============ FOOTER VIVO ============ */
         .footer-vivo {
             position: fixed;
             bottom: 20px;
@@ -218,10 +183,9 @@
         }
         .footer-vivo .alerta {
             color: var(--danger);
-            animation: glitchText 0.3s ease;
+            animation: glitchSystem 0.3s ease;
         }
 
-        /* ============ PANTALLAS ============ */
         .pantalla {
             position: fixed;
             top: 0;
@@ -238,7 +202,6 @@
             display: flex;
         }
 
-        /* Fase 1 */
         #fase1-inicio {
             background: #000;
             z-index: 100;
@@ -295,7 +258,6 @@
             }
         }
 
-        /* Fase 2 */
         #fase2-boot {
             background: radial-gradient(ellipse at center, #1c0035 0%, #010508 100%);
             z-index: 90;
@@ -369,7 +331,6 @@
             pointer-events: none;
         }
 
-        /* Fase 3 */
         #fase3-registro {
             background: #000;
             z-index: 80;
@@ -423,7 +384,6 @@
             text-align: center;
         }
 
-        /* ============ ESCRITORIO ============ */
         #escritorio {
             background: linear-gradient(180deg, #ffaadd 0%, #ffe0f0 50%, #ffffff 100%);
             z-index: 70;
@@ -463,7 +423,6 @@
             pointer-events: none;
         }
 
-        /* Ventanas */
         .ventana {
             position: absolute;
             min-width: 350px;
@@ -510,7 +469,6 @@
             overflow: auto;
         }
 
-        /* Barra de tareas */
         .barra-tareas {
             height: 46px;
             background: var(--silver);
@@ -575,7 +533,6 @@
             color: #fff;
         }
 
-        /* Ajustes móvil */
         @media (max-width: 768px) {
             .icono-escritorio {
                 width: 70px;
@@ -685,20 +642,14 @@
         }
 
         document.addEventListener('visibilitychange', () => {
-            if (document.hidden) {
-                tabTitle.textContent = "DON'T LEAVE. SIGNAL LOST.";
-            } else {
-                actualizarTabAudio();
-            }
+            if (document.hidden) tabTitle.textContent = "DON'T LEAVE. SIGNAL LOST.";
+            else actualizarTabAudio();
         });
 
-        // Simular nueva transmisión cada 30-60 segundos
         setInterval(() => {
-            if (Math.random() > 0.6) {
-                nuevaTransmision = true;
+            if (Math.random() > 0.6) { nuevaTransmision = true;
                 actualizarTabAudio();
-                mostrarMensajeTemporal('🔴 NEW TRANSMISSION INCOMING');
-            }
+                mostrarMensajeTemporal('🔴 NEW TRANSMISSION INCOMING'); }
         }, 30000 + Math.random() * 30000);
 
         // ============ CURSOR ============
@@ -717,30 +668,20 @@
         function moverCursor(e) {
             cursorOjo.style.left = (e.clientX - 20) + 'px';
             cursorOjo.style.top = (e.clientY - 20) + 'px';
-            if (!trailTimeout) {
-                trailTimeout = setTimeout(() => {
-                    crearTrail(e.clientX, e.clientY);
-                    trailTimeout = null;
-                }, 50);
-            }
+            if (!trailTimeout) { trailTimeout = setTimeout(() => { crearTrail(e.clientX, e.clientY);
+                    trailTimeout = null; }, 50); }
             const el = document.elementFromPoint(e.clientX, e.clientY);
             if (el && (el.tagName === 'BUTTON' || el.tagName === 'A' || el.classList.contains('icono-escritorio') || el
-                    .classList.contains('item-menu'))) {
-                cursorOjo.classList.add('magnetic');
-            } else {
-                cursorOjo.classList.remove('magnetic');
-            }
-            if (el && (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA')) {
-                cursorOjo.classList.add('sobre-input');
-            } else {
-                cursorOjo.classList.remove('sobre-input');
-            }
+                    .classList.contains('item-menu'))) cursorOjo.classList.add('magnetic');
+            else cursorOjo.classList.remove('magnetic');
+            if (el && (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA')) cursorOjo.classList.add('sobre-input');
+            else cursorOjo.classList.remove('sobre-input');
         }
         document.addEventListener('mousemove', moverCursor);
         document.addEventListener('mousedown', () => cursorOjo.classList.add('clicking'));
         document.addEventListener('mouseup', () => cursorOjo.classList.remove('clicking'));
 
-        // ============ MENSAJES TEMPORALES (SCARCITY) ============
+        // ============ MENSAJES TEMPORALES ============
         function mostrarMensajeTemporal(texto) {
             const msg = document.createElement('div');
             msg.className = 'mensaje-temporal';
@@ -749,16 +690,17 @@
             setTimeout(() => msg.remove(), 4000);
         }
 
-        // Easter egg: escribir DETROIT en el campo de usuario
+        // Easter egg: DETROIT
         document.getElementById('reg-usuario').addEventListener('input', function() {
             if (this.value.toUpperCase() === 'DETROIT') {
                 mostrarMensajeTemporal('⚠ DETROIT VISION ACTIVE');
                 document.body.classList.add('glitch-sistema');
                 setTimeout(() => document.body.classList.remove('glitch-sistema'), 200);
+                playErrorSound();
             }
         });
 
-        // ============ SONIDO ============
+        // ============ SONIDOS ============
         let ctxAudio, ambienteNode, ambienteGain;
 
         function getCtx() { if (!ctxAudio) ctxAudio = new(window.AudioContext || window.webkitAudioContext)(); return ctxAudio; }
@@ -795,7 +737,6 @@
         }
         iniciarSonidoAmbiente();
 
-        // Sonidos contextuales
         function playHoverSound() {
             try {
                 const ctx = getCtx();
@@ -844,17 +785,33 @@
             } catch (e) {}
         }
 
+        // ⌨️ SONIDO AL TECLEAR
+        function playKeySound() {
+            try {
+                const ctx = getCtx();
+                const o = ctx.createOscillator();
+                const g = ctx.createGain();
+                o.type = 'sine';
+                o.frequency.setValueAtTime(600 + Math.random() * 200, ctx.currentTime);
+                g.gain.setValueAtTime(0.015, ctx.currentTime);
+                g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.04);
+                o.connect(g);
+                g.connect(ctx.destination);
+                o.start();
+                o.stop(ctx.currentTime + 0.04);
+            } catch (e) {}
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+                playKeySound();
+            }
+        });
+
         document.querySelectorAll('button, .icono-escritorio, .item-menu, input').forEach(el => {
             el.addEventListener('mouseenter', playHoverSound);
         });
-        document.addEventListener('click', (e) => {
-            if (e.target.closest('#reg-usuario') && document.getElementById('reg-usuario').value.toUpperCase() ===
-                'DETROIT') {
-                playErrorSound();
-            } else {
-                playClickSound();
-            }
-        });
+        document.addEventListener('click', playClickSound);
 
         // ============ FOOTER VIVO ============
         function actualizarFooter() {
@@ -862,7 +819,6 @@
             document.getElementById('footer-signal').textContent = ahora.toLocaleTimeString('es-ES', { hour: '2-digit',
                 minute: '2-digit' });
             document.getElementById('footer-members').textContent = Math.floor(Math.random() * 20 + 5);
-            // Simular alerta aleatoria
             if (Math.random() > 0.7) {
                 const alerta = document.getElementById('footer-alerta');
                 alerta.style.display = 'block';
@@ -872,14 +828,10 @@
         setInterval(actualizarFooter, 8000);
         actualizarFooter();
 
-        // ============ IMPERFECCIÓN CONTROLADA (GLITCH ALEATORIO) ============
-        function activarGlitchSistema() {
-            document.body.classList.add('glitch-sistema');
-            setTimeout(() => document.body.classList.remove('glitch-sistema'), 150);
-        }
-        setInterval(() => {
-            if (Math.random() > 0.5) activarGlitchSistema();
-        }, 12000 + Math.random() * 15000);
+        // ============ GLITCH ALEATORIO ============
+        function activarGlitchSistema() { document.body.classList.add('glitch-sistema');
+            setTimeout(() => document.body.classList.remove('glitch-sistema'), 150); }
+        setInterval(() => { if (Math.random() > 0.5) activarGlitchSistema(); }, 12000 + Math.random() * 15000);
 
         // ============ INTRO ============
         const fragmentos = ['0x8F3A', 'DETROIT::VISION', 'MALAGA::BASE', '23/10/2026', 'MYC', 'CHAOS'];
@@ -907,16 +859,11 @@
         }, 2000);
 
         const lineasBoot = [
-            'M.Y.C SECURE SYSTEM v.2024',
-            '──────────────────────────────────────────',
-            'ESTABLISHING CONNECTION...',
-            'SIGNAL FOUND: DETROIT RELAY',
-            'AUTHENTICATING: MÁLAGA NODE',
-            'ENCRYPTING CHANNEL... 256-BIT AES',
-            'ACCESS GATEWAY: OPEN',
-            '[████████████████████████████████] 100%',
-            '',
-            '> WELCOME. REQUEST ACCESS TO CONTINUE._'
+            'M.Y.C SECURE SYSTEM v.2024', '──────────────────────────────────────────',
+            'ESTABLISHING CONNECTION...', 'SIGNAL FOUND: DETROIT RELAY',
+            'AUTHENTICATING: MÁLAGA NODE', 'ENCRYPTING CHANNEL... 256-BIT AES',
+            'ACCESS GATEWAY: OPEN', '[████████████████████████████████] 100%',
+            '', '> WELCOME. REQUEST ACCESS TO CONTINUE._'
         ];
         let iL = 0;
 
@@ -985,7 +932,6 @@
             }, 1000);
             iniciarAudioBeat();
         }
-
         let dIcon = null,
             dX = 0,
             dY = 0;
@@ -1041,7 +987,6 @@
                 `<div class="barra-titulo" onmousedown="startDragWin(event,'${win.id}')"><span>${tit}</span><div><button onclick="document.getElementById('${win.id}').remove()">✕</button></div></div><div class="cuerpo-ventana">${cont}</div>`;
             area.appendChild(win);
         }
-
         let dWin = null,
             wX = 0,
             wY = 0;
