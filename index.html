@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
-    <title>M.Y.C | The Mayin Buu Club</title>
+    <title id="tab-title">◉ M.Y.C TRANSMISSION</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='28' font-size='28'>💜</text></svg>" id="favicon">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
 
@@ -37,27 +38,23 @@
             cursor: none;
         }
 
-        /* ============ CURSOR OJO (VISIBLE DESDE EL INICIO) ============ */
+        /* ============ CURSOR OJO MEJORADO ============ */
         #cursor-ojo {
             position: fixed;
             width: 40px;
             height: 40px;
             z-index: 99999;
             pointer-events: none;
-            transition: transform 0.06s ease, filter 0.2s ease;
+            transition: transform 0.06s ease, filter 0.2s ease, width 0.2s, height 0.2s;
             filter: drop-shadow(0 0 20px var(--magenta-glow));
             top: 50%;
             left: 50%;
             opacity: 1;
         }
-        /* Ocultar cursor en móvil */
-        @media (max-width: 768px) {
-            #cursor-ojo {
-                display: none;
-            }
-            body {
-                cursor: auto;
-            }
+        #cursor-ojo.magnetic {
+            width: 50px;
+            height: 50px;
+            filter: drop-shadow(0 0 35px #ff00ff);
         }
         #cursor-ojo.clicking {
             transform: scale(0.65);
@@ -69,8 +66,35 @@
             width: 100%;
             height: 100%;
         }
+        @media (max-width: 768px) {
+            #cursor-ojo {
+                display: none;
+            }
+            body {
+                cursor: auto;
+            }
+        }
 
-        /* ============ SONIDO AMBIENTAL ============ */
+        /* Trail del cursor */
+        .cursor-trail {
+            position: fixed;
+            width: 4px;
+            height: 4px;
+            background: var(--magenta);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 99998;
+            opacity: 0.6;
+            animation: fadeTrail 0.5s ease-out forwards;
+        }
+        @keyframes fadeTrail {
+            to {
+                opacity: 0;
+                transform: scale(0);
+            }
+        }
+
+        /* ============ SONIDO ============ */
         .sound-toggle {
             position: fixed;
             bottom: 20px;
@@ -85,11 +109,32 @@
             cursor: pointer;
             letter-spacing: 2px;
             backdrop-filter: blur(4px);
-            transition: 0.3s;
+            transition: all 0.3s ease;
         }
         .sound-toggle:hover {
             background: var(--magenta);
             color: #000;
+            transform: scale(1.05);
+        }
+        .sound-toggle.muted {
+            border-color: #444;
+            color: #444;
+        }
+
+        /* ============ FOOTER VIVO ============ */
+        .footer-vivo {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 1000;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 10px;
+            color: #333;
+            letter-spacing: 1px;
+            line-height: 1.6;
+        }
+        .footer-vivo span {
+            color: var(--magenta);
         }
 
         /* ============ PANTALLAS ============ */
@@ -113,7 +158,7 @@
         #fase1-inicio {
             background: #000;
             z-index: 100;
-            transition: opacity 0.6s ease, background 0.9s ease;
+            transition: opacity 0.8s ease, background 1s ease;
         }
         #fase1-inicio.modo-morado {
             background: radial-gradient(circle at center, #1a0030, #000);
@@ -128,7 +173,7 @@
             letter-spacing: 20px;
             color: #fff;
             text-shadow: 0 0 80px var(--magenta-glow);
-            animation: aparecerLogo 0.7s ease-out forwards;
+            animation: aparecerLogo 1s ease-out forwards;
         }
         @keyframes aparecerLogo {
             0% {
@@ -149,7 +194,7 @@
             color: #aaa;
             letter-spacing: 12px;
             opacity: 0;
-            animation: mostrarTexto 0.5s 0.6s forwards, pulsoTexto 2s 1s infinite;
+            animation: mostrarTexto 0.8s 0.8s forwards, pulsoTexto 2.5s 1.5s infinite;
         }
         @keyframes mostrarTexto {
             to {
@@ -166,7 +211,7 @@
             }
         }
 
-        /* Fase 2: Boot */
+        /* Fase 2 */
         #fase2-boot {
             background: radial-gradient(ellipse at center, #1c0035 0%, #010508 100%);
             z-index: 90;
@@ -224,7 +269,7 @@
             opacity: 0;
             font-size: 18px;
             margin: 8px 0;
-            animation: escribirLinea 0.2s forwards;
+            animation: escribirLinea 0.3s forwards;
         }
         @keyframes escribirLinea {
             to {
@@ -240,7 +285,7 @@
             pointer-events: none;
         }
 
-        /* Fase 3: Registro */
+        /* Fase 3 */
         #fase3-registro {
             background: #000;
             z-index: 80;
@@ -253,11 +298,6 @@
             width: 90%;
             box-shadow: 0 0 40px rgba(0, 255, 65, 0.3);
             background: rgba(0, 0, 0, 0.8);
-        }
-        .formulario-acceso label {
-            display: block;
-            margin-top: 20px;
-            font-size: 16px;
         }
         .formulario-acceso input {
             background: #000;
@@ -281,13 +321,17 @@
             font-weight: bold;
             margin-top: 35px;
             letter-spacing: 4px;
-            transition: 0.2s;
+            transition: all 0.3s ease;
             width: 100%;
             cursor: pointer;
         }
         .btn-acceso:hover {
             background: #fff;
             box-shadow: 0 0 50px rgba(0, 255, 65, 0.7);
+            transform: scale(1.02);
+        }
+        .btn-acceso:active {
+            transform: scale(0.98);
         }
         .nivel-info {
             margin-top: 25px;
@@ -319,12 +363,16 @@
             text-align: center;
             color: #000;
             font-size: 11px;
-            transition: background 0.15s, transform 0.2s;
+            transition: all 0.2s ease;
             z-index: 1;
         }
         .icono-escritorio:hover {
             background: rgba(255, 255, 255, 0.5);
             border: 1px dotted var(--gray);
+            transform: scale(1.05);
+        }
+        .icono-escritorio:active {
+            transform: scale(0.95);
         }
         .icono-escritorio .img-icono {
             font-size: 40px;
@@ -345,6 +393,17 @@
             resize: both;
             overflow: auto;
             min-height: 250px;
+            animation: abrirVentana 0.25s ease;
+        }
+        @keyframes abrirVentana {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
         }
         .barra-titulo {
             background: linear-gradient(90deg, var(--win95-blue), #1084d0);
@@ -386,6 +445,13 @@
             border: 2px solid;
             border-color: #fff var(--gray) var(--gray) #fff;
             font-family: inherit;
+            transition: all 0.2s ease;
+        }
+        .btn-inicio:hover {
+            background: #fff;
+        }
+        .btn-inicio:active {
+            border-color: var(--gray) #fff #fff var(--gray);
         }
         .hora-tarea {
             margin-left: auto;
@@ -404,7 +470,7 @@
             border: 2px solid;
             border-color: #fff var(--gray) var(--gray) #fff;
             z-index: 300;
-            width: 210px;
+            width: 220px;
             box-shadow: 2px 2px 0 black;
         }
         .menu-inicio.activo {
@@ -418,13 +484,14 @@
             cursor: pointer;
             font-size: 13px;
             color: #000;
+            transition: all 0.15s ease;
         }
         .item-menu:hover {
             background: var(--win95-blue);
             color: #fff;
         }
 
-        /* Ajustes móvil (preparados) */
+        /* Ajustes móvil */
         @media (max-width: 768px) {
             .icono-escritorio {
                 width: 70px;
@@ -437,15 +504,11 @@
                 min-width: 250px;
                 max-width: 90vw;
             }
-            .formulario-acceso {
-                padding: 30px;
-            }
         }
     </style>
 </head>
 <body>
 
-    <!-- CURSOR OJO (SIEMPRE VISIBLE) -->
     <div id="cursor-ojo">
         <svg viewBox="0 0 38 38">
             <ellipse cx="19" cy="19" rx="17" ry="12" fill="none" stroke="#d400ff" stroke-width="2.5"/>
@@ -457,13 +520,17 @@
 
     <button class="sound-toggle" id="sound-toggle" onclick="alternarSonidoAmbiente()">🔊 SOUND ON</button>
 
-    <!-- FASE 1 -->
+    <div class="footer-vivo" id="footer-vivo">
+        LAST SIGNAL: <span id="footer-signal">02:14 AM</span><br>
+        NODE STATUS: <span style="color:#00ff41;">ACTIVE</span><br>
+        MEMBERS ONLINE: <span id="footer-members">14</span>
+    </div>
+
     <div class="pantalla activa" id="fase1-inicio">
         <div class="logo-inicio">M<span class="punto">.</span>Y<span class="punto">.</span><span style="color:#fff;">C</span></div>
         <div class="texto-iniciando">INICIANDO...</div>
     </div>
 
-    <!-- FASE 2 -->
     <div class="pantalla" id="fase2-boot">
         <div class="capa-codigo" id="capa-codigo"></div>
         <div class="scanlines"></div>
@@ -473,7 +540,6 @@
         <div class="mensaje-fantasma" style="top:45%;left:82%;">MALAGA_BASE</div>
     </div>
 
-    <!-- FASE 3 -->
     <div class="pantalla" id="fase3-registro">
         <div class="formulario-acceso">
             <p style="font-size:28px;margin-bottom:30px;text-align:center;">> REQUEST ACCESS_</p>
@@ -486,7 +552,6 @@
         </div>
     </div>
 
-    <!-- ESCRITORIO -->
     <div class="pantalla" id="escritorio">
         <div class="area-escritorio" id="area-escritorio"></div>
         <div class="menu-inicio" id="menu-inicio">
@@ -508,13 +573,66 @@
     </div>
 
     <script>
-        // ============ CURSOR (SIEMPRE VISIBLE) ============
+        // ============ TAB TITLE + FAVICON DINÁMICO ============
+        const tabTitle = document.getElementById('tab-title');
+        const favicon = document.getElementById('favicon');
+        let audioActivo = true;
+
+        function actualizarTabAudio() {
+            if (audioActivo) {
+                tabTitle.textContent = '◉ M.Y.C TRANSMISSION';
+                favicon.href =
+                    "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='28' font-size='28'>💜</text></svg>";
+            } else {
+                tabTitle.textContent = '◌ SIGNAL MUTED';
+                favicon.href =
+                    "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='28' font-size='28'>🖤</text></svg>";
+            }
+        }
+
+        // Al abandonar la pestaña
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                tabTitle.textContent = 'DON\'T LEAVE. SIGNAL LOST.';
+            } else {
+                actualizarTabAudio();
+            }
+        });
+
+        // ============ CURSOR MEJORADO ============
         const cursorOjo = document.getElementById('cursor-ojo');
+        let trailTimeout;
+
+        function crearTrail(x, y) {
+            const trail = document.createElement('div');
+            trail.className = 'cursor-trail';
+            trail.style.left = x + 'px';
+            trail.style.top = y + 'px';
+            document.body.appendChild(trail);
+            setTimeout(() => trail.remove(), 500);
+        }
 
         function moverCursor(e) {
             cursorOjo.style.left = (e.clientX - 20) + 'px';
             cursorOjo.style.top = (e.clientY - 20) + 'px';
+
+            // Trail cada 50ms
+            if (!trailTimeout) {
+                trailTimeout = setTimeout(() => {
+                    crearTrail(e.clientX, e.clientY);
+                    trailTimeout = null;
+                }, 50);
+            }
+
+            // Magnetic hover sobre botones y enlaces
             const el = document.elementFromPoint(e.clientX, e.clientY);
+            if (el && (el.tagName === 'BUTTON' || el.tagName === 'A' || el.classList.contains('icono-escritorio') || el
+                    .classList.contains('item-menu'))) {
+                cursorOjo.classList.add('magnetic');
+            } else {
+                cursorOjo.classList.remove('magnetic');
+            }
+
             if (el && (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA')) {
                 cursorOjo.classList.add('sobre-input');
             } else {
@@ -525,8 +643,8 @@
         document.addEventListener('mousedown', () => cursorOjo.classList.add('clicking'));
         document.addEventListener('mouseup', () => cursorOjo.classList.remove('clicking'));
 
-        // ============ SONIDO AMBIENTAL ============
-        let ctxAudio, ambienteNode, ambienteGain, ambientePlaying = true;
+        // ============ SONIDO AMBIENTAL + HOVER SOUND ============
+        let ctxAudio, ambienteNode, ambienteGain;
 
         function getCtx() { if (!ctxAudio) ctxAudio = new(window.AudioContext || window.webkitAudioContext)(); return ctxAudio; }
 
@@ -547,33 +665,70 @@
         function alternarSonidoAmbiente() {
             const btn = document.getElementById('sound-toggle');
             iniciarSonidoAmbiente();
-            if (ambientePlaying) {
+            if (audioActivo) {
                 ambienteGain.gain.setValueAtTime(0, getCtx().currentTime);
                 btn.textContent = '🔇 SOUND OFF';
-                ambientePlaying = false;
+                btn.classList.add('muted');
+                audioActivo = false;
             } else {
                 ambienteGain.gain.setValueAtTime(0.015, getCtx().currentTime);
                 btn.textContent = '🔊 SOUND ON';
-                ambientePlaying = true;
+                btn.classList.remove('muted');
+                audioActivo = true;
             }
+            actualizarTabAudio();
         }
         iniciarSonidoAmbiente();
 
-        function playSound(freq, type, dur = 0.1, vol = 0.05) {
+        // Sonido hover sutil (tape click)
+        function playHoverSound() {
             try {
                 const ctx = getCtx();
                 const o = ctx.createOscillator();
                 const g = ctx.createGain();
-                o.type = type;
-                o.frequency.setValueAtTime(freq, ctx.currentTime);
-                g.gain.setValueAtTime(vol, ctx.currentTime);
-                g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + dur);
+                o.type = 'sine';
+                o.frequency.setValueAtTime(1200, ctx.currentTime);
+                g.gain.setValueAtTime(0.02, ctx.currentTime);
+                g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.05);
                 o.connect(g);
                 g.connect(ctx.destination);
                 o.start();
-                o.stop(ctx.currentTime + dur);
+                o.stop(ctx.currentTime + 0.05);
             } catch (e) {}
         }
+
+        // Sonido click
+        function playClickSound() {
+            try {
+                const ctx = getCtx();
+                const o = ctx.createOscillator();
+                const g = ctx.createGain();
+                o.type = 'square';
+                o.frequency.setValueAtTime(800, ctx.currentTime);
+                g.gain.setValueAtTime(0.04, ctx.currentTime);
+                g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.08);
+                o.connect(g);
+                g.connect(ctx.destination);
+                o.start();
+                o.stop(ctx.currentTime + 0.08);
+            } catch (e) {}
+        }
+
+        // Aplicar hover sound a elementos interactivos
+        document.querySelectorAll('button, .icono-escritorio, .item-menu, input').forEach(el => {
+            el.addEventListener('mouseenter', playHoverSound);
+        });
+        document.addEventListener('click', playClickSound);
+
+        // ============ FOOTER VIVO ============
+        function actualizarFooter() {
+            const ahora = new Date();
+            const hora = ahora.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+            document.getElementById('footer-signal').textContent = hora;
+            document.getElementById('footer-members').textContent = Math.floor(Math.random() * 20 + 5);
+        }
+        setInterval(actualizarFooter, 10000);
+        actualizarFooter();
 
         // ============ INTRO ============
         const fragmentos = ['0x8F3A', 'DETROIT::VISION', 'MALAGA::BASE', '23/10/2026', 'MYC', 'CHAOS'];
@@ -590,28 +745,24 @@
             capa.appendChild(col);
         }
 
-        // Secuencia de inicio (CORREGIDA)
         setTimeout(() => {
             const f1 = document.getElementById('fase1-inicio');
             f1.classList.add('modo-morado');
             setTimeout(() => {
                 f1.classList.add('oculto');
-                const f2 = document.getElementById('fase2-boot');
-                f2.classList.add('activa');
+                document.getElementById('fase2-boot').classList.add('activa');
                 iniciarBoot();
             }, 800);
-        }, 1800);
+        }, 2000);
 
         const lineasBoot = [
             'M.Y.C SECURE SYSTEM v.2024',
             '──────────────────────────────────────────',
-            'INITIALIZING CORE MODULES...',
-            'ESTABLISHING CONNECTION TO DETROIT RELAY...',
-            'MÁLAGA NODE: ONLINE',
-            'DETROIT RELAY: ACTIVE',
+            'ESTABLISHING CONNECTION...',
+            'SIGNAL FOUND: DETROIT RELAY',
+            'AUTHENTICATING: MÁLAGA NODE',
             'ENCRYPTING CHANNEL... 256-BIT AES',
             'ACCESS GATEWAY: OPEN',
-            'LOADING USER DATABASE...',
             '[████████████████████████████████] 100%',
             '',
             '> WELCOME. REQUEST ACCESS TO CONTINUE._'
@@ -624,14 +775,13 @@
                 l.className = 'linea-boot';
                 l.textContent = lineasBoot[iL];
                 document.getElementById('texto-boot').appendChild(l);
-                playSound(800 + Math.random() * 200, 'square', 0.06, 0.03);
                 iL++;
-                setTimeout(iniciarBoot, 180 + Math.random() * 120);
+                setTimeout(iniciarBoot, 250 + Math.random() * 150);
             } else {
                 setTimeout(() => {
                     document.getElementById('fase2-boot').classList.remove('activa');
                     document.getElementById('fase3-registro').classList.add('activa');
-                }, 900);
+                }, 1000);
             }
         }
 
@@ -639,21 +789,14 @@
             const u = document.getElementById('reg-usuario').value.trim();
             const e = document.getElementById('reg-email').value.trim();
             const p = document.getElementById('reg-contrasena').value.trim();
-            if (!u || !e || !p) {
-                alert('> ERROR: All fields required.');
-                return;
-            }
+            if (!u || !e || !p) { alert('> ERROR: All fields required.'); return; }
             let nivel = 'DEFAULT',
                 desc = '';
             if (p === 'MYC-FOUNDER-2024') { nivel = 'FOUNDER';
-                desc = '50% DISCOUNT ACTIVE'; } else if (document.getElementById('reg-codigo').value === '23/10/2026') { nivel =
-                    'VIP';
-                desc = '23% DISCOUNT ACTIVE'; }
+                desc = '50% DISCOUNT'; } else if (document.getElementById('reg-codigo').value === '23/10/2026') { nivel = 'VIP';
+                desc = '23% DISCOUNT'; }
             document.getElementById('reg-nivel').innerHTML =
                 `CLEARANCE: ${nivel} <span style="color:#d400ff;">${desc}</span>`;
-            localStorage.setItem('usuario_myc', JSON.stringify({ usuario: u, email: e, nivel }));
-            playSound(1300, 'sine', 0.25, 0.12);
-            setTimeout(() => playSound(1600, 'sine', 0.3, 0.12), 150);
             document.getElementById('fase3-registro').classList.remove('activa');
             document.getElementById('escritorio').classList.add('activa');
             iniciarEscritorio(nivel);
@@ -667,12 +810,10 @@
             const area = document.getElementById('area-escritorio');
             area.innerHTML = '';
             const iconos = [
-                { id: 'myc', i: '🎤', l: 'M.Y.C', t: 25, le: 25 },
-                { id: 'vault', i: '📁', l: '/vault', t: 25, le: 135 },
+                { id: 'myc', i: '🎤', l: 'M.Y.C', t: 25, le: 25 }, { id: 'vault', i: '📁', l: '/vault', t: 25, le: 135 },
                 { id: 'transmissions', i: '📡', l: '/transmissions', t: 25, le: 245 },
-                { id: 'store', i: '💿', l: 'Store', t: 140, le: 25 },
-                { id: 'tours', i: '🌍', l: 'Tours', t: 140, le: 135 },
-                { id: 'artists', i: '🎨', l: 'Artists', t: 140, le: 245 },
+                { id: 'store', i: '💿', l: 'Store', t: 140, le: 25 }, { id: 'tours', i: '🌍', l: 'Tours', t: 140, le: 135 },
+                { id: 'artists', i: '🎨', l: 'Artists', t: 140, le: 245 }
             ];
             iconos.forEach(ic => {
                 const el = document.createElement('div');
@@ -720,11 +861,11 @@
                     break;
                 case 'vault':
                     tit = '/vault';
-                    cont = '<h3>📁 CLASSIFIED</h3><p>Access restricted.</p>';
+                    cont = '<h3>📁 CLASSIFIED</h3><p>0x8F3A_NEON_VOID.dat</p>';
                     break;
                 case 'transmissions':
                     tit = '/transmissions';
-                    cont = '<h3>📡 SIGNAL</h3><p>Incoming data...</p>';
+                    cont = '<h3>📡 SIGNAL</h3><p>>> TOKYO NODE ACTIVE</p>';
                     break;
                 case 'store':
                     tit = 'STORE';
@@ -746,6 +887,7 @@
                 `<div class="barra-titulo" onmousedown="startDragWin(event,'${win.id}')"><span>${tit}</span><div><button onclick="document.getElementById('${win.id}').remove()">✕</button></div></div><div class="cuerpo-ventana">${cont}</div>`;
             area.appendChild(win);
         }
+
         let dWin = null,
             wX = 0,
             wY = 0;
@@ -764,7 +906,6 @@
                 .querySelector('.btn-inicio'); if (m && !m.contains(e.target) && e.target !== b) m.classList.remove(
                     'activo'); });
 
-        // ============ REPRODUCTOR ============
         let ctxBeat, playing = false,
             oscBeat, gainBeat;
 
