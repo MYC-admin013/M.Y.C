@@ -26,28 +26,37 @@
             min-height: 100vh;
             overflow: hidden;
             color: var(--blanco);
-            cursor: none;
             user-select: none;
         }
 
-        /* ============ CURSOR OJO (OCULTO HASTA PRIMER MOVIMIENTO) ============ */
+        /* ============ CURSOR OJO (SIEMPRE VISIBLE) ============ */
         #cursor-ojo {
             position: fixed;
             width: 38px;
             height: 38px;
             z-index: 99999;
             pointer-events: none;
-            transition: transform 0.08s ease, opacity 0.3s ease;
+            transition: transform 0.08s ease, opacity 0.3s ease, filter 0.3s ease;
             filter: drop-shadow(0 0 20px var(--magenta-brillo));
-            display: none;
             opacity: 0;
+            top: -50px;
+            left: -50px;
         }
         #cursor-ojo.visible {
-            display: block;
             opacity: 1;
         }
         #cursor-ojo.clicking {
             transform: scale(0.7);
+        }
+        /* Ojo morado al pasar sobre inputs */
+        #cursor-ojo.sobre-input {
+            filter: drop-shadow(0 0 25px #ff00ff) drop-shadow(0 0 40px rgba(255, 0, 255, 0.6));
+        }
+        #cursor-ojo.sobre-input svg ellipse {
+            stroke: #ff00ff;
+        }
+        #cursor-ojo.sobre-input svg circle:first-of-type {
+            fill: #ff00ff;
         }
         #cursor-ojo svg {
             width: 100%;
@@ -254,7 +263,7 @@
             padding: 14px 0;
             width: 100%;
             outline: none;
-            caret-color: var(--verde-terminal);
+            caret-color: #ff00ff;
         }
         .btn-acceso {
             background: var(--verde-terminal);
@@ -292,7 +301,7 @@
     </div>
 
     <div id="fase1-inicio">
-        <div class="logo-inicio" style="color:#fff;">
+        <div class="logo-inicio">
             M<span class="punto">.</span>Y<span class="punto">.</span><span style="color:#fff;">C</span>
         </div>
         <div class="texto-iniciando">INICIANDO...</div>
@@ -339,6 +348,14 @@
             cursorOjo.style.left = (e.clientX - 19) + 'px';
             cursorOjo.style.top = (e.clientY - 19) + 'px';
             mostrarCursor();
+
+            // Detectar si está sobre un input
+            const elementoDebajo = document.elementFromPoint(e.clientX, e.clientY);
+            if (elementoDebajo && (elementoDebajo.tagName === 'INPUT' || elementoDebajo.tagName === 'TEXTAREA')) {
+                cursorOjo.classList.add('sobre-input');
+            } else {
+                cursorOjo.classList.remove('sobre-input');
+            }
         }
 
         document.addEventListener('mousemove', moverCursor);
@@ -348,12 +365,6 @@
 
         document.addEventListener('mousedown', () => cursorOjo.classList.add('clicking'));
         document.addEventListener('mouseup', () => cursorOjo.classList.remove('clicking'));
-        document.addEventListener('touchstart', () => cursorOjo.classList.add('clicking'));
-        document.addEventListener('touchend', () => cursorOjo.classList.remove('clicking'));
-
-        document.addEventListener('focusin', () => {
-            document.body.style.cursor = 'none';
-        });
 
         let ctxAudio;
 
