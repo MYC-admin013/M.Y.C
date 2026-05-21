@@ -30,7 +30,7 @@
             user-select: none;
         }
 
-        /* ============ CURSOR OJO (OCULTO HASTA QUE SE MUEVE EL RATÓN) ============ */
+        /* ============ CURSOR OJO (OCULTO HASTA PRIMER MOVIMIENTO) ============ */
         #cursor-ojo {
             position: fixed;
             width: 38px;
@@ -39,11 +39,11 @@
             pointer-events: none;
             transition: transform 0.08s ease, opacity 0.3s ease;
             filter: drop-shadow(0 0 20px var(--magenta-brillo));
+            display: none;
             opacity: 0;
-            top: -50px;
-            left: -50px;
         }
         #cursor-ojo.visible {
+            display: block;
             opacity: 1;
         }
         #cursor-ojo.clicking {
@@ -292,8 +292,8 @@
     </div>
 
     <div id="fase1-inicio">
-        <div class="logo-inicio">
-            M<span class="punto">.</span>Y<span class="punto">.</span>C
+        <div class="logo-inicio" style="color:#fff;">
+            M<span class="punto">.</span>Y<span class="punto">.</span><span style="color:#fff;">C</span>
         </div>
         <div class="texto-iniciando">INICIANDO...</div>
     </div>
@@ -326,21 +326,19 @@
 
     <script>
         const cursorOjo = document.getElementById('cursor-ojo');
+        let cursorVisible = false;
 
         function mostrarCursor() {
-            cursorOjo.classList.add('visible');
-        }
-
-        function ocultarCursor() {
-            cursorOjo.classList.remove('visible');
+            if (!cursorVisible) {
+                cursorOjo.classList.add('visible');
+                cursorVisible = true;
+            }
         }
 
         function moverCursor(e) {
             cursorOjo.style.left = (e.clientX - 19) + 'px';
             cursorOjo.style.top = (e.clientY - 19) + 'px';
-            if (!cursorOjo.classList.contains('visible')) {
-                mostrarCursor();
-            }
+            mostrarCursor();
         }
 
         document.addEventListener('mousemove', moverCursor);
@@ -352,9 +350,6 @@
         document.addEventListener('mouseup', () => cursorOjo.classList.remove('clicking'));
         document.addEventListener('touchstart', () => cursorOjo.classList.add('clicking'));
         document.addEventListener('touchend', () => cursorOjo.classList.remove('clicking'));
-
-        document.addEventListener('mouseleave', () => ocultarCursor());
-        document.addEventListener('mouseenter', () => mostrarCursor());
 
         document.addEventListener('focusin', () => {
             document.body.style.cursor = 'none';
