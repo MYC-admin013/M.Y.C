@@ -30,18 +30,21 @@
             user-select: none;
         }
 
-        /* ============ CURSOR OJO ============ */
+        /* ============ CURSOR OJO (OCULTO HASTA QUE SE MUEVE EL RATÓN) ============ */
         #cursor-ojo {
             position: fixed;
             width: 38px;
             height: 38px;
             z-index: 99999;
             pointer-events: none;
-            transition: transform 0.08s ease;
+            transition: transform 0.08s ease, opacity 0.3s ease;
             filter: drop-shadow(0 0 20px var(--magenta-brillo));
-            /* Forzar visibilidad sobre cualquier elemento */
-            mix-blend-mode: normal;
-            isolation: isolate;
+            opacity: 0;
+            top: -50px;
+            left: -50px;
+        }
+        #cursor-ojo.visible {
+            opacity: 1;
         }
         #cursor-ojo.clicking {
             transform: scale(0.7);
@@ -92,9 +95,6 @@
             }
         }
         .logo-inicio .punto {
-            color: var(--magenta);
-        }
-        .logo-inicio .letra-c {
             color: var(--magenta);
         }
         .texto-iniciando {
@@ -264,7 +264,6 @@
             font-family: inherit;
             font-size: 20px;
             font-weight: bold;
-            cursor: none;
             margin-top: 35px;
             letter-spacing: 4px;
             transition: 0.2s;
@@ -294,7 +293,7 @@
 
     <div id="fase1-inicio">
         <div class="logo-inicio">
-            M<span class="punto">.</span>Y<span class="punto">.</span><span class="letra-c">C</span>
+            M<span class="punto">.</span>Y<span class="punto">.</span>C
         </div>
         <div class="texto-iniciando">INICIANDO...</div>
     </div>
@@ -328,9 +327,20 @@
     <script>
         const cursorOjo = document.getElementById('cursor-ojo');
 
+        function mostrarCursor() {
+            cursorOjo.classList.add('visible');
+        }
+
+        function ocultarCursor() {
+            cursorOjo.classList.remove('visible');
+        }
+
         function moverCursor(e) {
             cursorOjo.style.left = (e.clientX - 19) + 'px';
             cursorOjo.style.top = (e.clientY - 19) + 'px';
+            if (!cursorOjo.classList.contains('visible')) {
+                mostrarCursor();
+            }
         }
 
         document.addEventListener('mousemove', moverCursor);
@@ -343,7 +353,9 @@
         document.addEventListener('touchstart', () => cursorOjo.classList.add('clicking'));
         document.addEventListener('touchend', () => cursorOjo.classList.remove('clicking'));
 
-        // Prevenir que el cursor del sistema aparezca en inputs
+        document.addEventListener('mouseleave', () => ocultarCursor());
+        document.addEventListener('mouseenter', () => mostrarCursor());
+
         document.addEventListener('focusin', () => {
             document.body.style.cursor = 'none';
         });
