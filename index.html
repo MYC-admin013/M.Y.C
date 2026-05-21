@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
     <title id="tab-title">◉ M.Y.C TRANSMISSION</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='28' font-size='28'>💜</text></svg>" id="favicon">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='%23d400ff'/%3E%3Ccircle cx='16' cy='16' r='5' fill='%23fff'/%3E%3C/svg%3E" id="favicon">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
 
@@ -20,6 +20,7 @@
             --silver: #c0c0c0;
             --win95-blue: #000080;
             --bg-rosa: #ffaadd;
+            --danger: #ff0040;
         }
 
         * {
@@ -94,6 +95,85 @@
             }
         }
 
+        /* ============ GLITCH IMPERFECCIÓN CONTROLADA ============ */
+        @keyframes glitchSystem {
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+            50% {
+                transform: translateX(3px);
+                filter: hue-rotate(90deg);
+            }
+        }
+        @keyframes glitchText {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.7;
+                text-shadow: 2px 0 var(--cyan), -2px 0 var(--magenta);
+            }
+        }
+        .glitch-sistema {
+            animation: glitchSystem 0.15s ease;
+        }
+        .glitch-texto {
+            animation: glitchText 0.2s ease;
+        }
+
+        /* ============ SCARCITY - MENSAJES TEMPORALES ============ */
+        .mensaje-temporal {
+            position: fixed;
+            top: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.85);
+            border: 1px solid var(--cyan);
+            color: var(--cyan);
+            padding: 10px 25px;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 13px;
+            letter-spacing: 3px;
+            z-index: 500;
+            animation: aparecerDesaparecer 4s ease forwards;
+            pointer-events: none;
+        }
+        @keyframes aparecerDesaparecer {
+            0% {
+                opacity: 0;
+                transform: translateX(-50%) translateY(-10px);
+            }
+            15% {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+            85% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+                transform: translateX(-50%) translateY(-10px);
+            }
+        }
+
+        /* ============ DELAYED REVEALS ============ */
+        .reveal-delayed {
+            opacity: 0;
+            animation: revealDelay 1.5s ease forwards;
+        }
+        @keyframes revealDelay {
+            0% {
+                opacity: 0;
+                transform: translateY(5px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
         /* ============ SONIDO ============ */
         .sound-toggle {
             position: fixed;
@@ -135,6 +215,10 @@
         }
         .footer-vivo span {
             color: var(--magenta);
+        }
+        .footer-vivo .alerta {
+            color: var(--danger);
+            animation: glitchText 0.3s ease;
         }
 
         /* ============ PANTALLAS ============ */
@@ -523,7 +607,8 @@
     <div class="footer-vivo" id="footer-vivo">
         LAST SIGNAL: <span id="footer-signal">02:14 AM</span><br>
         NODE STATUS: <span style="color:#00ff41;">ACTIVE</span><br>
-        MEMBERS ONLINE: <span id="footer-members">14</span>
+        MEMBERS ONLINE: <span id="footer-members">14</span><br>
+        <span id="footer-alerta" style="display:none;" class="alerta">⚠ UNAUTHORIZED ACCESS</span>
     </div>
 
     <div class="pantalla activa" id="fase1-inicio">
@@ -573,33 +658,50 @@
     </div>
 
     <script>
-        // ============ TAB TITLE + FAVICON DINÁMICO ============
+        // ============ TAB TITLE + FAVICON ============
         const tabTitle = document.getElementById('tab-title');
         const favicon = document.getElementById('favicon');
         let audioActivo = true;
+        let nuevaTransmision = false;
 
         function actualizarTabAudio() {
+            if (nuevaTransmision) {
+                tabTitle.textContent = '🔴 NEW TRANSMISSION';
+                favicon.href =
+                    "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='%23ff0040'/%3E%3Ccircle cx='16' cy='16' r='5' fill='%23fff'/%3E%3C/svg%3E";
+                setTimeout(() => { nuevaTransmision = false;
+                    actualizarTabAudio(); }, 5000);
+                return;
+            }
             if (audioActivo) {
                 tabTitle.textContent = '◉ M.Y.C TRANSMISSION';
                 favicon.href =
-                    "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='28' font-size='28'>💜</text></svg>";
+                    "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='%23d400ff'/%3E%3Ccircle cx='16' cy='16' r='5' fill='%23fff'/%3E%3C/svg%3E";
             } else {
                 tabTitle.textContent = '◌ SIGNAL MUTED';
                 favicon.href =
-                    "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='28' font-size='28'>🖤</text></svg>";
+                    "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='%23444'/%3E%3Ccircle cx='16' cy='16' r='5' fill='%23999'/%3E%3C/svg%3E";
             }
         }
 
-        // Al abandonar la pestaña
         document.addEventListener('visibilitychange', () => {
             if (document.hidden) {
-                tabTitle.textContent = 'DON\'T LEAVE. SIGNAL LOST.';
+                tabTitle.textContent = "DON'T LEAVE. SIGNAL LOST.";
             } else {
                 actualizarTabAudio();
             }
         });
 
-        // ============ CURSOR MEJORADO ============
+        // Simular nueva transmisión cada 30-60 segundos
+        setInterval(() => {
+            if (Math.random() > 0.6) {
+                nuevaTransmision = true;
+                actualizarTabAudio();
+                mostrarMensajeTemporal('🔴 NEW TRANSMISSION INCOMING');
+            }
+        }, 30000 + Math.random() * 30000);
+
+        // ============ CURSOR ============
         const cursorOjo = document.getElementById('cursor-ojo');
         let trailTimeout;
 
@@ -615,16 +717,12 @@
         function moverCursor(e) {
             cursorOjo.style.left = (e.clientX - 20) + 'px';
             cursorOjo.style.top = (e.clientY - 20) + 'px';
-
-            // Trail cada 50ms
             if (!trailTimeout) {
                 trailTimeout = setTimeout(() => {
                     crearTrail(e.clientX, e.clientY);
                     trailTimeout = null;
                 }, 50);
             }
-
-            // Magnetic hover sobre botones y enlaces
             const el = document.elementFromPoint(e.clientX, e.clientY);
             if (el && (el.tagName === 'BUTTON' || el.tagName === 'A' || el.classList.contains('icono-escritorio') || el
                     .classList.contains('item-menu'))) {
@@ -632,7 +730,6 @@
             } else {
                 cursorOjo.classList.remove('magnetic');
             }
-
             if (el && (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA')) {
                 cursorOjo.classList.add('sobre-input');
             } else {
@@ -643,7 +740,25 @@
         document.addEventListener('mousedown', () => cursorOjo.classList.add('clicking'));
         document.addEventListener('mouseup', () => cursorOjo.classList.remove('clicking'));
 
-        // ============ SONIDO AMBIENTAL + HOVER SOUND ============
+        // ============ MENSAJES TEMPORALES (SCARCITY) ============
+        function mostrarMensajeTemporal(texto) {
+            const msg = document.createElement('div');
+            msg.className = 'mensaje-temporal';
+            msg.textContent = texto;
+            document.body.appendChild(msg);
+            setTimeout(() => msg.remove(), 4000);
+        }
+
+        // Easter egg: escribir DETROIT en el campo de usuario
+        document.getElementById('reg-usuario').addEventListener('input', function() {
+            if (this.value.toUpperCase() === 'DETROIT') {
+                mostrarMensajeTemporal('⚠ DETROIT VISION ACTIVE');
+                document.body.classList.add('glitch-sistema');
+                setTimeout(() => document.body.classList.remove('glitch-sistema'), 200);
+            }
+        });
+
+        // ============ SONIDO ============
         let ctxAudio, ambienteNode, ambienteGain;
 
         function getCtx() { if (!ctxAudio) ctxAudio = new(window.AudioContext || window.webkitAudioContext)(); return ctxAudio; }
@@ -680,7 +795,7 @@
         }
         iniciarSonidoAmbiente();
 
-        // Sonido hover sutil (tape click)
+        // Sonidos contextuales
         function playHoverSound() {
             try {
                 const ctx = getCtx();
@@ -697,7 +812,6 @@
             } catch (e) {}
         }
 
-        // Sonido click
         function playClickSound() {
             try {
                 const ctx = getCtx();
@@ -714,21 +828,58 @@
             } catch (e) {}
         }
 
-        // Aplicar hover sound a elementos interactivos
+        function playErrorSound() {
+            try {
+                const ctx = getCtx();
+                const o = ctx.createOscillator();
+                const g = ctx.createGain();
+                o.type = 'sawtooth';
+                o.frequency.setValueAtTime(150, ctx.currentTime);
+                g.gain.setValueAtTime(0.06, ctx.currentTime);
+                g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
+                o.connect(g);
+                g.connect(ctx.destination);
+                o.start();
+                o.stop(ctx.currentTime + 0.3);
+            } catch (e) {}
+        }
+
         document.querySelectorAll('button, .icono-escritorio, .item-menu, input').forEach(el => {
             el.addEventListener('mouseenter', playHoverSound);
         });
-        document.addEventListener('click', playClickSound);
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('#reg-usuario') && document.getElementById('reg-usuario').value.toUpperCase() ===
+                'DETROIT') {
+                playErrorSound();
+            } else {
+                playClickSound();
+            }
+        });
 
         // ============ FOOTER VIVO ============
         function actualizarFooter() {
             const ahora = new Date();
-            const hora = ahora.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
-            document.getElementById('footer-signal').textContent = hora;
+            document.getElementById('footer-signal').textContent = ahora.toLocaleTimeString('es-ES', { hour: '2-digit',
+                minute: '2-digit' });
             document.getElementById('footer-members').textContent = Math.floor(Math.random() * 20 + 5);
+            // Simular alerta aleatoria
+            if (Math.random() > 0.7) {
+                const alerta = document.getElementById('footer-alerta');
+                alerta.style.display = 'block';
+                setTimeout(() => { alerta.style.display = 'none'; }, 3000);
+            }
         }
-        setInterval(actualizarFooter, 10000);
+        setInterval(actualizarFooter, 8000);
         actualizarFooter();
+
+        // ============ IMPERFECCIÓN CONTROLADA (GLITCH ALEATORIO) ============
+        function activarGlitchSistema() {
+            document.body.classList.add('glitch-sistema');
+            setTimeout(() => document.body.classList.remove('glitch-sistema'), 150);
+        }
+        setInterval(() => {
+            if (Math.random() > 0.5) activarGlitchSistema();
+        }, 12000 + Math.random() * 15000);
 
         // ============ INTRO ============
         const fragmentos = ['0x8F3A', 'DETROIT::VISION', 'MALAGA::BASE', '23/10/2026', 'MYC', 'CHAOS'];
@@ -810,16 +961,19 @@
             const area = document.getElementById('area-escritorio');
             area.innerHTML = '';
             const iconos = [
-                { id: 'myc', i: '🎤', l: 'M.Y.C', t: 25, le: 25 }, { id: 'vault', i: '📁', l: '/vault', t: 25, le: 135 },
-                { id: 'transmissions', i: '📡', l: '/transmissions', t: 25, le: 245 },
-                { id: 'store', i: '💿', l: 'Store', t: 140, le: 25 }, { id: 'tours', i: '🌍', l: 'Tours', t: 140, le: 135 },
-                { id: 'artists', i: '🎨', l: 'Artists', t: 140, le: 245 }
+                { id: 'myc', i: '🎤', l: 'M.Y.C', t: 25, le: 25, delay: 0 },
+                { id: 'vault', i: '📁', l: '/vault', t: 25, le: 135, delay: 0.2 },
+                { id: 'transmissions', i: '📡', l: '/transmissions', t: 25, le: 245, delay: 0.4 },
+                { id: 'store', i: '💿', l: 'Store', t: 140, le: 25, delay: 0.6 },
+                { id: 'tours', i: '🌍', l: 'Tours', t: 140, le: 135, delay: 0.8 },
+                { id: 'artists', i: '🎨', l: 'Artists', t: 140, le: 245, delay: 1 }
             ];
             iconos.forEach(ic => {
                 const el = document.createElement('div');
-                el.className = 'icono-escritorio';
+                el.className = 'icono-escritorio reveal-delayed';
                 el.style.top = ic.t + 'px';
                 el.style.left = ic.le + 'px';
+                el.style.animationDelay = ic.delay + 's';
                 el.innerHTML = `<div class="img-icono">${ic.i}</div><span>${ic.l}</span>`;
                 el.addEventListener('dblclick', () => abrirVentana(ic.id));
                 el.addEventListener('mousedown', e => startDragIcon(e, el));
