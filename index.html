@@ -10,10 +10,8 @@
             --magenta: #d400ff;
             --magenta-brillo: rgba(212, 0, 255, 0.8);
             --cyan: #00b8b8;
-            --cyan-tenue: rgba(0, 184, 184, 0.25);
             --verde-terminal: #00ff41;
             --blanco: #f0f0f0;
-            --gris-oscuro: #1a1a2e;
         }
 
         * {
@@ -32,7 +30,7 @@
             user-select: none;
         }
 
-        /* ============ CURSOR OJO GEOMÉTRICO ============ */
+        /* ============ CURSOR OJO ============ */
         #cursor-ojo {
             position: fixed;
             width: 38px;
@@ -41,6 +39,9 @@
             pointer-events: none;
             transition: transform 0.08s ease;
             filter: drop-shadow(0 0 20px var(--magenta-brillo));
+            /* Forzar visibilidad sobre cualquier elemento */
+            mix-blend-mode: normal;
+            isolation: isolate;
         }
         #cursor-ojo.clicking {
             transform: scale(0.7);
@@ -79,9 +80,6 @@
             color: #fff;
             text-shadow: 0 0 80px var(--magenta-brillo);
             animation: aparecerLogo 0.7s ease-out forwards;
-            display: flex;
-            align-items: center;
-            gap: 8px;
         }
         @keyframes aparecerLogo {
             0% {
@@ -142,7 +140,6 @@
             display: flex;
         }
 
-        /* Código cayendo */
         .capa-codigo {
             position: absolute;
             top: 0;
@@ -173,7 +170,6 @@
             }
         }
 
-        /* Scanlines */
         .scanlines {
             position: absolute;
             top: 0;
@@ -185,37 +181,6 @@
             z-index: 1;
         }
 
-        /* Bola de discoteca */
-        .bola-discoteca {
-            position: absolute;
-            top: 50px;
-            right: 50px;
-            width: 100px;
-            height: 100px;
-            background: radial-gradient(circle at 35% 30%, #ffffff 5%, #e0e0e0 20%, #888 50%, #444 80%);
-            border-radius: 50%;
-            box-shadow: 0 0 60px var(--magenta-brillo), 0 0 100px rgba(255, 255, 255, 0.15);
-            animation: girarBola 5s linear infinite;
-            z-index: 2;
-        }
-        @keyframes girarBola {
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-        .bola-discoteca::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            border-radius: 50%;
-            background: repeating-linear-gradient(0deg, transparent, transparent 6px, rgba(0, 0, 0, 0.3) 6px, rgba(0, 0, 0, 0.3) 7px),
-                repeating-linear-gradient(90deg, transparent, transparent 6px, rgba(0, 0, 0, 0.3) 6px, rgba(0, 0, 0, 0.3) 7px);
-        }
-
-        /* Contenedor texto boot */
         .contenedor-boot {
             max-width: 900px;
             width: 90%;
@@ -238,7 +203,6 @@
             }
         }
 
-        /* Mensajes subliminales */
         .mensaje-fantasma {
             position: fixed;
             font-family: 'Courier New', monospace;
@@ -290,7 +254,7 @@
             padding: 14px 0;
             width: 100%;
             outline: none;
-            cursor: none;
+            caret-color: var(--verde-terminal);
         }
         .btn-acceso {
             background: var(--verde-terminal);
@@ -319,7 +283,6 @@
 </head>
 <body>
 
-    <!-- CURSOR OJO -->
     <div id="cursor-ojo">
         <svg viewBox="0 0 38 38">
             <ellipse cx="19" cy="19" rx="17" ry="12" fill="none" stroke="#d400ff" stroke-width="2.5"/>
@@ -329,7 +292,6 @@
         </svg>
     </div>
 
-    <!-- FASE 1: INICIO -->
     <div id="fase1-inicio">
         <div class="logo-inicio">
             M<span class="punto">.</span>Y<span class="punto">.</span><span class="letra-c">C</span>
@@ -337,11 +299,9 @@
         <div class="texto-iniciando">INICIANDO...</div>
     </div>
 
-    <!-- FASE 2: BOOT -->
     <div id="fase2-boot">
         <div class="capa-codigo" id="capa-codigo"></div>
         <div class="scanlines"></div>
-        <div class="bola-discoteca"></div>
         <div class="contenedor-boot" id="texto-boot"></div>
         <div class="mensaje-fantasma" id="msg1" style="top:10%;left:5%;">ACCESO_RESTRINGIDO</div>
         <div class="mensaje-fantasma" id="msg2" style="top:78%;right:5%;">DETROIT_VISION</div>
@@ -349,7 +309,6 @@
         <div class="mensaje-fantasma" id="msg4" style="top:60%;left:15%;">CHAOS_WITH_PURPOSE</div>
     </div>
 
-    <!-- FASE 3: REGISTRO -->
     <div id="fase3-registro">
         <div class="formulario-acceso">
             <p style="font-size:28px;margin-bottom:30px;text-align:center;">> NUEVO USUARIO_</p>
@@ -367,16 +326,28 @@
     </div>
 
     <script>
-        // ============ CURSOR OJO (SIEMPRE VISIBLE) ============
         const cursorOjo = document.getElementById('cursor-ojo');
-        document.addEventListener('mousemove', (e) => {
+
+        function moverCursor(e) {
             cursorOjo.style.left = (e.clientX - 19) + 'px';
             cursorOjo.style.top = (e.clientY - 19) + 'px';
+        }
+
+        document.addEventListener('mousemove', moverCursor);
+        document.addEventListener('touchmove', (e) => {
+            moverCursor(e.touches[0]);
         });
+
         document.addEventListener('mousedown', () => cursorOjo.classList.add('clicking'));
         document.addEventListener('mouseup', () => cursorOjo.classList.remove('clicking'));
+        document.addEventListener('touchstart', () => cursorOjo.classList.add('clicking'));
+        document.addEventListener('touchend', () => cursorOjo.classList.remove('clicking'));
 
-        // ============ SONIDOS (Web Audio API) ============
+        // Prevenir que el cursor del sistema aparezca en inputs
+        document.addEventListener('focusin', () => {
+            document.body.style.cursor = 'none';
+        });
+
         let ctxAudio;
 
         function getCtx() {
@@ -405,7 +376,6 @@
             else if (e.target.matches('input')) playSound(400, 'sine', 0.1, 0.03);
         });
 
-        // ============ CÓDIGO CAYENDO ============
         const fragmentosCodigo = [
             '0x8F3A', 'DETROIT::VISION', 'MALAGA::BASE', '23/10/2026',
             'MYC', 'CHAOS', '//club.dll', 'ACCESS_GRANTED',
@@ -426,7 +396,6 @@
             capaCodigo.appendChild(col);
         }
 
-        // ============ MENSAJES SUBLIMINALES ============
         const mensajes = document.querySelectorAll('.mensaje-fantasma');
         mensajes.forEach((msg, i) => {
             const duracion = 5 + Math.random() * 5;
@@ -445,7 +414,6 @@
         `;
         document.head.appendChild(styleSheet);
 
-        // ============ SECUENCIA DE INICIO ============
         setTimeout(() => {
             const fase1 = document.getElementById('fase1-inicio');
             fase1.classList.add('modo-morado');
@@ -489,7 +457,6 @@
             }
         }
 
-        // ============ REGISTRO ============
         function procesarAcceso() {
             const u = document.getElementById('reg-usuario').value.trim();
             const e = document.getElementById('reg-email').value.trim();
