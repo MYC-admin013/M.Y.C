@@ -1,684 +1,384 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>M.Y.C | The Mayin Buu Club</title>
-    <style>
-        :root {
-            --negro-profundo: #010508;
-            --magenta: #d400ff;
-            --magenta-brillo: rgba(212, 0, 255, 0.8);
-            --cyan: #00b8b8;
-            --verde-terminal: #00ff41;
-            --blanco: #f0f0f0;
-            --rosa-mayin: #ffaadd;
-            --rosa-claro: #ffe0f0;
-            --gris-win95: #c0c0c0;
-            --gris-oscuro: #808080;
-            --blanco-win95: #ffffff;
-            --negro-win95: #000000;
-            --azul-win95: #000080;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+  <title>M.Y.C | The Mayin Buu Club — Access Network</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+    :root {
+      --black: #010508;
+      --deep-black: #000000;
+      --magenta: #d400ff;
+      --magenta-glow: rgba(212, 0, 255, 0.8);
+      --cyan: #00b8b8;
+      --green-terminal: #00ff41;
+      --white: #f0f0f0;
+      --gray: #808080;
+      --silver: #c0c0c0;
+      --win95-blue: #000080;
+      --danger: #ff0040;
+      --bg-rosa: #ffaadd;
+    }
 
-        body {
-            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
-            background: var(--negro-profundo);
-            min-height: 100vh;
-            overflow: hidden;
-            color: var(--blanco);
-            user-select: none;
-        }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        /* ============ CURSOR OJO ============ */
-        #cursor-ojo {
-            position: fixed;
-            width: 38px;
-            height: 38px;
-            z-index: 99999;
-            pointer-events: none;
-            transition: transform 0.08s ease, filter 0.3s ease;
-            filter: drop-shadow(0 0 20px var(--magenta-brillo));
-            opacity: 0;
-            top: -50px;
-            left: -50px;
-        }
-        #cursor-ojo.visible {
-            opacity: 1;
-        }
-        #cursor-ojo.clicking {
-            transform: scale(0.7);
-        }
-        #cursor-ojo.sobre-input {
-            filter: drop-shadow(0 0 25px #ff00ff);
-        }
-        #cursor-ojo svg {
-            width: 100%;
-            height: 100%;
-        }
+    body {
+      font-family: 'Share Tech Mono', 'Courier New', monospace;
+      background: var(--deep-black);
+      min-height: 100vh;
+      overflow: hidden;
+      color: var(--white);
+      user-select: none;
+      cursor: none;
+    }
 
-        /* ============ PANTALLAS ============ */
-        .pantalla {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: none;
-            z-index: 10;
-        }
-        .pantalla.activa {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
+    /* ============ CURSOR OJO ============ */
+    #cursor-ojo {
+      position: fixed; width: 40px; height: 40px; z-index: 99999;
+      pointer-events: none; transition: transform 0.06s ease, filter 0.2s ease;
+      filter: drop-shadow(0 0 20px var(--magenta-glow));
+      opacity: 0; top: -50px; left: -50px;
+    }
+    #cursor-ojo.visible { opacity: 1; }
+    #cursor-ojo.clicking { transform: scale(0.65); }
+    #cursor-ojo.sobre-input { filter: drop-shadow(0 0 28px #ff00ff); }
+    #cursor-ojo svg { width: 100%; height: 100%; }
 
-        /* Fase 1: Inicio */
-        #fase1-inicio {
-            background: #000;
-            z-index: 100;
-            transition: opacity 0.6s ease, background 0.9s ease;
-        }
-        #fase1-inicio.modo-morado {
-            background: radial-gradient(circle at center, #1a0030, #000);
-        }
-        #fase1-inicio.oculto {
-            opacity: 0;
-            pointer-events: none;
-        }
-        .logo-inicio {
-            font-size: 100px;
-            font-weight: 900;
-            letter-spacing: 20px;
-            color: #fff;
-            text-shadow: 0 0 80px var(--magenta-brillo);
-            animation: aparecerLogo 0.7s ease-out forwards;
-        }
-        @keyframes aparecerLogo {
-            0% {
-                opacity: 0;
-                transform: scale(1.3);
-            }
-            100% {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-        .logo-inicio .punto {
-            color: var(--magenta);
-        }
-        .texto-iniciando {
-            margin-top: 35px;
-            font-size: 24px;
-            color: #aaa;
-            letter-spacing: 12px;
-            opacity: 0;
-            animation: mostrarTexto 0.5s 0.6s forwards, pulsoTexto 2s 1s infinite;
-        }
-        @keyframes mostrarTexto {
-            to {
-                opacity: 1;
-            }
-        }
-        @keyframes pulsoTexto {
-            0%,
-            100% {
-                opacity: 0.4;
-            }
-            50% {
-                opacity: 1;
-            }
-        }
+    /* ============ AMBIENTE SONORO ============ */
+    .sound-toggle {
+      position: fixed; bottom: 20px; right: 20px; z-index: 1000;
+      background: rgba(0,0,0,0.7); border: 1px solid var(--magenta);
+      color: var(--magenta); padding: 8px 16px; font-family: inherit;
+      font-size: 12px; cursor: pointer; letter-spacing: 2px;
+      backdrop-filter: blur(4px); transition: 0.3s;
+    }
+    .sound-toggle:hover { background: var(--magenta); color: #000; }
 
-        /* Fase 2: Boot */
-        #fase2-boot {
-            background: radial-gradient(ellipse at center, #1c0035 0%, #010508 100%);
-            z-index: 90;
-            font-family: 'Courier New', monospace;
-            color: var(--verde-terminal);
-        }
-        .capa-codigo {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            pointer-events: none;
-            z-index: 0;
-        }
-        .columna-codigo {
-            position: absolute;
-            top: -100px;
-            font-family: 'Courier New', monospace;
-            font-size: 12px;
-            color: var(--cyan);
-            opacity: 0.2;
-            animation: caerCodigo linear infinite;
-            white-space: pre;
-            line-height: 1.4;
-        }
-        @keyframes caerCodigo {
-            0% {
-                transform: translateY(-100px);
-            }
-            100% {
-                transform: translateY(110vh);
-            }
-        }
-        .scanlines {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 0, 0, 0.03) 2px, rgba(0, 0, 0, 0.03) 3px);
-            pointer-events: none;
-            z-index: 1;
-        }
-        .contenedor-boot {
-            max-width: 900px;
-            width: 90%;
-            padding: 50px;
-            border-left: 3px solid rgba(0, 255, 65, 0.4);
-            position: relative;
-            z-index: 3;
-            background: rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(4px);
-        }
-        .linea-boot {
-            opacity: 0;
-            font-size: 18px;
-            margin: 8px 0;
-            animation: escribirLinea 0.2s forwards;
-        }
-        @keyframes escribirLinea {
-            to {
-                opacity: 1;
-            }
-        }
-        .mensaje-fantasma {
-            position: fixed;
-            font-family: 'Courier New', monospace;
-            font-size: 14px;
-            color: var(--cyan);
-            opacity: 0;
-            z-index: 95;
-            pointer-events: none;
-        }
+    /* ============ PANTALLAS ============ */
+    .pantalla {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      display: none; z-index: 10; flex-direction: column;
+      align-items: center; justify-content: center;
+    }
+    .pantalla.activa { display: flex; }
 
-        /* Fase 3: Registro */
-        #fase3-registro {
-            background: #000;
-            z-index: 80;
-            font-family: 'Courier New', monospace;
-            color: var(--verde-terminal);
-        }
-        .formulario-acceso {
-            border: 2px solid var(--verde-terminal);
-            padding: 60px;
-            max-width: 550px;
-            width: 90%;
-            box-shadow: 0 0 40px rgba(0, 255, 65, 0.3);
-            background: rgba(0, 0, 0, 0.8);
-        }
-        .formulario-acceso label {
-            display: block;
-            margin-top: 20px;
-            font-size: 16px;
-        }
-        .formulario-acceso input {
-            background: #000;
-            border: none;
-            border-bottom: 2px solid var(--verde-terminal);
-            color: var(--verde-terminal);
-            font-family: inherit;
-            font-size: 20px;
-            padding: 14px 0;
-            width: 100%;
-            outline: none;
-            caret-color: #ff00ff;
-        }
-        .btn-acceso {
-            background: var(--verde-terminal);
-            color: #000;
-            border: none;
-            padding: 16px 50px;
-            font-family: inherit;
-            font-size: 20px;
-            font-weight: bold;
-            margin-top: 35px;
-            letter-spacing: 4px;
-            transition: 0.2s;
-            width: 100%;
-        }
-        .btn-acceso:hover {
-            background: #fff;
-            box-shadow: 0 0 50px rgba(0, 255, 65, 0.7);
-        }
-        .nivel-info {
-            margin-top: 25px;
-            font-size: 18px;
-            text-align: center;
-        }
+    /* Fase 1 */
+    #fase1-inicio {
+      background: #000; z-index: 100;
+      transition: opacity 0.6s ease, background 0.9s ease;
+    }
+    #fase1-inicio.modo-morado { background: radial-gradient(circle at center, #1a0030, #000); }
+    #fase1-inicio.oculto { opacity: 0; pointer-events: none; }
+    .logo-inicio {
+      font-size: 100px; font-weight: 900; letter-spacing: 20px; color: #fff;
+      text-shadow: 0 0 80px var(--magenta-glow);
+      animation: aparecerLogo 0.7s ease-out forwards;
+    }
+    @keyframes aparecerLogo { 0% { opacity: 0; transform: scale(1.3); } 100% { opacity: 1; transform: scale(1); } }
+    .logo-inicio .punto { color: var(--magenta); }
+    .texto-iniciando {
+      margin-top: 35px; font-size: 24px; color: #aaa; letter-spacing: 12px;
+      opacity: 0; animation: mostrarTexto 0.5s 0.6s forwards, pulsoTexto 2s 1s infinite;
+    }
+    @keyframes mostrarTexto { to { opacity: 1; } }
+    @keyframes pulsoTexto { 0%,100% { opacity: 0.4; } 50% { opacity: 1; } }
 
-        /* ============ ESCRITORIO ============ */
-        #escritorio {
-            background: linear-gradient(180deg, var(--rosa-mayin) 0%, var(--rosa-claro) 50%, var(--blanco) 100%);
-            z-index: 70;
-            flex-direction: column;
-        }
-        #escritorio.activa {
-            display: flex;
-        }
-        .area-escritorio {
-            flex: 1;
-            position: relative;
-            overflow: hidden;
-        }
-        .icono-escritorio {
-            position: absolute;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 6px;
-            cursor: pointer;
-            padding: 10px;
-            border-radius: 4px;
-            width: 90px;
-            text-align: center;
-            color: var(--negro-win95);
-            font-size: 11px;
-            transition: background 0.15s;
-            z-index: 1;
-        }
-        .icono-escritorio:hover {
-            background: rgba(255, 255, 255, 0.5);
-            border: 1px dotted var(--gris-oscuro);
-        }
-        .icono-escritorio .img-icono {
-            font-size: 40px;
-            pointer-events: none;
-        }
+    /* Fase 2: Boot */
+    #fase2-boot {
+      background: radial-gradient(ellipse at center, #1c0035 0%, #010508 100%);
+      z-index: 90; color: var(--green-terminal);
+    }
+    .capa-codigo { position: absolute; top:0; left:0; width:100%; height:100%; overflow:hidden; pointer-events:none; z-index:0; }
+    .columna-codigo {
+      position: absolute; top:-100px; font-size:12px; color:var(--cyan);
+      opacity:0.2; animation:caerCodigo linear infinite; white-space:pre; line-height:1.4;
+    }
+    @keyframes caerCodigo { 0% { transform: translateY(-100px); } 100% { transform: translateY(110vh); } }
+    .scanlines {
+      position: absolute; top:0; left:0; width:100%; height:100%;
+      background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 3px);
+      pointer-events:none; z-index:1;
+    }
+    .contenedor-boot {
+      max-width:900px; width:90%; padding:50px; border-left:3px solid rgba(0,255,65,0.4);
+      position:relative; z-index:3; background:rgba(0,0,0,0.3); backdrop-filter:blur(4px);
+    }
+    .linea-boot { opacity:0; font-size:18px; margin:8px 0; animation:escribirLinea 0.2s forwards; }
+    @keyframes escribirLinea { to { opacity:1; } }
+    .mensaje-fantasma {
+      position:fixed; font-size:14px; color:var(--cyan); opacity:0; z-index:95; pointer-events:none;
+    }
 
-        /* Ventanas */
-        .ventana {
-            position: absolute;
-            min-width: 350px;
-            background: var(--gris-win95);
-            border: 2px solid;
-            border-color: var(--blanco-win95) var(--gris-oscuro) var(--gris-oscuro) var(--blanco-win95);
-            box-shadow: 3px 3px 0 var(--negro-win95);
-            z-index: 50;
-            display: flex;
-            flex-direction: column;
-            resize: both;
-            overflow: auto;
-            min-height: 250px;
-        }
-        .barra-titulo {
-            background: linear-gradient(90deg, var(--azul-win95), #1084d0);
-            color: white;
-            padding: 5px 8px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            font-size: 13px;
-            font-weight: bold;
-            cursor: move;
-            height: 30px;
-        }
-        .cuerpo-ventana {
-            flex: 1;
-            padding: 20px;
-            background: white;
-            color: black;
-            font-size: 13px;
-            overflow: auto;
-        }
+    /* Fase 3: Registro */
+    #fase3-registro {
+      background: #000; z-index:80; color: var(--green-terminal);
+    }
+    .formulario-acceso {
+      border: 2px solid var(--green-terminal); padding: 60px; max-width:550px; width:90%;
+      box-shadow: 0 0 40px rgba(0,255,65,0.3); background: rgba(0,0,0,0.8);
+    }
+    .formulario-acceso label { display: block; margin-top: 20px; font-size: 16px; }
+    .formulario-acceso input {
+      background: #000; border: none; border-bottom: 2px solid var(--green-terminal);
+      color: var(--green-terminal); font-family: inherit; font-size: 20px;
+      padding: 14px 0; width: 100%; outline: none; caret-color: #ff00ff;
+    }
+    .btn-acceso {
+      background: var(--green-terminal); color: #000; border: none;
+      padding: 16px 50px; font-family: inherit; font-size: 20px; font-weight: bold;
+      margin-top: 35px; letter-spacing: 4px; transition: 0.2s; width: 100%; cursor: pointer;
+    }
+    .btn-acceso:hover { background: #fff; box-shadow: 0 0 50px rgba(0,255,65,0.7); }
+    .nivel-info { margin-top: 25px; font-size: 18px; text-align: center; }
 
-        /* Barra de tareas */
-        .barra-tareas {
-            height: 46px;
-            background: var(--gris-win95);
-            border-top: 2px solid var(--blanco-win95);
-            display: flex;
-            align-items: center;
-            padding: 4px 6px;
-            gap: 8px;
-            z-index: 200;
-        }
-        .btn-inicio {
-            font-weight: bold;
-            padding: 6px 16px;
-            cursor: pointer;
-            background: var(--gris-win95);
-            border: 2px solid;
-            border-color: var(--blanco-win95) var(--gris-oscuro) var(--gris-oscuro) var(--blanco-win95);
-            font-family: inherit;
-        }
-        .hora-tarea {
-            margin-left: auto;
-            font-size: 12px;
-            color: #000;
-            padding: 6px 14px;
-            border: 2px solid;
-            border-color: var(--gris-oscuro) var(--blanco-win95) var(--blanco-win95) var(--gris-oscuro);
-        }
-        .menu-inicio {
-            display: none;
-            position: fixed;
-            bottom: 50px;
-            left: 6px;
-            background: var(--gris-win95);
-            border: 2px solid;
-            border-color: var(--blanco-win95) var(--gris-oscuro) var(--gris-oscuro) var(--blanco-win95);
-            z-index: 300;
-            width: 210px;
-            box-shadow: 2px 2px 0 black;
-        }
-        .menu-inicio.activo {
-            display: block;
-        }
-        .item-menu {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 10px 18px;
-            cursor: pointer;
-            font-size: 13px;
-            color: #000;
-        }
-        .item-menu:hover {
-            background: var(--azul-win95);
-            color: #fff;
-        }
-    </style>
+    /* ============ ESCRITORIO ============ */
+    #escritorio {
+      background: linear-gradient(180deg, #ffaadd 0%, #ffe0f0 50%, #ffffff 100%);
+      z-index: 70; flex-direction: column;
+    }
+    .area-escritorio { flex: 1; position: relative; overflow: hidden; }
+    .icono-escritorio {
+      position: absolute; display: flex; flex-direction: column; align-items: center;
+      gap: 6px; cursor: pointer; padding: 10px; border-radius: 4px; width: 90px;
+      text-align: center; color: #000; font-size: 11px; transition: background 0.15s; z-index: 1;
+    }
+    .icono-escritorio:hover { background: rgba(255,255,255,0.5); border: 1px dotted var(--gray); }
+    .icono-escritorio .img-icono { font-size: 40px; pointer-events: none; }
+
+    /* Ventanas */
+    .ventana {
+      position: absolute; min-width: 350px; background: var(--silver);
+      border: 2px solid; border-color: #fff var(--gray) var(--gray) #fff;
+      box-shadow: 3px 3px 0 #000; z-index: 50; display: flex;
+      flex-direction: column; resize: both; overflow: auto; min-height: 250px;
+    }
+    .barra-titulo {
+      background: linear-gradient(90deg, var(--win95-blue), #1084d0); color: white;
+      padding: 5px 8px; display: flex; align-items: center; justify-content: space-between;
+      font-size: 13px; font-weight: bold; cursor: move; height: 30px;
+    }
+    .cuerpo-ventana { flex:1; padding:20px; background:white; color:#000; font-size:13px; overflow:auto; }
+
+    /* Barra de tareas */
+    .barra-tareas {
+      height: 46px; background: var(--silver); border-top: 2px solid #fff;
+      display: flex; align-items: center; padding: 4px 6px; gap: 8px; z-index: 200;
+    }
+    .btn-inicio {
+      font-weight: bold; padding: 6px 16px; cursor: pointer;
+      background: var(--silver); border: 2px solid; border-color: #fff var(--gray) var(--gray) #fff;
+      font-family: inherit;
+    }
+    .hora-tarea {
+      margin-left: auto; font-size: 12px; color: #000; padding: 6px 14px;
+      border: 2px solid; border-color: var(--gray) #fff #fff var(--gray);
+    }
+    .menu-inicio {
+      display: none; position: fixed; bottom: 50px; left: 6px;
+      background: var(--silver); border: 2px solid; border-color: #fff var(--gray) var(--gray) #fff;
+      z-index: 300; width: 210px; box-shadow: 2px 2px 0 black;
+    }
+    .menu-inicio.activo { display: block; }
+    .item-menu {
+      display: flex; align-items: center; gap: 12px; padding: 10px 18px;
+      cursor: pointer; font-size: 13px; color: #000;
+    }
+    .item-menu:hover { background: var(--win95-blue); color: #fff; }
+  </style>
 </head>
 <body>
 
-    <!-- CURSOR OJO -->
-    <div id="cursor-ojo">
-        <svg viewBox="0 0 38 38">
-            <ellipse cx="19" cy="19" rx="17" ry="12" fill="none" stroke="#d400ff" stroke-width="2.5"/>
-            <circle cx="19" cy="19" r="7" fill="#d400ff" opacity="0.9"/>
-            <circle cx="19" cy="19" r="3.5" fill="#fff"/>
-            <path d="M2 19 L0 19 M36 19 L38 19 M19 2 L19 0 M19 36 L19 38" stroke="#d400ff" stroke-width="2.5"/>
-        </svg>
+  <div id="cursor-ojo">
+    <svg viewBox="0 0 38 38">
+      <ellipse cx="19" cy="19" rx="17" ry="12" fill="none" stroke="#d400ff" stroke-width="2.5"/>
+      <circle cx="19" cy="19" r="7" fill="#d400ff" opacity="0.9"/>
+      <circle cx="19" cy="19" r="3.5" fill="#fff"/>
+      <path d="M2 19 L0 19 M36 19 L38 19 M19 2 L19 0 M19 36 L19 38" stroke="#d400ff" stroke-width="2.5"/>
+    </svg>
+  </div>
+
+  <button class="sound-toggle" id="sound-toggle" onclick="alternarSonidoAmbiente()">🔊 SOUND ON</button>
+
+  <div class="pantalla activa" id="fase1-inicio">
+    <div class="logo-inicio">M<span class="punto">.</span>Y<span class="punto">.</span><span style="color:#fff;">C</span></div>
+    <div class="texto-iniciando">INICIANDO...</div>
+  </div>
+
+  <div class="pantalla" id="fase2-boot">
+    <div class="capa-codigo" id="capa-codigo"></div>
+    <div class="scanlines"></div>
+    <div class="contenedor-boot" id="texto-boot"></div>
+    <div class="mensaje-fantasma" style="top:10%;left:5%;animation-delay:0s;">ACCESO_RESTRINGIDO</div>
+    <div class="mensaje-fantasma" style="top:78%;right:5%;animation-delay:3.5s;">DETROIT_VISION</div>
+    <div class="mensaje-fantasma" style="top:45%;left:82%;animation-delay:6s;">MALAGA_BASE</div>
+    <div class="mensaje-fantasma" style="top:60%;left:15%;animation-delay:8s;">CHAOS_WITH_PURPOSE</div>
+  </div>
+
+  <div class="pantalla" id="fase3-registro">
+    <div class="formulario-acceso">
+      <p style="font-size:28px;margin-bottom:30px;text-align:center;">> REQUEST ACCESS_</p>
+      <label>> USERNAME:</label><input type="text" id="reg-usuario" placeholder="identify yourself">
+      <label>> EMAIL:</label><input type="email" id="reg-email" placeholder="email@signal.net">
+      <label>> PASSWORD:</label><input type="password" id="reg-contrasena" placeholder="········">
+      <label>> ACCESS CODE:</label><input type="text" id="reg-codigo" value="23/10/2026" readonly style="opacity:0.6;">
+      <div class="nivel-info" id="reg-nivel">CLEARANCE: DEFAULT</div>
+      <button class="btn-acceso" onclick="procesarAcceso()">ENTER NETWORK</button>
     </div>
+  </div>
 
-    <!-- FASE 1 -->
-    <div class="pantalla activa" id="fase1-inicio">
-        <div class="logo-inicio">M<span class="punto">.</span>Y<span class="punto">.</span><span style="color:#fff;">C</span></div>
-        <div class="texto-iniciando">INICIANDO...</div>
+  <div class="pantalla" id="escritorio">
+    <div class="area-escritorio" id="area-escritorio"></div>
+    <div class="menu-inicio" id="menu-inicio">
+      <div class="item-menu" onclick="abrirVentana('myc');alternarInicio()">🎤 M.Y.C</div>
+      <div class="item-menu" onclick="abrirVentana('vault');alternarInicio()">📁 /vault</div>
+      <div class="item-menu" onclick="abrirVentana('transmissions');alternarInicio()">📡 /transmissions</div>
+      <div class="item-menu" onclick="abrirVentana('store');alternarInicio()">💿 Store</div>
+      <div class="item-menu" onclick="abrirVentana('tours');alternarInicio()">🌍 Tours</div>
+      <div class="item-menu" onclick="abrirVentana('artists');alternarInicio()">🎨 Artists</div>
+      <div class="item-menu" id="item-asistente" style="display:none;" onclick="abrirVentana('assist');alternarInicio()">🤖 M.Y.C ASSIST</div>
+      <div style="border-top:1px solid #808080;margin:6px 0;"></div>
+      <div class="item-menu" onclick="location.reload()">🚪 DISCONNECT</div>
     </div>
-
-    <!-- FASE 2 -->
-    <div class="pantalla" id="fase2-boot">
-        <div class="capa-codigo" id="capa-codigo"></div>
-        <div class="scanlines"></div>
-        <div class="contenedor-boot" id="texto-boot"></div>
-        <div class="mensaje-fantasma" id="msg1" style="top:10%;left:5%;">ACCESO_RESTRINGIDO</div>
-        <div class="mensaje-fantasma" id="msg2" style="top:78%;right:5%;">DETROIT_VISION</div>
-        <div class="mensaje-fantasma" id="msg3" style="top:45%;left:82%;">MALAGA_BASE</div>
-        <div class="mensaje-fantasma" id="msg4" style="top:60%;left:15%;">CHAOS_WITH_PURPOSE</div>
+    <div class="barra-tareas">
+      <button class="btn-inicio" onclick="alternarInicio()">🏠 Inicio</button>
+      <button id="btn-reproducir" onclick="alternarReproduccion()" style="width:32px;height:32px;">▶</button>
+      <span style="font-size:12px;color:#000;">SIGNAL FM</span>
+      <div class="hora-tarea" id="hora-tarea">00:00</div>
     </div>
+  </div>
 
-    <!-- FASE 3 -->
-    <div class="pantalla" id="fase3-registro">
-        <div class="formulario-acceso">
-            <p style="font-size:28px;margin-bottom:30px;text-align:center;">> NUEVO USUARIO_</p>
-            <label>> USUARIO:</label><input type="text" id="reg-usuario" placeholder="username">
-            <label>> EMAIL:</label><input type="email" id="reg-email" placeholder="email@club.xxx">
-            <label>> CONTRASEÑA:</label><input type="password" id="reg-contrasena" placeholder="········">
-            <label>> CODIGO DE ACCESO:</label><input type="text" id="reg-codigo" value="23/10/2026" readonly style="opacity:0.6;">
-            <div class="nivel-info" id="reg-nivel">NIVEL: DEFAULT</div>
-            <button class="btn-acceso" onclick="procesarAcceso()">ACCEDER</button>
-        </div>
-    </div>
+  <script>
+    const cursorOjo = document.getElementById('cursor-ojo');
+    let cursorVisible = false;
+    function mostrarCursor() { if(!cursorVisible) { cursorOjo.classList.add('visible'); cursorVisible = true; } }
+    function moverCursor(e) {
+      cursorOjo.style.left = (e.clientX-20)+'px'; cursorOjo.style.top = (e.clientY-20)+'px';
+      mostrarCursor();
+      const el = document.elementFromPoint(e.clientX, e.clientY);
+      if(el && (el.tagName==='INPUT' || el.tagName==='TEXTAREA')) cursorOjo.classList.add('sobre-input');
+      else cursorOjo.classList.remove('sobre-input');
+    }
+    document.addEventListener('mousemove', moverCursor);
+    document.addEventListener('mousedown', () => cursorOjo.classList.add('clicking'));
+    document.addEventListener('mouseup', () => cursorOjo.classList.remove('clicking'));
 
-    <!-- ESCRITORIO -->
-    <div class="pantalla" id="escritorio">
-        <div class="area-escritorio" id="area-escritorio"></div>
-        <div class="menu-inicio" id="menu-inicio">
-            <div class="item-menu" onclick="abrirVentana('myc');alternarInicio()">🎤 M.Y.C</div>
-            <div class="item-menu" onclick="abrirVentana('store');alternarInicio()">💿 Store</div>
-            <div class="item-menu" onclick="abrirVentana('merch');alternarInicio()">👕 Merch</div>
-            <div class="item-menu" onclick="abrirVentana('tours');alternarInicio()">🌍 Tours</div>
-            <div class="item-menu" onclick="abrirVentana('babybuus');alternarInicio()">👶 Baby Buu's</div>
-            <div class="item-menu" onclick="abrirVentana('artists');alternarInicio()">🎨 Artists</div>
-            <div class="item-menu" id="item-asistente" style="display:none;" onclick="abrirVentana('assist');alternarInicio()">🤖 M.Y.C ASSIST</div>
-            <div style="border-top:1px solid #808080;margin:6px 0;"></div>
-            <div class="item-menu" onclick="location.reload()">🚪 Cerrar Sesión</div>
-        </div>
-        <div class="barra-tareas">
-            <button class="btn-inicio" onclick="alternarInicio()">🏠 Inicio</button>
-            <div style="width:2px;height:30px;background:#808080;border-left:1px solid white;"></div>
-            <button id="btn-reproducir" onclick="alternarReproduccion()" style="width:32px;height:32px;font-weight:bold;">▶</button>
-            <span style="font-size:12px;color:#000;">SYNTHWAVE FM</span>
-            <div class="hora-tarea" id="hora-tarea">00:00</div>
-        </div>
-    </div>
+    let ctxAudio;
+    function getCtx() { if(!ctxAudio) ctxAudio = new (window.AudioContext||window.webkitAudioContext)(); return ctxAudio; }
+    function playSound(freq, type, dur=0.1, vol=0.05) {
+      try { const ctx=getCtx(); const o=ctx.createOscillator(); const g=ctx.createGain();
+        o.type=type; o.frequency.setValueAtTime(freq,ctx.currentTime);
+        g.gain.setValueAtTime(vol,ctx.currentTime); g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+dur);
+        o.connect(g); g.connect(ctx.destination); o.start(); o.stop(ctx.currentTime+dur); } catch(e){}
+    }
 
-    <script>
-        // ============ CURSOR ============
-        const cursorOjo = document.getElementById('cursor-ojo');
-        let cursorVisible = false;
+    // Ambiente sonoro
+    let ambienteNode, ambienteGain, ambientePlaying = true;
+    function iniciarSonidoAmbiente() {
+      if(!ambienteNode) {
+        const ctx = getCtx();
+        ambienteNode = ctx.createOscillator();
+        ambienteGain = ctx.createGain();
+        const filtro = ctx.createBiquadFilter();
+        ambienteNode.type = 'sawtooth';
+        ambienteNode.frequency.setValueAtTime(80, ctx.currentTime);
+        filtro.type = 'lowpass'; filtro.frequency.setValueAtTime(300, ctx.currentTime);
+        ambienteGain.gain.setValueAtTime(0.02, ctx.currentTime);
+        ambienteNode.connect(filtro); filtro.connect(ambienteGain); ambienteGain.connect(ctx.destination);
+        ambienteNode.start();
+      }
+    }
+    function alternarSonidoAmbiente() {
+      const btn = document.getElementById('sound-toggle');
+      iniciarSonidoAmbiente();
+      if(ambientePlaying) { ambienteGain.gain.setValueAtTime(0, getCtx().currentTime); btn.textContent = '🔇 SOUND OFF'; ambientePlaying = false; }
+      else { ambienteGain.gain.setValueAtTime(0.02, getCtx().currentTime); btn.textContent = '🔊 SOUND ON'; ambientePlaying = true; }
+    }
+    iniciarSonidoAmbiente();
 
-        function mostrarCursor() {
-            if (!cursorVisible) { cursorOjo.classList.add('visible');
-                cursorVisible = true; }
-        }
+    document.addEventListener('click', (e) => { if(e.target.matches('button')) playSound(900, 'square', 0.08, 0.06); });
 
-        function moverCursor(e) {
-            cursorOjo.style.left = (e.clientX - 19) + 'px';
-            cursorOjo.style.top = (e.clientY - 19) + 'px';
-            mostrarCursor();
-            const el = document.elementFromPoint(e.clientX, e.clientY);
-            if (el && (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA')) { cursorOjo.classList.add('sobre-input'); } else { cursorOjo
-                    .classList.remove('sobre-input'); }
-        }
-        document.addEventListener('mousemove', moverCursor);
-        document.addEventListener('mousedown', () => cursorOjo.classList.add('clicking'));
-        document.addEventListener('mouseup', () => cursorOjo.classList.remove('clicking'));
+    // Intro
+    const fragmentos = ['0x8F3A','DETROIT::VISION','MALAGA::BASE','23/10/2026','MYC','CHAOS','//club.dll','ACCESS_GRANTED'];
+    const capa = document.getElementById('capa-codigo');
+    for(let i=0; i<20; i++) { const col=document.createElement('div'); col.className='columna-codigo'; col.style.left=Math.random()*95+'%'; col.style.animationDuration=(10+Math.random()*25)+'s'; col.style.animationDelay=Math.random()*12+'s'; let t=''; for(let j=0;j<15;j++) t+=fragmentos[Math.floor(Math.random()*fragmentos.length)]+'\n'; col.textContent=t; capa.appendChild(col); }
+    const mensajes = document.querySelectorAll('.mensaje-fantasma');
+    mensajes.forEach((msg,i) => { msg.style.animation = `flotar ${5+Math.random()*5}s ${i*1.5}s ease-in-out infinite`; });
+    const ss = document.createElement('style'); ss.textContent = '@keyframes flotar{0%{opacity:0;transform:translateY(0);}20%{opacity:0.8;}50%{opacity:0;transform:translateY(-35px);}100%{opacity:0;}}'; document.head.appendChild(ss);
 
-        // ============ SONIDOS ============
-        let ctxAudio;
+    setTimeout(() => {
+      const f1 = document.getElementById('fase1-inicio'); f1.classList.add('modo-morado');
+      setTimeout(() => { f1.classList.add('oculto'); document.getElementById('fase2-boot').classList.add('activa'); iniciarBoot(); }, 800);
+    }, 1800);
 
-        function getCtx() { if (!ctxAudio) ctxAudio = new(window.AudioContext || window.webkitAudioContext)(); return ctxAudio; }
+    const lineasBoot = ['M.Y.C SECURE SYSTEM v.2024','──────────────────────────────────────────','INITIALIZING CORE MODULES...','ESTABLISHING CONNECTION TO DETROIT RELAY...','MÁLAGA NODE: ONLINE','DETROIT RELAY: ACTIVE','ENCRYPTING CHANNEL... 256-BIT AES','ACCESS GATEWAY: OPEN','LOADING USER DATABASE...','[████████████████████████████████] 100%','','> WELCOME. REQUEST ACCESS TO CONTINUE._'];
+    let iL = 0;
+    function iniciarBoot() { if(iL < lineasBoot.length) { const l=document.createElement('div'); l.className='linea-boot'; l.textContent=lineasBoot[iL]; document.getElementById('texto-boot').appendChild(l); playSound(800+Math.random()*200,'square',0.06,0.03); iL++; setTimeout(iniciarBoot, 180+Math.random()*120); } else { setTimeout(() => { document.getElementById('fase2-boot').classList.remove('activa'); document.getElementById('fase3-registro').classList.add('activa'); }, 900); } }
 
-        function playSound(freq, type, dur = 0.1, vol = 0.05) {
-            try { const ctx = getCtx(); const o = ctx.createOscillator(); const g = ctx.createGain();
-                o.type = type;
-                o.frequency.setValueAtTime(freq, ctx.currentTime);
-                g.gain.setValueAtTime(vol, ctx.currentTime);
-                g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + dur);
-                o.connect(g);
-                g.connect(ctx.destination);
-                o.start();
-                o.stop(ctx.currentTime + dur); } catch (e) {}
-        }
-        document.addEventListener('click', (e) => { if (e.target.matches('button')) playSound(900, 'square', 0.08, 0.06);
-            else if (e.target.matches('input')) playSound(400, 'sine', 0.1, 0.03); });
+    function procesarAcceso() {
+      const u = document.getElementById('reg-usuario').value.trim();
+      const e = document.getElementById('reg-email').value.trim();
+      const p = document.getElementById('reg-contrasena').value.trim();
+      if(!u||!e||!p) { alert('> ERROR: All fields required.'); return; }
+      let nivel = 'DEFAULT', desc = '';
+      if(p === 'MYC-FOUNDER-2024') { nivel = 'FOUNDER'; desc = '50% DISCOUNT ACTIVE'; }
+      else if(document.getElementById('reg-codigo').value === '23/10/2026') { nivel = 'VIP'; desc = '23% DISCOUNT ACTIVE'; }
+      document.getElementById('reg-nivel').innerHTML = `CLEARANCE: ${nivel} <span style="color:#d400ff;">${desc}</span>`;
+      localStorage.setItem('usuario_myc', JSON.stringify({usuario:u, email:e, nivel}));
+      playSound(1300,'sine',0.25,0.12); setTimeout(()=>playSound(1600,'sine',0.3,0.12),150);
+      document.getElementById('fase3-registro').classList.remove('activa');
+      document.getElementById('escritorio').classList.add('activa');
+      iniciarEscritorio(nivel);
+    }
 
-        // ============ INTRO ============
-        const fragmentosCodigo = ['0x8F3A', 'DETROIT::VISION', 'MALAGA::BASE', '23/10/2026', 'MYC', 'CHAOS', '//club.dll',
-            'ACCESS_GRANTED'
-        ];
-        const capaCodigo = document.getElementById('capa-codigo');
-        for (let i = 0; i < 20; i++) { const col = document.createElement('div');
-            col.className = 'columna-codigo';
-            col.style.left = Math.random() * 95 + '%';
-            col.style.animationDuration = (10 + Math.random() * 25) + 's';
-            col.style.animationDelay = Math.random() * 12 + 's';
-            let texto = ''; for (let j = 0; j < 15; j++) texto += fragmentosCodigo[Math.floor(Math.random() * fragmentosCodigo
-                .length)] + '\n';
-            col.textContent = texto;
-            capaCodigo.appendChild(col); }
-        const mensajes = document.querySelectorAll('.mensaje-fantasma');
-        mensajes.forEach((msg, i) => { msg.style.animation =
-            `flotar ${5+Math.random()*5}s ${i*1.5}s ease-in-out infinite`; });
-        const styleSheet = document.createElement('style');
-        styleSheet.textContent =
-            '@keyframes flotar{0%{opacity:0;transform:translateY(0);}20%{opacity:0.8;}50%{opacity:0;transform:translateY(-35px);}100%{opacity:0;}}';
-        document.head.appendChild(styleSheet);
-        setTimeout(() => { const f1 = document.getElementById('fase1-inicio');
-            f1.classList.add('modo-morado');
-            setTimeout(() => { f1.classList.add('oculto');
-                document.getElementById('fase2-boot').classList.add('activa');
-                iniciarBoot(); }, 800); }, 1800);
-        const lineasBoot = ['M.Y.C SECURE SYSTEM v.2024', '──────────────────────────────────────────',
-            'INITIALIZING CORE MODULES...', 'ESTABLISHING CONNECTION TO DETROIT RELAY...', 'MÁLAGA NODE: ONLINE',
-            'DETROIT RELAY: ACTIVE', 'ENCRYPTING CHANNEL... 256-BIT AES', 'ACCESS GATEWAY: OPEN',
-            'LOADING USER DATABASE...', '[████████████████████████████████] 100%', '',
-            '> BIENVENIDO. CREA TUS CREDENCIALES._'
-        ];
-        let iLinea = 0;
+    let zIdx=100, vId=0;
+    function iniciarEscritorio(nivel) {
+      const area = document.getElementById('area-escritorio'); area.innerHTML = '';
+      const iconos = [
+        {id:'myc',i:'🎤',l:'M.Y.C',t:25,le:25},{id:'vault',i:'📁',l:'/vault',t:25,le:135},
+        {id:'transmissions',i:'📡',l:'/transmissions',t:25,le:245},{id:'store',i:'💿',l:'Store',t:140,le:25},
+        {id:'tours',i:'🌍',l:'Tours',t:140,le:135},{id:'artists',i:'🎨',l:'Artists',t:140,le:245}
+      ];
+      if(nivel==='FOUNDER') { iconos.push({id:'assist',i:'🤖',l:'ASSIST',t:255,le:25}); document.getElementById('item-asistente').style.display='flex'; }
+      iconos.forEach(ic => { const el=document.createElement('div'); el.className='icono-escritorio'; el.style.top=ic.t+'px'; el.style.left=ic.le+'px'; el.innerHTML=`<div class="img-icono">${ic.i}</div><span>${ic.l}</span>`; el.addEventListener('dblclick',()=>abrirVentana(ic.id)); el.addEventListener('mousedown',e=>startDragIcon(e,el)); area.appendChild(el); });
+      setInterval(()=>{ document.getElementById('hora-tarea').textContent = new Date().toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'}); },1000);
+      iniciarAudioBeat();
+    }
+    let dIcon=null,dX=0,dY=0;
+    function startDragIcon(e,el){ e.preventDefault(); dIcon=el; dX=e.clientX-el.offsetLeft; dY=e.clientY-el.offsetTop; }
+    document.addEventListener('mousemove',e=>{ if(dIcon){ dIcon.style.left=(e.clientX-dX)+'px'; dIcon.style.top=(e.clientY-dY)+'px'; } });
+    document.addEventListener('mouseup',()=>{ dIcon=null; });
 
-        function iniciarBoot() { if (iLinea < lineasBoot.length) { const linea = document.createElement('div');
-                linea.className = 'linea-boot';
-                linea.textContent = lineasBoot[iLinea];
-                document.getElementById('texto-boot').appendChild(linea);
-                playSound(800 + Math.random() * 200, 'square', 0.06, 0.03);
-                iLinea++;
-                setTimeout(iniciarBoot, 180 + Math.random() * 120); } else { setTimeout(() => { document.getElementById(
-                        'fase2-boot').classList.remove('activa');
-                    document.getElementById('fase3-registro').classList.add('activa'); }, 900); } }
+    function abrirVentana(tipo) {
+      const area = document.getElementById('area-escritorio');
+      const win = document.createElement('div'); win.className='ventana'; win.id='v-'+(++vId);
+      win.style.zIndex=++zIdx; win.style.top=(60+Math.random()*100)+'px'; win.style.left=(60+Math.random()*200)+'px';
+      let tit='', cont='';
+      switch(tipo) {
+        case'myc':tit='M.Y.C — Info';cont='<h3>M.Y.C</h3><p>Chaos With Purpose.</p><p>Diseñado en Málaga. Visión Detroit.</p>';break;
+        case'vault':tit='/vault — Classified';cont='<h3>📁 CLASSIFIED FILES</h3><p>[RESTRICTED ACCESS]</p><p>Clearance required.</p>';break;
+        case'transmissions':tit='/transmissions — Signal';cont='<h3>📡 NETWORK SIGNAL</h3><p>Incoming transmission...</p><p>Málaga → Detroit → Tokyo</p>';break;
+        case'store':tit='STORE';cont='<h3>💿 STORE</h3><p>Neon Void Vol.1 — 24.99€</p>';break;
+        case'tours':tit='TOURS';cont='<h3>🌍 TOURS</h3><p>15 DIC — Tokyo</p>';break;
+        case'artists':tit='ARTISTS';cont='<h3>🎨 ARTISTS</h3><p>VHS GLITCH</p><p>TERMINAL X</p>';break;
+        case'assist':tit='🤖 ASSIST';cont='<h3>M.Y.C ASSIST</h3><p>Awaiting Python backend...</p>';break;
+        default:tit='Window';cont='<p>Content</p>';
+      }
+      win.innerHTML = `<div class="barra-titulo" onmousedown="startDragWin(event,'${win.id}')"><span>${tit}</span><div><button onclick="document.getElementById('${win.id}').remove()">✕</button></div></div><div class="cuerpo-ventana">${cont}</div>`;
+      area.appendChild(win);
+    }
+    let dWin=null,wX=0,wY=0;
+    function startDragWin(e,id){ e.preventDefault(); dWin=document.getElementById(id); wX=e.clientX-dWin.offsetLeft; wY=e.clientY-dWin.offsetTop; dWin.style.zIndex=++zIdx; }
+    document.addEventListener('mousemove',e=>{ if(dWin){ dWin.style.left=(e.clientX-wX)+'px'; dWin.style.top=(e.clientY-wY)+'px'; } });
+    document.addEventListener('mouseup',()=>{ dWin=null; });
 
-        function procesarAcceso() { const u = document.getElementById('reg-usuario').value.trim(); const e = document
-                .getElementById('reg-email').value.trim(); const p = document.getElementById('reg-contrasena').value
-                .trim(); if (!u || !e || !p) { alert('> ERROR: Todos los campos son obligatorios.'); return; } let nivel =
-                'DEFAULT'; let descuento = ''; if (p === 'MYC-FOUNDER-2024') { nivel = 'FOUNDER';
-                descuento = '50% DESCUENTO ACTIVADO'; } else if (document.getElementById('reg-codigo').value ===
-                '23/10/2026') { nivel = 'VIP';
-                descuento = '23% DESCUENTO ACTIVADO'; }
-            document.getElementById('reg-nivel').innerHTML =
-                `NIVEL: ${nivel} <span style="color:#d400ff;">${descuento}</span>`;
-            localStorage.setItem('usuario_myc', JSON.stringify({ usuario: u, email: e, nivel }));
-            playSound(1300, 'sine', 0.25, 0.12);
-            setTimeout(() => playSound(1600, 'sine', 0.3, 0.12), 150);
-            document.getElementById('fase3-registro').classList.remove('activa');
-            document.getElementById('escritorio').classList.add('activa');
-            iniciarEscritorio(nivel); }
+    function alternarInicio(){ document.getElementById('menu-inicio').classList.toggle('activo'); }
+    document.addEventListener('click',e=>{ const m=document.getElementById('menu-inicio'); const b=document.querySelector('.btn-inicio'); if(m&&!m.contains(e.target)&&e.target!==b) m.classList.remove('activo'); });
 
-        // ============ ESCRITORIO ============
-        let zIdx = 100,
-            vId = 0;
-
-        function iniciarEscritorio(nivel) { const area = document.getElementById('area-escritorio');
-            area.innerHTML = ''; const iconos = [{ id: 'myc', icono: '🎤', label: 'M.Y.C', top: 25, left: 25 }, { id: 'store',
-                    icono: '💿', label: 'Store', top: 25, left: 135
-                }, { id: 'merch', icono: '👕', label: 'Merch', top: 25, left: 245 }, { id: 'tours', icono: '🌍',
-                    label: 'Tours', top: 140, left: 25
-                }, { id: 'babybuus', icono: '👶', label: "Baby Buu's", top: 140, left: 135 }, { id: 'artists',
-                    icono: '🎨', label: 'Artists', top: 140, left: 245 }, ]; if (nivel === 'FOUNDER') { iconos.push({ id: 'assist',
-                    icono: '🤖', label: 'M.Y.C ASSIST', top: 255, left: 25 });
-                document.getElementById('item-asistente').style.display = 'flex'; }
-            iconos.forEach(ic => { const el = document.createElement('div');
-                el.className = 'icono-escritorio';
-                el.style.top = ic.top + 'px';
-                el.style.left = ic.left + 'px';
-                el.innerHTML =
-                    `<div class="img-icono">${ic.icono}</div><span style="color:#000;">${ic.label}</span>`;
-                el.addEventListener('dblclick', () => abrirVentana(ic.id));
-                el.addEventListener('mousedown', (e) => iniciarArrastreIcono(e, el));
-                area.appendChild(el); });
-            setInterval(() => { document.getElementById('hora-tarea').textContent = new Date()
-                    .toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }); }, 1000);
-            iniciarAudio(); }
-        let dIcon = null,
-            dX = 0,
-            dY = 0;
-
-        function iniciarArrastreIcono(e, el) { e.preventDefault();
-            dIcon = el;
-            dX = e.clientX - el.offsetLeft;
-            dY = e.clientY - el.offsetTop; }
-        document.addEventListener('mousemove', (e) => { if (dIcon) { dIcon.style.left = (e.clientX - dX) + 'px';
-                dIcon.style.top = (e.clientY - dY) + 'px'; } });
-        document.addEventListener('mouseup', () => { dIcon = null; });
-
-        function abrirVentana(tipo) { const area = document.getElementById('area-escritorio'); const win = document
-                .createElement('div');
-            win.className = 'ventana';
-            win.id = 'v-' + (++vId);
-            win.style.zIndex = ++zIdx;
-            win.style.top = (60 + Math.random() * 100) + 'px';
-            win.style.left = (60 + Math.random() * 200) + 'px'; let tit = '',
-                cont = ''; switch (tipo) { case 'myc':
-                tit = 'M.Y.C — Info';
-                cont = '<h3>M.Y.C</h3><p>Chaos With Purpose.</p><p>Diseñado en Málaga. Visión Detroit.</p>';
-                break; case 'store':
-                tit = 'STORE';
-                cont = '<h3>STORE</h3><p>💿 Neon Void Vol.1 — 24.99€</p><p>📀 First Steps EP — 12.99€</p>';
-                break; case 'merch':
-                tit = 'MERCH';
-                cont = '<h3>MERCH</h3><p>👕 Camiseta — 29.99€</p><p>🧢 Gorra — 22.00€</p>'; break; case 'tours':
-                tit = 'TOURS';
-                cont = '<h3>TOURS</h3><p>15 DIC — Tokyo</p><p>20 ENE — Berlin</p><p>14 FEB — Miami</p>';
-                break; case 'babybuus':
-                tit = 'BABY BUUS';
-                cont = '<h3>BABY BUUS</h3><p>Subsello experimental de M.Y.C.</p>'; break; case 'artists':
-                tit = 'ARTISTS';
-                cont = '<h3>ARTISTS</h3><p>🎹 VHS GLITCH — Synthwave</p><p>🎛️ TERMINAL X — Cyberpunk</p>';
-                break; case 'assist':
-                tit = '🤖 M.Y.C ASSIST';
-                cont =
-                    '<h3>M.Y.C ASSIST v1.0</h3><p>Conectando con servidor Python...</p><p style="color:#d400ff;">> Backend pendiente.</p>';
-                break;
-            default:
-                tit = 'Ventana';
-                cont = '<p>Contenido</p>'; }
-            win.innerHTML =
-                `<div class="barra-titulo" onmousedown="iniciarArrastreVentana(event,'${win.id}')"><span>${tit}</span><div><button onclick="document.getElementById('${win.id}').remove()">✕</button></div></div><div class="cuerpo-ventana">${cont}</div>`;
-            area.appendChild(win);
-            win.style.zIndex = ++zIdx; } let dWin = null,
-            wX = 0,
-            wY = 0;
-
-        function iniciarArrastreVentana(e, id) { e.preventDefault();
-            dWin = document.getElementById(id);
-            wX = e.clientX - dWin.offsetLeft;
-            wY = e.clientY - dWin.offsetTop;
-            dWin.style.zIndex = ++zIdx; }
-        document.addEventListener('mousemove', (e) => { if (dWin) { dWin.style.left = (e.clientX - wX) + 'px';
-                dWin.style.top = (e.clientY - wY) + 'px'; } });
-        document.addEventListener('mouseup', () => { dWin = null; });
-
-        function alternarInicio() { document.getElementById('menu-inicio').classList.toggle('activo'); }
-        document.addEventListener('click', (e) => { const m = document.getElementById('menu-inicio'); const b = document
-                .querySelector('.btn-inicio'); if (m && !m.contains(e.target) && e.target !== b) m.classList.remove(
-                    'activo'); });
-        let ctxBeat, playing = false,
-            oscBeat, gainBeat;
-
-        function iniciarAudio() { if (!ctxBeat) { ctxBeat = new(window.AudioContext || window.webkitAudioContext)();
-                oscBeat = ctxBeat.createOscillator();
-                gainBeat = ctxBeat.createGain(); const f = ctxBeat.createBiquadFilter();
-                oscBeat.type = 'sawtooth';
-                oscBeat.frequency.setValueAtTime(110, ctxBeat.currentTime);
-                f.type = 'lowpass';
-                f.frequency.setValueAtTime(800, ctxBeat.currentTime);
-                gainBeat.gain.setValueAtTime(0, ctxBeat.currentTime);
-                oscBeat.connect(f);
-                f.connect(gainBeat);
-                gainBeat.connect(ctxBeat.destination);
-                oscBeat.start(); } }
-
-        function alternarReproduccion() { const btn = document.getElementById('btn-reproducir');
-            iniciarAudio(); if (ctxBeat.state === 'suspended') ctxBeat.resume(); if (playing) { gainBeat.gain
-                    .setValueAtTime(0, ctxBeat.currentTime);
-                btn.textContent = '▶';
-                playing = false; } else { gainBeat.gain.setValueAtTime(0.12, ctxBeat.currentTime);
-                btn.textContent = '⏸';
-                playing = true; } }
-    </script>
+    let ctxBeat,playing=false,oscBeat,gainBeat;
+    function iniciarAudioBeat(){ if(!ctxBeat){ ctxBeat=new(window.AudioContext||window.webkitAudioContext)(); oscBeat=ctxBeat.createOscillator(); gainBeat=ctxBeat.createGain(); const f=ctxBeat.createBiquadFilter(); oscBeat.type='sawtooth'; oscBeat.frequency.setValueAtTime(110,ctxBeat.currentTime); f.type='lowpass'; f.frequency.setValueAtTime(800,ctxBeat.currentTime); gainBeat.gain.setValueAtTime(0,ctxBeat.currentTime); oscBeat.connect(f); f.connect(gainBeat); gainBeat.connect(ctxBeat.destination); oscBeat.start(); } }
+    function alternarReproduccion(){ const btn=document.getElementById('btn-reproducir'); iniciarAudioBeat(); if(ctxBeat.state==='suspended')ctxBeat.resume(); if(playing){ gainBeat.gain.setValueAtTime(0,ctxBeat.currentTime); btn.textContent='▶'; playing=false; } else { gainBeat.gain.setValueAtTime(0.12,ctxBeat.currentTime); btn.textContent='⏸'; playing=true; } }
+  </script>
 </body>
 </html>
