@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
-    <title>M.Y.C | The Mayin Buu Club — Access Network</title>
+    <title>M.Y.C | The Mayin Buu Club</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
 
@@ -18,7 +18,6 @@
             --gray: #808080;
             --silver: #c0c0c0;
             --win95-blue: #000080;
-            --danger: #ff0040;
             --bg-rosa: #ffaadd;
         }
 
@@ -38,7 +37,7 @@
             cursor: none;
         }
 
-        /* ============ CURSOR OJO ============ */
+        /* ============ CURSOR OJO (VISIBLE DESDE EL INICIO) ============ */
         #cursor-ojo {
             position: fixed;
             width: 40px;
@@ -47,12 +46,18 @@
             pointer-events: none;
             transition: transform 0.06s ease, filter 0.2s ease;
             filter: drop-shadow(0 0 20px var(--magenta-glow));
-            opacity: 0;
-            top: -50px;
-            left: -50px;
-        }
-        #cursor-ojo.visible {
+            top: 50%;
+            left: 50%;
             opacity: 1;
+        }
+        /* Ocultar cursor en móvil */
+        @media (max-width: 768px) {
+            #cursor-ojo {
+                display: none;
+            }
+            body {
+                cursor: auto;
+            }
         }
         #cursor-ojo.clicking {
             transform: scale(0.65);
@@ -63,42 +68,6 @@
         #cursor-ojo svg {
             width: 100%;
             height: 100%;
-        }
-
-        /* ============ PARTÍCULAS REACTIVAS ============ */
-        .particula {
-            position: fixed;
-            width: 2px;
-            height: 2px;
-            background: var(--magenta);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 5;
-            opacity: 0.6;
-            transition: transform 0.3s ease;
-        }
-
-        /* ============ GLITCH ============ */
-        @keyframes glitch {
-            0%,
-            100% {
-                transform: translateX(0);
-            }
-            50% {
-                transform: translateX(3px);
-            }
-        }
-        @keyframes glitchColor {
-            0%,
-            100% {
-                color: inherit;
-            }
-            50% {
-                color: var(--cyan);
-            }
-        }
-        .glitch-activo {
-            animation: glitch 0.1s ease, glitchColor 0.1s ease;
         }
 
         /* ============ SONIDO AMBIENTAL ============ */
@@ -154,13 +123,12 @@
             pointer-events: none;
         }
         .logo-inicio {
-            font-size: 100px;
+            font-size: clamp(60px, 10vw, 100px);
             font-weight: 900;
             letter-spacing: 20px;
             color: #fff;
             text-shadow: 0 0 80px var(--magenta-glow);
             animation: aparecerLogo 0.7s ease-out forwards;
-            transition: text-shadow 0.3s;
         }
         @keyframes aparecerLogo {
             0% {
@@ -177,7 +145,7 @@
         }
         .texto-iniciando {
             margin-top: 35px;
-            font-size: 24px;
+            font-size: clamp(18px, 3vw, 24px);
             color: #aaa;
             letter-spacing: 12px;
             opacity: 0;
@@ -280,7 +248,7 @@
         }
         .formulario-acceso {
             border: 2px solid var(--green-terminal);
-            padding: 60px;
+            padding: clamp(30px, 5vw, 60px);
             max-width: 550px;
             width: 90%;
             box-shadow: 0 0 40px rgba(0, 255, 65, 0.3);
@@ -358,18 +326,6 @@
             background: rgba(255, 255, 255, 0.5);
             border: 1px dotted var(--gray);
         }
-        .icono-escritorio.bote {
-            animation: boteIcono 0.4s ease;
-        }
-        @keyframes boteIcono {
-            0%,
-            100% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.2);
-            }
-        }
         .icono-escritorio .img-icono {
             font-size: 40px;
             pointer-events: none;
@@ -389,24 +345,6 @@
             resize: both;
             overflow: auto;
             min-height: 250px;
-            animation: abrirVentana 0.3s ease;
-        }
-        @keyframes abrirVentana {
-            0% {
-                transform: scale(0.5);
-                opacity: 0;
-            }
-            100% {
-                transform: scale(1);
-                opacity: 1;
-            }
-        }
-        .ventana.maximizada {
-            top: 0 !important;
-            left: 0 !important;
-            width: 100% !important;
-            height: calc(100% - 46px) !important;
-            resize: none;
         }
         .barra-titulo {
             background: linear-gradient(90deg, var(--win95-blue), #1084d0);
@@ -420,22 +358,6 @@
             cursor: move;
             height: 30px;
         }
-        .barra-titulo .btn-ventana {
-            background: var(--silver);
-            border: 2px solid;
-            border-color: #fff var(--gray) var(--gray) #fff;
-            width: 22px;
-            height: 22px;
-            cursor: pointer;
-            font-size: 11px;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0;
-            color: #000;
-            font-family: inherit;
-        }
         .cuerpo-ventana {
             flex: 1;
             padding: 20px;
@@ -443,25 +365,6 @@
             color: #000;
             font-size: 13px;
             overflow: auto;
-        }
-
-        /* Botones de ventana en taskbar */
-        .btn-ventana-taskbar {
-            background: var(--silver);
-            border: 2px solid;
-            border-color: #fff var(--gray) var(--gray) #fff;
-            padding: 4px 12px;
-            cursor: pointer;
-            font-size: 11px;
-            font-family: inherit;
-            max-width: 150px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-        .btn-ventana-taskbar.activa {
-            border-color: var(--gray) #fff #fff var(--gray);
-            background: #fff;
         }
 
         /* Barra de tareas */
@@ -472,9 +375,8 @@
             display: flex;
             align-items: center;
             padding: 4px 6px;
-            gap: 6px;
+            gap: 8px;
             z-index: 200;
-            overflow-x: auto;
         }
         .btn-inicio {
             font-weight: bold;
@@ -484,16 +386,6 @@
             border: 2px solid;
             border-color: #fff var(--gray) var(--gray) #fff;
             font-family: inherit;
-            animation: pulsoInicio 3s ease-in-out infinite;
-        }
-        @keyframes pulsoInicio {
-            0%,
-            100% {
-                box-shadow: none;
-            }
-            50% {
-                box-shadow: 0 0 15px var(--magenta-glow);
-            }
         }
         .hora-tarea {
             margin-left: auto;
@@ -502,7 +394,6 @@
             padding: 6px 14px;
             border: 2px solid;
             border-color: var(--gray) #fff #fff var(--gray);
-            white-space: nowrap;
         }
         .menu-inicio {
             display: none;
@@ -513,7 +404,7 @@
             border: 2px solid;
             border-color: #fff var(--gray) var(--gray) #fff;
             z-index: 300;
-            width: 220px;
+            width: 210px;
             box-shadow: 2px 2px 0 black;
         }
         .menu-inicio.activo {
@@ -533,28 +424,28 @@
             color: #fff;
         }
 
-        /* Menú contextual */
-        .menu-contextual {
-            display: none;
-            position: fixed;
-            background: var(--silver);
-            border: 2px solid;
-            border-color: #fff var(--gray) var(--gray) #fff;
-            z-index: 400;
-            width: 180px;
-            box-shadow: 2px 2px 0 black;
-        }
-        .menu-contextual.activo {
-            display: block;
-        }
-        .menu-contextual .item-menu {
-            font-size: 12px;
-            padding: 8px 14px;
+        /* Ajustes móvil (preparados) */
+        @media (max-width: 768px) {
+            .icono-escritorio {
+                width: 70px;
+                padding: 6px;
+            }
+            .icono-escritorio .img-icono {
+                font-size: 30px;
+            }
+            .ventana {
+                min-width: 250px;
+                max-width: 90vw;
+            }
+            .formulario-acceso {
+                padding: 30px;
+            }
         }
     </style>
 </head>
 <body>
 
+    <!-- CURSOR OJO (SIEMPRE VISIBLE) -->
     <div id="cursor-ojo">
         <svg viewBox="0 0 38 38">
             <ellipse cx="19" cy="19" rx="17" ry="12" fill="none" stroke="#d400ff" stroke-width="2.5"/>
@@ -565,28 +456,24 @@
     </div>
 
     <button class="sound-toggle" id="sound-toggle" onclick="alternarSonidoAmbiente()">🔊 SOUND ON</button>
-    <div class="menu-contextual" id="menu-contextual">
-        <div class="item-menu" onclick="actualizarEscritorio()">🔄 Refresh</div>
-        <div class="item-menu" onclick="nuevaCarpeta()">📁 New Folder</div>
-        <div style="border-top:1px solid #808080;"></div>
-        <div class="item-menu" onclick="propiedades()">⚙️ Properties</div>
-    </div>
 
+    <!-- FASE 1 -->
     <div class="pantalla activa" id="fase1-inicio">
-        <div class="logo-inicio" id="logo-principal">M<span class="punto">.</span>Y<span class="punto">.</span><span style="color:#fff;">C</span></div>
-        <div class="texto-iniciando" id="texto-iniciando">INICIANDO...</div>
+        <div class="logo-inicio">M<span class="punto">.</span>Y<span class="punto">.</span><span style="color:#fff;">C</span></div>
+        <div class="texto-iniciando">INICIANDO...</div>
     </div>
 
+    <!-- FASE 2 -->
     <div class="pantalla" id="fase2-boot">
         <div class="capa-codigo" id="capa-codigo"></div>
         <div class="scanlines"></div>
         <div class="contenedor-boot" id="texto-boot"></div>
-        <div class="mensaje-fantasma" style="top:10%;left:5%;animation-delay:0s;">ACCESO_RESTRINGIDO</div>
-        <div class="mensaje-fantasma" style="top:78%;right:5%;animation-delay:3.5s;">DETROIT_VISION</div>
-        <div class="mensaje-fantasma" style="top:45%;left:82%;animation-delay:6s;">MALAGA_BASE</div>
-        <div class="mensaje-fantasma" style="top:60%;left:15%;animation-delay:8s;">CHAOS_WITH_PURPOSE</div>
+        <div class="mensaje-fantasma" style="top:10%;left:5%;">ACCESO_RESTRINGIDO</div>
+        <div class="mensaje-fantasma" style="top:78%;right:5%;">DETROIT_VISION</div>
+        <div class="mensaje-fantasma" style="top:45%;left:82%;">MALAGA_BASE</div>
     </div>
 
+    <!-- FASE 3 -->
     <div class="pantalla" id="fase3-registro">
         <div class="formulario-acceso">
             <p style="font-size:28px;margin-bottom:30px;text-align:center;">> REQUEST ACCESS_</p>
@@ -599,8 +486,9 @@
         </div>
     </div>
 
+    <!-- ESCRITORIO -->
     <div class="pantalla" id="escritorio">
-        <div class="area-escritorio" id="area-escritorio" oncontextmenu="mostrarMenuContextual(event)"></div>
+        <div class="area-escritorio" id="area-escritorio"></div>
         <div class="menu-inicio" id="menu-inicio">
             <div class="item-menu" onclick="abrirVentana('myc');alternarInicio()">🎤 M.Y.C</div>
             <div class="item-menu" onclick="abrirVentana('vault');alternarInicio()">📁 /vault</div>
@@ -608,85 +496,73 @@
             <div class="item-menu" onclick="abrirVentana('store');alternarInicio()">💿 Store</div>
             <div class="item-menu" onclick="abrirVentana('tours');alternarInicio()">🌍 Tours</div>
             <div class="item-menu" onclick="abrirVentana('artists');alternarInicio()">🎨 Artists</div>
-            <div class="item-menu" id="item-asistente" style="display:none;" onclick="abrirVentana('assist');alternarInicio()">🤖 M.Y.C ASSIST</div>
             <div style="border-top:1px solid #808080;margin:6px 0;"></div>
             <div class="item-menu" onclick="location.reload()">🚪 DISCONNECT</div>
         </div>
-        <div class="barra-tareas" id="barra-tareas">
+        <div class="barra-tareas">
             <button class="btn-inicio" onclick="alternarInicio()">🏠 Inicio</button>
-            <div style="width:2px;height:30px;background:#808080;border-left:1px solid white;"></div>
-            <div id="botones-ventanas" style="display:flex;gap:4px;overflow-x:auto;"></div>
-            <button id="btn-reproducir" onclick="alternarReproduccion()" style="width:32px;height:32px;font-weight:bold;margin-left:auto;">▶</button>
+            <button id="btn-reproducir" onclick="alternarReproduccion()" style="width:32px;height:32px;">▶</button>
             <span style="font-size:12px;color:#000;">SIGNAL FM</span>
             <div class="hora-tarea" id="hora-tarea">00:00</div>
         </div>
     </div>
 
     <script>
-        // ============ CURSOR ============
+        // ============ CURSOR (SIEMPRE VISIBLE) ============
         const cursorOjo = document.getElementById('cursor-ojo');
-        let cursorVisible = false;
 
-        function mostrarCursor() { if (!cursorVisible) { cursorOjo.classList.add('visible');
-                cursorVisible = true; } }
-
-        function moverCursor(e) { cursorOjo.style.left = (e.clientX - 20) + 'px';
+        function moverCursor(e) {
+            cursorOjo.style.left = (e.clientX - 20) + 'px';
             cursorOjo.style.top = (e.clientY - 20) + 'px';
-            mostrarCursor(); const el = document.elementFromPoint(e.clientX, e.clientY); if (el && (el.tagName === 'INPUT' ||
-                el.tagName === 'TEXTAREA')) cursorOjo.classList.add('sobre-input'); else cursorOjo.classList.remove(
-                'sobre-input'); }
+            const el = document.elementFromPoint(e.clientX, e.clientY);
+            if (el && (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA')) {
+                cursorOjo.classList.add('sobre-input');
+            } else {
+                cursorOjo.classList.remove('sobre-input');
+            }
+        }
         document.addEventListener('mousemove', moverCursor);
         document.addEventListener('mousedown', () => cursorOjo.classList.add('clicking'));
         document.addEventListener('mouseup', () => cursorOjo.classList.remove('clicking'));
 
-        // ============ PARTÍCULAS REACTIVAS ============
-        for (let i = 0; i < 15; i++) { const p = document.createElement('div');
-            p.className = 'particula';
-            p.style.left = Math.random() * 100 + '%';
-            p.style.top = Math.random() * 100 + '%';
-            p.style.animation = `flotar ${3+Math.random()*4}s infinite`; document.body.appendChild(p); }
-
-        // ============ GLITCH ALEATORIO ============
-        function activarGlitch() { const el = document.getElementById('logo-principal') || document.querySelector(
-                '.linea-boot:last-child'); if (el) { el.classList.add('glitch-activo');
-                setTimeout(() => el.classList.remove('glitch-activo'), 150); } }
-        setInterval(activarGlitch, 8000 + Math.random() * 7000);
-
-        // ============ SONIDO AMBIENTAL (VHS + LATIDO) ============
-        let ctxAudio, ambienteNode, ambienteGain, latidoNode, latidoGain, ambientePlaying = true;
+        // ============ SONIDO AMBIENTAL ============
+        let ctxAudio, ambienteNode, ambienteGain, ambientePlaying = true;
 
         function getCtx() { if (!ctxAudio) ctxAudio = new(window.AudioContext || window.webkitAudioContext)(); return ctxAudio; }
 
-        function iniciarSonidoAmbiente() { if (!ambienteNode) { const ctx = getCtx();
+        function iniciarSonidoAmbiente() {
+            if (!ambienteNode) {
+                const ctx = getCtx();
                 ambienteNode = ctx.createOscillator();
                 ambienteGain = ctx.createGain();
-                latidoNode = ctx.createOscillator();
-                latidoGain = ctx.createGain();
                 ambienteNode.type = 'sawtooth';
                 ambienteNode.frequency.setValueAtTime(80, ctx.currentTime);
                 ambienteGain.gain.setValueAtTime(0.015, ctx.currentTime);
                 ambienteNode.connect(ambienteGain);
                 ambienteGain.connect(ctx.destination);
                 ambienteNode.start();
-                latidoNode.type = 'sine';
-                latidoNode.frequency.setValueAtTime(50, ctx.currentTime);
-                latidoGain.gain.setValueAtTime(0, ctx.currentTime);
-                latidoNode.connect(latidoGain);
-                latidoGain.connect(ctx.destination);
-                latidoNode.start();
-                setInterval(() => { if (ambientePlaying) { latidoGain.gain.setValueAtTime(0.04, ctx.currentTime);
-                        latidoGain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3); } }, 2000); } }
+            }
+        }
 
-        function alternarSonidoAmbiente() { const btn = document.getElementById('sound-toggle');
-            iniciarSonidoAmbiente(); if (ambientePlaying) { ambienteGain.gain.setValueAtTime(0, getCtx().currentTime);
-                latidoGain.gain.setValueAtTime(0, getCtx().currentTime);
+        function alternarSonidoAmbiente() {
+            const btn = document.getElementById('sound-toggle');
+            iniciarSonidoAmbiente();
+            if (ambientePlaying) {
+                ambienteGain.gain.setValueAtTime(0, getCtx().currentTime);
                 btn.textContent = '🔇 SOUND OFF';
-                ambientePlaying = false; } else { ambienteGain.gain.setValueAtTime(0.015, getCtx().currentTime);
+                ambientePlaying = false;
+            } else {
+                ambienteGain.gain.setValueAtTime(0.015, getCtx().currentTime);
                 btn.textContent = '🔊 SOUND ON';
-                ambientePlaying = true; } }
+                ambientePlaying = true;
+            }
+        }
         iniciarSonidoAmbiente();
 
-        function playSound(freq, type, dur = 0.1, vol = 0.05) { try { const ctx = getCtx(); const o = ctx.createOscillator();
+        function playSound(freq, type, dur = 0.1, vol = 0.05) {
+            try {
+                const ctx = getCtx();
+                const o = ctx.createOscillator();
                 const g = ctx.createGain();
                 o.type = type;
                 o.frequency.setValueAtTime(freq, ctx.currentTime);
@@ -695,52 +571,81 @@
                 o.connect(g);
                 g.connect(ctx.destination);
                 o.start();
-                o.stop(ctx.currentTime + dur); } catch (e) {} }
-        document.addEventListener('click', (e) => { if (e.target.matches('button')) playSound(900, 'square', 0.08, 0.06); });
+                o.stop(ctx.currentTime + dur);
+            } catch (e) {}
+        }
 
         // ============ INTRO ============
-        const fragmentos = ['0x8F3A', 'DETROIT::VISION', 'MALAGA::BASE', '23/10/2026', 'MYC', 'CHAOS', '//club.dll',
-            'ACCESS_GRANTED'
-        ];
-        const capa = document.getElementById('capa-codigo'); for (let i = 0; i < 20; i++) { const col = document.createElement(
-                'div');
+        const fragmentos = ['0x8F3A', 'DETROIT::VISION', 'MALAGA::BASE', '23/10/2026', 'MYC', 'CHAOS'];
+        const capa = document.getElementById('capa-codigo');
+        for (let i = 0; i < 20; i++) {
+            const col = document.createElement('div');
             col.className = 'columna-codigo';
             col.style.left = Math.random() * 95 + '%';
             col.style.animationDuration = (10 + Math.random() * 25) + 's';
-            col.style.animationDelay = Math.random() * 12 + 's'; let t = ''; for (let j = 0; j < 15; j++) t += fragmentos[Math
-                .floor(Math.random() * fragmentos.length)] + '\n';
+            col.style.animationDelay = Math.random() * 12 + 's';
+            let t = '';
+            for (let j = 0; j < 15; j++) t += fragmentos[Math.floor(Math.random() * fragmentos.length)] + '\n';
             col.textContent = t;
-            capa.appendChild(col); }
-        const mensajes = document.querySelectorAll('.mensaje-fantasma');
-        mensajes.forEach((msg, i) => { msg.style.animation =
-            `flotar ${5+Math.random()*5}s ${i*1.5}s ease-in-out infinite`; });
-        setTimeout(() => { const f1 = document.getElementById('fase1-inicio');
+            capa.appendChild(col);
+        }
+
+        // Secuencia de inicio (CORREGIDA)
+        setTimeout(() => {
+            const f1 = document.getElementById('fase1-inicio');
             f1.classList.add('modo-morado');
-            setTimeout(() => { f1.classList.add('oculto');
-                document.getElementById('fase2-boot').classList.add('activa');
-                iniciarBoot(); }, 800); }, 1800);
-        const lineasBoot = ['M.Y.C SECURE SYSTEM v.2024', '──────────────────────────────────────────',
-            'INITIALIZING CORE MODULES...', 'ESTABLISHING CONNECTION TO DETROIT RELAY...', 'MÁLAGA NODE: ONLINE',
-            'DETROIT RELAY: ACTIVE', 'ENCRYPTING CHANNEL... 256-BIT AES', 'ACCESS GATEWAY: OPEN',
-            'LOADING USER DATABASE...', '[████████████████████████████████] 100%', '',
+            setTimeout(() => {
+                f1.classList.add('oculto');
+                const f2 = document.getElementById('fase2-boot');
+                f2.classList.add('activa');
+                iniciarBoot();
+            }, 800);
+        }, 1800);
+
+        const lineasBoot = [
+            'M.Y.C SECURE SYSTEM v.2024',
+            '──────────────────────────────────────────',
+            'INITIALIZING CORE MODULES...',
+            'ESTABLISHING CONNECTION TO DETROIT RELAY...',
+            'MÁLAGA NODE: ONLINE',
+            'DETROIT RELAY: ACTIVE',
+            'ENCRYPTING CHANNEL... 256-BIT AES',
+            'ACCESS GATEWAY: OPEN',
+            'LOADING USER DATABASE...',
+            '[████████████████████████████████] 100%',
+            '',
             '> WELCOME. REQUEST ACCESS TO CONTINUE._'
         ];
         let iL = 0;
 
-        function iniciarBoot() { if (iL < lineasBoot.length) { const l = document.createElement('div');
+        function iniciarBoot() {
+            if (iL < lineasBoot.length) {
+                const l = document.createElement('div');
                 l.className = 'linea-boot';
                 l.textContent = lineasBoot[iL];
                 document.getElementById('texto-boot').appendChild(l);
                 playSound(800 + Math.random() * 200, 'square', 0.06, 0.03);
                 iL++;
-                setTimeout(iniciarBoot, 180 + Math.random() * 120); } else { setTimeout(() => { document.getElementById(
-                        'fase2-boot').classList.remove('activa');
-                    document.getElementById('fase3-registro').classList.add('activa'); }, 900); } }
+                setTimeout(iniciarBoot, 180 + Math.random() * 120);
+            } else {
+                setTimeout(() => {
+                    document.getElementById('fase2-boot').classList.remove('activa');
+                    document.getElementById('fase3-registro').classList.add('activa');
+                }, 900);
+            }
+        }
 
-        function procesarAcceso() { const u = document.getElementById('reg-usuario').value.trim(); const e = document
-                .getElementById('reg-email').value.trim(); const p = document.getElementById('reg-contrasena').value
-                .trim(); if (!u || !e || !p) { alert('> ERROR: All fields required.'); return; } let nivel = 'DEFAULT',
-                desc = ''; if (p === 'MYC-FOUNDER-2024') { nivel = 'FOUNDER';
+        function procesarAcceso() {
+            const u = document.getElementById('reg-usuario').value.trim();
+            const e = document.getElementById('reg-email').value.trim();
+            const p = document.getElementById('reg-contrasena').value.trim();
+            if (!u || !e || !p) {
+                alert('> ERROR: All fields required.');
+                return;
+            }
+            let nivel = 'DEFAULT',
+                desc = '';
+            if (p === 'MYC-FOUNDER-2024') { nivel = 'FOUNDER';
                 desc = '50% DISCOUNT ACTIVE'; } else if (document.getElementById('reg-codigo').value === '23/10/2026') { nivel =
                     'VIP';
                 desc = '23% DISCOUNT ACTIVE'; }
@@ -751,37 +656,40 @@
             setTimeout(() => playSound(1600, 'sine', 0.3, 0.12), 150);
             document.getElementById('fase3-registro').classList.remove('activa');
             document.getElementById('escritorio').classList.add('activa');
-            iniciarEscritorio(nivel); }
+            iniciarEscritorio(nivel);
+        }
 
         // ============ ESCRITORIO ============
         let zIdx = 100,
-            vId = 0,
-            ventanasAbiertas = [];
-        const areaEscritorio = document.getElementById('area-escritorio');
-        const barraTareas = document.getElementById('barra-tareas');
-        const botonesVentanas = document.getElementById('botones-ventanas');
+            vId = 0;
 
         function iniciarEscritorio(nivel) {
-            areaEscritorio.innerHTML = ''; const iconos = [{ id: 'myc', i: '🎤', l: 'M.Y.C', t: 25, le: 25 }, { id: 'vault',
-                i: '📁', l: '/vault', t: 25, le: 135 }, { id: 'transmissions', i: '📡', l: '/transmissions', t: 25,
-                le: 245 }, { id: 'store', i: '💿', l: 'Store', t: 140, le: 25 }, { id: 'tours', i: '🌍', l: 'Tours',
-                t: 140, le: 135 }, { id: 'artists', i: '🎨', l: 'Artists', t: 140, le: 245 }, ]; if (nivel ===
-                'FOUNDER') { iconos.push({ id: 'assist', i: '🤖', l: 'ASSIST', t: 255, le: 25 });
-                document.getElementById('item-asistente').style.display = 'flex'; }
-            iconos.forEach(ic => { const el = document.createElement('div');
+            const area = document.getElementById('area-escritorio');
+            area.innerHTML = '';
+            const iconos = [
+                { id: 'myc', i: '🎤', l: 'M.Y.C', t: 25, le: 25 },
+                { id: 'vault', i: '📁', l: '/vault', t: 25, le: 135 },
+                { id: 'transmissions', i: '📡', l: '/transmissions', t: 25, le: 245 },
+                { id: 'store', i: '💿', l: 'Store', t: 140, le: 25 },
+                { id: 'tours', i: '🌍', l: 'Tours', t: 140, le: 135 },
+                { id: 'artists', i: '🎨', l: 'Artists', t: 140, le: 245 },
+            ];
+            iconos.forEach(ic => {
+                const el = document.createElement('div');
                 el.className = 'icono-escritorio';
                 el.style.top = ic.t + 'px';
                 el.style.left = ic.le + 'px';
-                el.innerHTML =
-                    `<div class="img-icono">${ic.i}</div><span>${ic.l}</span>`;
-                el.addEventListener('dblclick', () => { el.classList.add('bote');
-                    setTimeout(() => el.classList.remove('bote'), 400);
-                    abrirVentana(ic.id); });
+                el.innerHTML = `<div class="img-icono">${ic.i}</div><span>${ic.l}</span>`;
+                el.addEventListener('dblclick', () => abrirVentana(ic.id));
                 el.addEventListener('mousedown', e => startDragIcon(e, el));
-                areaEscritorio.appendChild(el); });
-            setInterval(() => { document.getElementById('hora-tarea').textContent = new Date()
-                    .toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }); }, 1000);
-            iniciarAudioBeat(); }
+                area.appendChild(el);
+            });
+            setInterval(() => {
+                document.getElementById('hora-tarea').textContent = new Date().toLocaleTimeString('es-ES', { hour: '2-digit',
+                    minute: '2-digit' });
+            }, 1000);
+            iniciarAudioBeat();
+        }
 
         let dIcon = null,
             dX = 0,
@@ -795,4 +703,88 @@
                 dIcon.style.top = (e.clientY - dY) + 'px'; } });
         document.addEventListener('mouseup', () => { dIcon = null; });
 
-        function abrirVentana
+        function abrirVentana(tipo) {
+            const area = document.getElementById('area-escritorio');
+            const win = document.createElement('div');
+            win.className = 'ventana';
+            win.id = 'v-' + (++vId);
+            win.style.zIndex = ++zIdx;
+            win.style.top = (60 + Math.random() * 100) + 'px';
+            win.style.left = (60 + Math.random() * 200) + 'px';
+            let tit = '',
+                cont = '';
+            switch (tipo) {
+                case 'myc':
+                    tit = 'M.Y.C';
+                    cont = '<h3>M.Y.C</h3><p>Chaos With Purpose.</p>';
+                    break;
+                case 'vault':
+                    tit = '/vault';
+                    cont = '<h3>📁 CLASSIFIED</h3><p>Access restricted.</p>';
+                    break;
+                case 'transmissions':
+                    tit = '/transmissions';
+                    cont = '<h3>📡 SIGNAL</h3><p>Incoming data...</p>';
+                    break;
+                case 'store':
+                    tit = 'STORE';
+                    cont = '<h3>💿 STORE</h3><p>Neon Void Vol.1</p>';
+                    break;
+                case 'tours':
+                    tit = 'TOURS';
+                    cont = '<h3>🌍 TOURS</h3><p>15 DIC Tokyo</p>';
+                    break;
+                case 'artists':
+                    tit = 'ARTISTS';
+                    cont = '<h3>🎨 ARTISTS</h3><p>VHS GLITCH</p>';
+                    break;
+                default:
+                    tit = 'Window';
+                    cont = '<p>Content</p>';
+            }
+            win.innerHTML =
+                `<div class="barra-titulo" onmousedown="startDragWin(event,'${win.id}')"><span>${tit}</span><div><button onclick="document.getElementById('${win.id}').remove()">✕</button></div></div><div class="cuerpo-ventana">${cont}</div>`;
+            area.appendChild(win);
+        }
+        let dWin = null,
+            wX = 0,
+            wY = 0;
+
+        function startDragWin(e, id) { e.preventDefault();
+            dWin = document.getElementById(id);
+            wX = e.clientX - dWin.offsetLeft;
+            wY = e.clientY - dWin.offsetTop;
+            dWin.style.zIndex = ++zIdx; }
+        document.addEventListener('mousemove', (e) => { if (dWin) { dWin.style.left = (e.clientX - wX) + 'px';
+                dWin.style.top = (e.clientY - wY) + 'px'; } });
+        document.addEventListener('mouseup', () => { dWin = null; });
+
+        function alternarInicio() { document.getElementById('menu-inicio').classList.toggle('activo'); }
+        document.addEventListener('click', (e) => { const m = document.getElementById('menu-inicio'); const b = document
+                .querySelector('.btn-inicio'); if (m && !m.contains(e.target) && e.target !== b) m.classList.remove(
+                    'activo'); });
+
+        // ============ REPRODUCTOR ============
+        let ctxBeat, playing = false,
+            oscBeat, gainBeat;
+
+        function iniciarAudioBeat() { if (!ctxBeat) { ctxBeat = new(window.AudioContext || window.webkitAudioContext)();
+                oscBeat = ctxBeat.createOscillator();
+                gainBeat = ctxBeat.createGain();
+                oscBeat.type = 'sawtooth';
+                oscBeat.frequency.setValueAtTime(110, ctxBeat.currentTime);
+                gainBeat.gain.setValueAtTime(0, ctxBeat.currentTime);
+                oscBeat.connect(gainBeat);
+                gainBeat.connect(ctxBeat.destination);
+                oscBeat.start(); } }
+
+        function alternarReproduccion() { const btn = document.getElementById('btn-reproducir');
+            iniciarAudioBeat(); if (ctxBeat.state === 'suspended') ctxBeat.resume(); if (playing) { gainBeat.gain
+                    .setValueAtTime(0, ctxBeat.currentTime);
+                btn.textContent = '▶';
+                playing = false; } else { gainBeat.gain.setValueAtTime(0.12, ctxBeat.currentTime);
+                btn.textContent = '⏸';
+                playing = true; } }
+    </script>
+</body>
+</html>
